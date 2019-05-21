@@ -10,12 +10,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int currentStamina = 100;
 
     private Rigidbody2D RB;
-    [SerializeField] private float speed;
-    [SerializeField] private float jumpStrength; 
+    [SerializeField] private float speed = 8;
+    [SerializeField] private float jumpStrength = 12;
 
     void Start()
     {
         RB = GetComponent<Rigidbody2D>();
+        RB.gravityScale = 2;
     }
     void Update()
     {
