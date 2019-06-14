@@ -2,43 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Character2D
 {
-    [SerializeField] private int maximumHealth = 100;
-    [SerializeField] private int currentHealth = 100;
     [SerializeField] private int maximumStamina = 100;
     [SerializeField] private float currentStamina = 100;
-
     private bool movementEnabled = true;
-    private bool knockedBack = false;
-
-    private GameObject attackArea;
-
     private float dodgeDelay;
     private float dodgeCooldown = 1;
     public bool dodging;
     private List<Collider2D> ignoredColliders = new List<Collider2D>();
-
-    private Rigidbody2D RB;
-    [SerializeField] private float speed = 8;
-    [SerializeField] private float jumpStrength = 12;
-    [SerializeField] private float jumpRaycastLength = 2;
-    [SerializeField] LayerMask groundLayer;
-    private bool grounded;
     private Vector2 movementDirection;
 
     private bool recoverStamina = false;
     private Coroutine staminaCoroutine;
 
-    // Tempoary Variables
-    [SerializeField] private LayerMask EnemyLayer;
-    void Start()
+    protected override void Awake()
     {
-        RB = GetComponent<Rigidbody2D>();
+        base.Awake();
         RB.gravityScale = 2;
-
-        attackArea = GameObject.Find("AttackArea");
-        attackArea.SetActive(false);
     }
     void Update()
     {
@@ -54,56 +35,28 @@ public class PlayerController : MonoBehaviour
         if (movementEnabled)
         {
             Vector3 oldPosition = transform.position;
-
             float xDirection = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
             transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
-
             Vector3 NewPosition = transform.position;
 
-            if (oldPosition.x < NewPosition.x)
+            if (oldPosition.x < NewPosition.x) // Moving Right
             {
-                // Moving right
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
                 movementDirection = Vector2.right;
             }
-            else if (oldPosition.x > NewPosition.x)
+            else if (oldPosition.x > NewPosition.x) // Moving Left
             {
-                // Moving left
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
                 movementDirection = Vector2.left;
             }
         }
         else
         {
-            if (IsGrounded() && !knockedBack)
+            if (IsGrounded() && !knockedback)
             {
                 movementEnabled = true;
             }
         }
-    }
-
-    private void Jump()
-    {
-        if (IsGrounded())
-        {
-            RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
-        }
-    }
-
-    private bool IsGrounded()
-    {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, groundLayer);
-        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 5f);
-
-        if (hit.collider != null)
-        {
-            grounded = true;
-        }
-        else
-        {
-            grounded = false;
-        }
-        return grounded;
     }
 
     private void PlayerActions()
@@ -115,7 +68,11 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Attack();
+            if (Time.time > attackDelay)
+            {
+                attackDelay = (Time.time + attackCooldown);
+                Attack();
+            }
         }
 
         if (Input.GetKey(KeyCode.Mouse1))
@@ -129,32 +86,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damageValue)
+    public override void TakeDamage(int damageValue)
     {
-        currentHealth -= damageValue;
+        base.TakeDamage(damageValue);
         StartCoroutine(GameManager.instance.CameraShake());
         GameManager.instance.UpdateHealthUI(currentHealth);
     }
 
-    private void CheckHealth()
-    {
-        if (currentHealth <= 0)
-        {
-            // Needs functionality, respawn? Death screen?
-            Debug.Log("Player has died");
-        }
-
-        if (currentHealth >= maximumHealth)
-        {
-            currentHealth = maximumHealth;
-        }
-    }
-
-    private void Attack()
+    protected override void Attack()
     {
         // Attack, plays animation + damages all targets hit
         DrainStamina(10);
-        StartCoroutine(Attack(0.1f));
+        base.Attack();
     }
 
     private void Block()
@@ -213,9 +156,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void Knockback(Vector2 knockbackDirection, float knockbackStrength, float movementLockoutDuration)
+    protected override void Die()
     {
-        StartCoroutine(KnockBackEffect(knockbackDirection, knockbackStrength, movementLockoutDuration));
+        Debug.Log("Player died");
     }
 
     private IEnumerator StaminaRecoveryProcess(float delay)
@@ -224,25 +167,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(delay);
         recoverStamina = true;
     }
-
-    public IEnumerator KnockBackEffect(Vector2 knockbackDirection, float knockbackStrength, float movementLockoutDuration)
-    {
-        movementEnabled = false;
-        knockedBack = true;
-        RB.AddForce(knockbackDirection * knockbackStrength, ForceMode2D.Impulse);
-        Debug.Log("Knockback force applied!");
-        yield return new WaitForSeconds(movementLockoutDuration);
-        knockedBack = false;
-    }
-
-    private IEnumerator Attack(float duration)
-    {
-        attackArea.GetComponent<AttackArea>().affectedTargets.Clear();
-        attackArea.SetActive(true);
-        yield return new WaitForSeconds(duration);
-        attackArea.SetActive(false);
-    }
-
     private IEnumerator DodgerollEffect(float duration)
     {
         dodging = true;
