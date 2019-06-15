@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public bool IsGamePaused = false;
+
     private Slider healthSlider;
     private Slider staminaSlider;
     private Camera gameCamera;
@@ -49,14 +51,25 @@ public class GameManager : MonoBehaviour
         staminaSlider.value = staminaValue;
     }
 
+    public void TogglePauseState()
+    {
+        if (Time.timeScale == 1)
+        {
+            Time.timeScale = 0;
+            IsGamePaused = true;
+        }
+        else
+        {
+            Time.timeScale = 1;
+            IsGamePaused = false;
+        }
+    }
+
     public IEnumerator CameraShake()
     {
         virtualCameraNoise.m_AmplitudeGain = shakeAmplitude;
         virtualCameraNoise.m_FrequencyGain = shakeFrequency;
-
         yield return new WaitForSeconds(shakeDuration);
-
         virtualCameraNoise.m_AmplitudeGain = 0f;
-
     }
 }

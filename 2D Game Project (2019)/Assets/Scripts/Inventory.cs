@@ -6,7 +6,7 @@ using TMPro;
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance; // Singleton
-    public delegate void OnItemChanged(Item item); // Delegate
+    public delegate void OnItemChanged(); // Delegate
     public OnItemChanged onItemChangedCallback;
     public TextMeshProUGUI goldText;
     public int goldAmount;
@@ -27,10 +27,10 @@ public class Inventory : MonoBehaviour
 
     public bool AddToInventory(Item item)
     {
-        Debug.Log("Attempting to add item to inventory...");
+        //Debug.Log("Attempting to add item to inventory...");
         if (inventoryItems.Count >= maxInventorySpace)
         {
-            Debug.Log("Could not add to inventory");
+           // Debug.Log("Could not add to inventory");
             return false;
         }
         else
@@ -38,19 +38,19 @@ public class Inventory : MonoBehaviour
             inventoryItems.Add(item);
             if (onItemChangedCallback != null)
             {
-                onItemChangedCallback(item);
+                onItemChangedCallback();
             }
-            Debug.Log("Item added to inventory!");
+            //Debug.Log("Item added to inventory!");
             return true;
         }
     }
     public void RemoveFromInventory(Item item)
     {
-        Debug.Log("Attempting to remove item from inventory...");
+        //Debug.Log("Attempting to remove item from inventory...");
         inventoryItems.Remove(item);
         if (onItemChangedCallback != null)
         {
-            onItemChangedCallback(item);
+            onItemChangedCallback();
         }
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class Item : ScriptableObject
 {
     public string itemName = "New Item";
-    public string description = "Description";
     public Sprite sprite = null;
     public int goldValue = 0;
 
@@ -18,5 +17,12 @@ public abstract class Item : ScriptableObject
     public void RemoveFromInventory()
     {
         // To be done
+    }
+
+    public virtual string GetTooltipInfo()
+    {
+        // Intended to be overwritten
+        string tooltipInfo = "Default Tooltip Information";
+        return tooltipInfo;
     }
 }

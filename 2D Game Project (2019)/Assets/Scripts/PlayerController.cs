@@ -25,11 +25,14 @@ public class PlayerController : Character2D
     }
     void Update()
     {
-        xMovement = (Input.GetAxis("Horizontal"));
-        PlayerActions();
-        CheckHealth();
-        CheckStamina();
-        StaminaRecovery();
+        if (GameManager.instance.IsGamePaused == false)
+        {
+            xMovement = (Input.GetAxis("Horizontal"));
+            PlayerActions();
+            CheckHealth();
+            CheckStamina();
+            StaminaRecovery();
+        }
     }
 
     private void FixedUpdate()

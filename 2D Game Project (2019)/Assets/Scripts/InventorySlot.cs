@@ -1,17 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image icon;
     [SerializeField] private Button removeButton;
     private Item item;
 
+    // Tooltip Info
+    private GameObject tooltip;
+    private TextMeshProUGUI tooltipText;
+    private Vector2 tooltipOriginalPosition;
+
+    private void Awake()
+    {
+        tooltip = GameObject.Find("TooltipPanel");
+        tooltipText = tooltip.GetComponentInChildren<TextMeshProUGUI>();
+        tooltipOriginalPosition = tooltip.transform.position;
+    }
+
+    private void Start()
+    {
+        tooltip.SetActive(false);
+    }
+
     public void AddItem(Item newItem)
     {
-        Debug.Log("Adding item to UI...");
+        //Debug.Log("Adding item to UI...");
         item = newItem;
         icon.sprite = item.sprite;
         icon.enabled = true;
@@ -20,7 +39,7 @@ public class InventorySlot : MonoBehaviour
 
     public void ClearSlot()
     {
-        Debug.Log("Clearing item from UI...");
+       //Debug.Log("Clearing item from UI...");
         item = null;
         icon.sprite = null;
         icon.enabled = false;
@@ -29,7 +48,8 @@ public class InventorySlot : MonoBehaviour
 
     public void OnRemoveButton()
     {
-        Debug.Log("Removing item from inventory...");
+        //Debug.Log("Removing item from inventory...");
+        HideToolTip();
         Inventory.instance.RemoveFromInventory(item);
     }
 
@@ -41,5 +61,31 @@ public class InventorySlot : MonoBehaviour
             Debug.Log("Item used!");
             item.UseItem();
         }
+    }
+
+    private void ShowToolTip(Vector2 position, string text)
+    {
+        tooltip.SetActive(true);
+        tooltip.transform.position = position + new Vector2(60,50);
+        tooltipText.text = text;
+    }
+
+    private void HideToolTip()
+    {
+        tooltip.transform.position = tooltipOriginalPosition;
+        tooltip.SetActive(false);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (item != null)
+        {
+            ShowToolTip(transform.position, item.GetTooltipInfo());
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        HideToolTip();
     }
 }
