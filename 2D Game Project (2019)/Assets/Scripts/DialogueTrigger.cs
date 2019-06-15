@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class DialogueTrigger : MonoBehaviour
 {
-    public Dialogue dialogue; // Dialogue of the DialogueTrigger
+    [SerializeField] private Dialogue dialogue; // Dialogue of the DialogueTrigger
     private GameObject player;
     [SerializeField] private float interactionRange = 2.5F;
     public static bool dialogueOpen; // Used so that multiple DialogueTrigger's can exist in the same scene without conflicting based on their different distances to the player
-    public bool recentlyInteracted; // Used to flag which specific DialogueTrigger is being interacted with
-    public GameObject interactionPrompt;
+    private bool recentlyInteracted; // Used to flag which specific DialogueTrigger is being interacted with
+    [SerializeField] private GameObject interactionPrompt;
 
     // Set up references
     private void Awake()
