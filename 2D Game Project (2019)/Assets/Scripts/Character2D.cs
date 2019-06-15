@@ -11,7 +11,7 @@ public abstract class Character2D : MonoBehaviour
     // Movement
     [SerializeField] protected int speed = 5;
     [SerializeField] protected int jumpStrength = 8;
-    protected float jumpRaycastLength = 2;
+    [SerializeField] protected float jumpRaycastLength = 1;
     [SerializeField] protected LayerMask groundLayer;
     protected bool grounded;
     protected bool knockedback;

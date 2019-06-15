@@ -21,6 +21,7 @@ public class AI : Character2D
     {
         base.Awake();
         Player = FindObjectOfType<PlayerController>().gameObject;
+        Physics2D.IgnoreLayerCollision(10, 11, true);
     }
 
     void Update()

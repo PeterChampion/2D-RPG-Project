@@ -12,6 +12,7 @@ public class PlayerController : Character2D
     public bool dodging;
     private List<Collider2D> ignoredColliders = new List<Collider2D>();
     private Vector2 movementDirection;
+    private float xMovement;
 
     private bool recoverStamina = false;
     private Coroutine staminaCoroutine;
@@ -20,24 +21,34 @@ public class PlayerController : Character2D
     {
         base.Awake();
         RB.gravityScale = 2;
+        Physics2D.IgnoreLayerCollision(9, 11, true);
     }
     void Update()
     {
-        PlayerMovement();
+        xMovement = (Input.GetAxis("Horizontal"));
         PlayerActions();
         CheckHealth();
         CheckStamina();
         StaminaRecovery();
     }
 
+    private void FixedUpdate()
+    {
+        PlayerMovement();
+    }
+
     private void PlayerMovement()
     {
         if (movementEnabled)
         {
-            Vector3 oldPosition = transform.position;
-            float xDirection = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-            transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
-            Vector3 NewPosition = transform.position;
+            Vector2 oldPosition = transform.position;
+
+            //xMovement.Normalize();
+            RB.velocity = new Vector2(xMovement * speed, RB.velocity.y);
+
+            //float xDirection = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+            //transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
+            Vector2 NewPosition = transform.position;
 
             if (oldPosition.x < NewPosition.x) // Moving Right
             {

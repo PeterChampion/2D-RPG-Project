@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class InventorySlot : MonoBehaviour
 {
-    private Image icon;
-    private Button removeButton;
+    [SerializeField] private Image icon;
+    [SerializeField] private Button removeButton;
     private Item item;
 
     public void AddItem(Item newItem)
     {
+        Debug.Log("Adding item to UI...");
         item = newItem;
-
         icon.sprite = item.sprite;
         icon.enabled = true;
         removeButton.interactable = true;
@@ -20,6 +20,7 @@ public class InventorySlot : MonoBehaviour
 
     public void ClearSlot()
     {
+        Debug.Log("Clearing item from UI...");
         item = null;
         icon.sprite = null;
         icon.enabled = false;
@@ -28,13 +29,16 @@ public class InventorySlot : MonoBehaviour
 
     public void OnRemoveButton()
     {
+        Debug.Log("Removing item from inventory...");
         Inventory.instance.RemoveFromInventory(item);
     }
 
     public void UseItem()
     {
+        Debug.Log("Attempting to use item...");
         if (item != null)
         {
+            Debug.Log("Item used!");
             item.UseItem();
         }
     }

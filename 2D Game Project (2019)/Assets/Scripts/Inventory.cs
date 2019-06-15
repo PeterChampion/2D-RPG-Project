@@ -27,8 +27,10 @@ public class Inventory : MonoBehaviour
 
     public bool AddToInventory(Item item)
     {
+        Debug.Log("Attempting to add item to inventory...");
         if (inventoryItems.Count >= maxInventorySpace)
         {
+            Debug.Log("Could not add to inventory");
             return false;
         }
         else
@@ -38,11 +40,13 @@ public class Inventory : MonoBehaviour
             {
                 onItemChangedCallback(item);
             }
+            Debug.Log("Item added to inventory!");
             return true;
         }
     }
     public void RemoveFromInventory(Item item)
     {
+        Debug.Log("Attempting to remove item from inventory...");
         inventoryItems.Remove(item);
         if (onItemChangedCallback != null)
         {
