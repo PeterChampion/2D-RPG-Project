@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour
     public OnItemChanged onItemChangedCallback;
     public TextMeshProUGUI goldText;
     public int goldAmount;
-    [SerializeField] private int maxInventorySpace = 20;
+    public int maxInventorySpace = 20;
     public List<Item> inventoryItems = new List<Item>();
 
     private void Awake()

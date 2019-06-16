@@ -10,7 +10,7 @@ public abstract class Item : ScriptableObject
     public Sprite sprite = null;
     public int goldValue = 0;
 
-    public virtual void UseItem()
+    public virtual void Use()
     {
         // Intended to be overwritten
         RemoveFromInventory();
@@ -18,7 +18,7 @@ public abstract class Item : ScriptableObject
 
     public void RemoveFromInventory()
     {
-        // To be done
+        Inventory.instance.RemoveFromInventory(this);
     }
 
     public virtual string GetTooltipInfo()

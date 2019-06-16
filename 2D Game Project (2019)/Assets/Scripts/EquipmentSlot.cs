@@ -1,16 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine;
 using TMPro;
 
-// Runs on each individual slot within the inventory, stores the information of the item stored within the slot if one is present, allows for adding/removing/clearing an item to and from the inventory.
-public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private Image icon;
-    [SerializeField] private Button removeButton;
-    private Item item;
+    public Image icon;
+    public Button removeButton;
+    private Equipment equipment;
 
     // Tooltip Info
     private GameObject tooltip;
@@ -29,19 +28,18 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         tooltip.SetActive(false);
     }
 
-    public void AddItem(Item newItem)
+    public void AddEquipment(Equipment newEquipment)
     {
-        //Debug.Log("Adding item to UI...");
-        item = newItem;
-        icon.sprite = item.sprite;
+        Debug.Log("Adding Equipment");
+        equipment = newEquipment;
+        icon.sprite = equipment.sprite;
         icon.enabled = true;
         removeButton.interactable = true;
     }
 
     public void ClearSlot()
     {
-       //Debug.Log("Clearing item from UI...");
-        item = null;
+        equipment = null;
         icon.sprite = null;
         icon.enabled = false;
         removeButton.interactable = false;
@@ -49,25 +47,25 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnRemoveButton()
     {
-        //Debug.Log("Removing item from inventory...");
+        Debug.Log("Removing Equipment");
+        EquipmentManager.instance.Unequip((int)equipment.equipSlot);
         HideToolTip();
-        Inventory.instance.RemoveFromInventory(item);
     }
 
-    public void UseItem()
+    public void UseEquipment()
     {
-        Debug.Log("Attempting to use item...");
-        if (item != null)
+        Debug.Log("Using Equipment");
+        if (equipment != null)
         {
-            Debug.Log("Item used!");
-            item.Use();
+            equipment.Use();
+            HideToolTip();
         }
     }
 
     private void ShowToolTip(Vector2 position, string text)
     {
         tooltip.SetActive(true);
-        tooltip.transform.position = position + new Vector2(60,50);
+        tooltip.transform.position = position + new Vector2(60, 50);
         tooltipText.text = text;
     }
 
@@ -79,9 +77,9 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (item != null)
+        if (equipment != null)
         {
-            ShowToolTip(transform.position, item.GetTooltipInfo());
+            ShowToolTip(transform.position, equipment.GetTooltipInfo());
         }
     }
 

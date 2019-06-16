@@ -5,9 +5,13 @@ using UnityEngine;
 // TBD
 public class Equipment : Item
 {
-    public override void UseItem()
+    public enum EquipmentSlot { Head, Chest, Legs, Feet, Weapon, Shield, Trinket }
+    public EquipmentSlot equipSlot;
+
+    public override void Use()
     {
         // Needs to equip item to player
-        base.UseItem();
+        EquipmentManager.instance.Equip(this);
+        base.Use();
     }
 }
