@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Used when a character attacks, handles the collision, knockback, damage amplification, etc. Does not allow for the same character to be damaged multiple times within a single attack.
 public class AttackArea : MonoBehaviour
 {
     private Vector2 knockbackDirection;

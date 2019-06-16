@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+
+// Central class of the dialogue system, handles the dialogue box information and capability of storing dialogue sentences into a queue which is used to display dialogue in order.
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager instance; // Singleton

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Base class for all 2D characters, gives all characters the capability of moving, attacking, ground checking, dying, etc.
 public abstract class Character2D : MonoBehaviour
 {
     // Health
@@ -85,7 +86,6 @@ public abstract class Character2D : MonoBehaviour
         }
         return grounded;
     }
-
 
     public void Knockback(Vector2 knockbackDirection, float knockbackStrength, float movementLockoutDuration)
     {

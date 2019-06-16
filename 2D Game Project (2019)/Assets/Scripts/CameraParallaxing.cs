@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Handles all camera parallazing effects, moves the elements stored within an array based on their z axis, the closer (larger) the z axis the faster the element moves across the scene.
 public class CameraParallaxing : MonoBehaviour
 {
     [SerializeField] private Transform[] elements; // Array of objects that will be parallaxed

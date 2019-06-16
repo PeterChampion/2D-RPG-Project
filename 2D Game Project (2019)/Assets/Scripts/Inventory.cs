@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+// The central class of the inventory system, handles inventory size, checking if an item can successfully be added or not and introduces a delegate for when changes to the inventory occur.
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance; // Singleton

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Base item class, provides each item with a name, sprite & gold value, as well as the functionality to be used, removed from inventory and gather the relevant information needed for a tooltip for future
+// derived classes to use.
 public abstract class Item : ScriptableObject
 {
     public string itemName = "New Item";

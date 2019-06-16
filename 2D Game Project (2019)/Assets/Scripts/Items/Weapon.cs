@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TBD
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Weapon")]
 public class Weapon : Equipment
 {

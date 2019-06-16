@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Handles displaying the inventory when the inventory key is pressed, loops through the inventory to display the contents and which slots are filled/empty.
 public class InventoryUI : MonoBehaviour
 {
     private GameObject InventoryPanel;

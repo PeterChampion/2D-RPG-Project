@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
+// Runs on each individual slot within the inventory, stores the information of the item stored within the slot if one is present, allows for adding/removing/clearing an item to and from the inventory.
 public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image icon;

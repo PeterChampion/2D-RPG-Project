@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TBD
 [CreateAssetMenu(fileName = "New Consumable", menuName = "Consumable")]
 public class Consumable : Item
 {

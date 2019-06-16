@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// A trigger for dialogue that runs on a 2D element, when the player is within the interaction range a prompt is displayed, when the interaction key is pressed the dialogue specific to the object is shown and looped through.
 public class DialogueTrigger : MonoBehaviour
 {
     [SerializeField] private Dialogue dialogue; // Dialogue of the DialogueTrigger

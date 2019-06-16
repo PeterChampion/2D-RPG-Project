@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TBD
 public class Equipment : Item
 {
     public override void UseItem()

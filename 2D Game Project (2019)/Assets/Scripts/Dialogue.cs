@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Handles storing local dialogue, removing/clearing/replacing dialogue at runtime.
 [System.Serializable] // Allows the class to be displayed in the Unity IDE
 public class Dialogue
 {

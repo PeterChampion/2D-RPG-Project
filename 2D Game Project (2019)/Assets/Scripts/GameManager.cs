@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
 
+// Central gamemanger class, handles camera behaviour, UI elements & pausing the gamestate
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
