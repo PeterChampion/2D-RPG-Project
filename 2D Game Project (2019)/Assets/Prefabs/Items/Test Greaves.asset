@@ -16,5 +16,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: e0e1cbd3dfed986479116682f5cc0007, type: 3}
   goldValue: 9999
   equipSlot: 2
-  armourValue: 10
-  magicResist: 5
+  armour: 10

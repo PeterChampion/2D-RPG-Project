@@ -10,8 +10,17 @@ public class Equipment : Item
 
     public override void Use()
     {
-        // Needs to equip item to player
         EquipmentManager.instance.Equip(this);
         base.Use();
+    }
+
+    public virtual void ApplyEquipmentStats()
+    {
+        // Intended to be overwritten
+    }
+
+    public virtual void RemoveEquipmentStats()
+    {
+        // Intended to be overwritten
     }
 }

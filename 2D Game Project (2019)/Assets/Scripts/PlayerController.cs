@@ -5,8 +5,14 @@ using UnityEngine;
 // Handles player movement, actions such as attacking/dodging/etc, health and stamina (Possibly should be moved to a 'Stats' class)
 public class PlayerController : Character2D
 {
+    // General Stats
     [SerializeField] private int maximumStamina = 100;
     [SerializeField] private float currentStamina = 100;
+    public static int armour = 0;
+    public static int magicResist = 0;
+    public static int damage = 0;
+
+    // Movement + Dodge
     private bool movementEnabled = true;
     private float dodgeDelay;
     private float dodgeCooldown = 1;
@@ -15,6 +21,7 @@ public class PlayerController : Character2D
     private Vector2 movementDirection;
     private float xMovement;
 
+    // Stamina Recovery
     private bool recoverStamina = false;
     private Coroutine staminaCoroutine;
 
@@ -22,7 +29,7 @@ public class PlayerController : Character2D
     {
         base.Awake();
         RB.gravityScale = 2;
-        Physics2D.IgnoreLayerCollision(9, 11, true);
+        Physics2D.IgnoreLayerCollision(9, 11, true); // Ignore collision with items layer
     }
     void Update()
     {
@@ -45,21 +52,17 @@ public class PlayerController : Character2D
     {
         if (movementEnabled)
         {
-            Vector2 oldPosition = transform.position;
-
             //xMovement.Normalize();
             RB.velocity = new Vector2(xMovement * speed, RB.velocity.y);
-
             //float xDirection = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
             //transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
-            Vector2 NewPosition = transform.position;
 
-            if (oldPosition.x < NewPosition.x) // Moving Right
+            if (RB.velocity.x > 0) // Moving Right
             {
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
                 movementDirection = Vector2.right;
             }
-            else if (oldPosition.x > NewPosition.x) // Moving Left
+            else if (RB.velocity.x < 0) // Moving Left
             {
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
                 movementDirection = Vector2.left;
@@ -103,9 +106,13 @@ public class PlayerController : Character2D
 
     public override void TakeDamage(int damageValue)
     {
-        base.TakeDamage(damageValue);
-        StartCoroutine(GameManager.instance.CameraShake());
-        GameManager.instance.UpdateHealthUI(currentHealth);
+        damageValue -= armour;
+        if (damageValue > 0)
+        {
+            base.TakeDamage(damageValue);
+            StartCoroutine(GameManager.instance.CameraShake());
+            GameManager.instance.UpdateHealthUI(currentHealth);
+        }
     }
 
     protected override void Attack()

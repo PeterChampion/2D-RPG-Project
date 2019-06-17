@@ -3,19 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using TMPro;
 
 // Central gamemanger class, handles camera behaviour, UI elements & pausing the gamestate
 public class GameManager : MonoBehaviour
 {
+    // Singleton
     public static GameManager instance;
 
+    // Game State
     public bool IsGamePaused = false;
 
+    // Player Stats
     private Slider healthSlider;
     private Slider staminaSlider;
-    private Camera gameCamera;
+    private TextMeshProUGUI statsText;
 
     // Camera Shake
+    private Camera gameCamera;
     [SerializeField] private float shakeDuration = 0.3f; // How long the shake effect lasts
     [SerializeField] private float shakeAmplitude = 1f;
     [SerializeField] private float shakeFrequency = 2f;
@@ -36,10 +41,17 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
-        virtualCameraNoise = virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>();
+        virtualCameraNoise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         gameCamera = FindObjectOfType<Camera>();
         healthSlider = GameObject.Find("HealthSlider").GetComponent<Slider>();
         staminaSlider = GameObject.Find("StaminaSlider").GetComponent<Slider>();
+        statsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
+        EquipmentManager.instance.onEquipmentChangedCallback += UpdatePlayerStatsUI;
+    }
+
+    private void UpdatePlayerStatsUI()
+    {
+        statsText.text = "Damage: " + PlayerController.damage.ToString() +"\nArmour: " + PlayerController.armour.ToString() + "\nMagic Resist: " + PlayerController.magicResist.ToString();
     }
 
     public void UpdateHealthUI(int healthValue)

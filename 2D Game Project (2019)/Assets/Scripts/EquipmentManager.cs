@@ -41,11 +41,13 @@ public class EquipmentManager : MonoBehaviour
 
         if (currentEquipment[slotIndex] != null)
         {
+            currentEquipment[slotIndex].RemoveEquipmentStats();
             oldEquipment = currentEquipment[slotIndex];
             inventory.AddToInventory(oldEquipment);
             Debug.Log("Old equipped item returned to inventory!");
         }
         currentEquipment[slotIndex] = newEquipment;
+        currentEquipment[slotIndex].ApplyEquipmentStats();
         Debug.Log("Item Equipped!");
 
         if (onEquipmentChangedCallback != null)
@@ -71,6 +73,7 @@ public class EquipmentManager : MonoBehaviour
                 oldEquipment = currentEquipment[slotIndex];
                 inventory.AddToInventory(oldEquipment);
 
+                currentEquipment[slotIndex].RemoveEquipmentStats();
                 currentEquipment[slotIndex] = null;
                 Debug.Log("Attempt to Unequip an item was successful");
 
@@ -104,6 +107,7 @@ public class EquipmentManager : MonoBehaviour
     {
         for (int i = 0; i < currentEquipment.Length; i++)
         {
+            currentEquipment[i].RemoveEquipmentStats();
             currentEquipment[i] = null;
         }
     }

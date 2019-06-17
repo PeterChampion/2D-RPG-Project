@@ -24,6 +24,7 @@ public class InventoryUI : MonoBehaviour
         inventory = Inventory.instance;
         inventory.onItemChangedCallback += UpdateUI;
         InventoryPanel.SetActive(false);
+        tooltip.SetActive(false);
         UpdateUI();
     }
 

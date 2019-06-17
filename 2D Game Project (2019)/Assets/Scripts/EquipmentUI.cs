@@ -31,7 +31,6 @@ public class EquipmentUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false)
         {
             tooltip.SetActive(false);
-            GameManager.instance.TogglePauseState();
             equipmentPanel.SetActive(!equipmentPanel.activeSelf);
         }
     }
