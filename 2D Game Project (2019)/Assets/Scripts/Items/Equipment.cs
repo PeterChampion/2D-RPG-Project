@@ -7,6 +7,12 @@ public class Equipment : Item
 {
     public enum EquipmentSlot { Head, Chest, Legs, Feet, Weapon, Shield, Trinket }
     public EquipmentSlot equipSlot;
+    protected PlayerController player;
+
+    private void OnEnable()
+    {
+        player = FindObjectOfType<PlayerController>();
+    }
 
     public override void Use()
     {

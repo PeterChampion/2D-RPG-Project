@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private Slider healthSlider;
     private Slider staminaSlider;
     private TextMeshProUGUI statsText;
+    private PlayerController player;
 
     // Camera Shake
     private Camera gameCamera;
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        player = FindObjectOfType<PlayerController>();
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
         virtualCameraNoise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         gameCamera = FindObjectOfType<Camera>();
@@ -51,7 +53,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdatePlayerStatsUI()
     {
-        statsText.text = "Damage: " + PlayerController.damage.ToString() +"\nArmour: " + PlayerController.armour.ToString() + "\nMagic Resist: " + PlayerController.magicResist.ToString();
+        statsText.text = "Damage: " + player.Damage.ToString() +"\nArmour: " + player.Armour.ToString() + "\nMagic Resist: " + player.MagicResist.ToString();
     }
 
     public void UpdateHealthUI(int healthValue)

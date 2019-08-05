@@ -11,11 +11,11 @@ public class Weapon : Equipment
 
     public override void ApplyEquipmentStats()
     {
-        PlayerController.damage += damageValue;
+        player.Damage += damageValue;
     }
 
     public override void RemoveEquipmentStats()
     {
-        PlayerController.damage -= damageValue;
+        player.Damage -= damageValue;
     }
 }

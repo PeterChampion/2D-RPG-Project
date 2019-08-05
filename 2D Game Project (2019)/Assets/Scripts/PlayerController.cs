@@ -8,9 +8,6 @@ public class PlayerController : Character2D
     // General Stats
     [SerializeField] private int maximumStamina = 100;
     [SerializeField] private float currentStamina = 100;
-    public static int armour = 0;
-    public static int magicResist = 0;
-    public static int damage = 0;
 
     // Movement + Dodge
     private bool movementEnabled = true;
@@ -18,7 +15,6 @@ public class PlayerController : Character2D
     private float dodgeCooldown = 1;
     public bool dodging;
     private List<Collider2D> ignoredColliders = new List<Collider2D>();
-    private Vector2 movementDirection;
     private float xMovement;
 
     // Stamina Recovery
@@ -48,8 +44,36 @@ public class PlayerController : Character2D
         PlayerMovement();
     }
 
+    private void NewAttack()
+    {
+        Debug.DrawRay(transform.position, movementDirection * attackRange, Color.blue, 0.5f);
+        RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, movementDirection, attackRange, EnemyLayer);
+        List<RaycastHit2D> beenHits = new List<RaycastHit2D>();
+
+        foreach (RaycastHit2D newHit in newHits)
+        {
+            foreach (RaycastHit2D beenHit in beenHits)
+            {
+                if (newHit == beenHit)
+                {
+                    break;
+                }
+            }
+            beenHits.Add(newHit);
+            newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
+            newHit.collider.GetComponent<Character2D>().Knockback(movementDirection, knockbackPower, 0.5f);
+            Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
+            Debug.Log(newHit.collider);
+        }
+    }
+
     private void PlayerMovement()
     {
+        if (knockedback)
+        {
+            movementEnabled = false;
+        }
+
         if (movementEnabled)
         {
             //xMovement.Normalize();
@@ -89,7 +113,8 @@ public class PlayerController : Character2D
             if (Time.time > attackDelay)
             {
                 attackDelay = (Time.time + attackCooldown);
-                Attack();
+                //Attack();
+                NewAttack();
             }
         }
 
@@ -106,7 +131,7 @@ public class PlayerController : Character2D
 
     public override void TakeDamage(int damageValue)
     {
-        damageValue -= armour;
+        damageValue -= Armour;
         if (damageValue > 0)
         {
             base.TakeDamage(damageValue);

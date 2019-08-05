@@ -5,12 +5,12 @@ using UnityEngine;
 // A trigger for dialogue that runs on a 2D element, when the player is within the interaction range a prompt is displayed, when the interaction key is pressed the dialogue specific to the object is shown and looped through.
 public class DialogueTrigger : MonoBehaviour
 {
-    [SerializeField] private Dialogue dialogue; // Dialogue of the DialogueTrigger
+    [SerializeField] private Dialogue dialogue = new Dialogue(); // Dialogue of the DialogueTrigger
     private GameObject player;
     [SerializeField] private float interactionRange = 2.5F;
     public static bool dialogueOpen; // Used so that multiple DialogueTrigger's can exist in the same scene without conflicting based on their different distances to the player
     private bool recentlyInteracted; // Used to flag which specific DialogueTrigger is being interacted with
-    [SerializeField] private GameObject interactionPrompt;
+    [SerializeField] private GameObject interactionPrompt = null;
 
     // Set up references
     private void Awake()

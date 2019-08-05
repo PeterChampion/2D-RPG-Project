@@ -8,16 +8,15 @@ using UnityEngine.AI;
 public class AI : Character2D
 {
     private GameObject Player;
-    [SerializeField] private int detectionRange;
-    [SerializeField] private int minimumRange;
-    [SerializeField] private int attackRange;
+    [SerializeField] private int detectionRange = 5;
+    [SerializeField] private int minimumRange = 2;
     private float xdistanceFromPlayer;
     private float ydistanceFromPlayer;
-    [SerializeField] Vector2 rayCastOffset;
-    [SerializeField] private float timeBetweenJumps = 1.5f;
+    [SerializeField] Vector2 rayCastOffset = new Vector2(1,0);
+    [SerializeField] private float jumpCooldown = 1.5f;
     private float jumpDelay = 0;    
     private bool playerInRange = false;
-    private int movementDirection = -1;
+    private int directionOfMovement = -1;
 
     protected override void Awake()
     {
@@ -35,7 +34,7 @@ public class AI : Character2D
 
     private void FixedUpdate()
     {
-        float xDirection = movementDirection * speed * Time.deltaTime; // Test
+        float xDirection = directionOfMovement * speed * Time.deltaTime; // Test
 
         // If we ARE NOT in minimum range AND ARE on the ground = chase
         // If we ARE in minimum range AND ARE on the ground = stop
@@ -54,15 +53,17 @@ public class AI : Character2D
         {
             if (!knockedback)
             {
-                if (movementDirection == 1) // Right
+                if (directionOfMovement == 1) // Right
                 {
                     transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
                     transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
+                    movementDirection = Vector2.right;
                 }
-                else if (movementDirection == -1) // Left
+                else if (directionOfMovement == -1) // Left
                 {
                     transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
                     transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
+                    movementDirection = Vector2.left;
                 }
             }            
         }   
@@ -98,15 +99,15 @@ public class AI : Character2D
         {
             if (xdistanceFromPlayer < 0)
             {
-                movementDirection = -1;
+                directionOfMovement = -1;
             }
             else
             {
-                movementDirection = 1;
+                directionOfMovement = 1;
             }
         }
 
-        if (movementDirection == 1)
+        if (directionOfMovement == 1)
         {
             RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 1.5f, groundLayer);
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.right, Color.yellow);
@@ -115,7 +116,7 @@ public class AI : Character2D
             {
                 if (!playerInRange)
                 {
-                    movementDirection = -1;
+                    directionOfMovement = -1;
                     Debug.Log("Turn Around");
                 }
                 else
@@ -135,7 +136,7 @@ public class AI : Character2D
                 }
                 else
                 {
-                    movementDirection = -1;
+                    directionOfMovement = -1;
                     Debug.Log("Turn Around");
                 }
             }
@@ -149,7 +150,7 @@ public class AI : Character2D
             {
                 if (!playerInRange)
                 {
-                    movementDirection = 1;
+                    directionOfMovement = 1;
                     Debug.Log("Turn Around");
                 }
                 else
@@ -169,19 +170,20 @@ public class AI : Character2D
                 }
                 else
                 {
-                    movementDirection = 1;
+                    directionOfMovement = 1;
                     Debug.Log("Turn Around");
                 }
             }
         }   
     }
-     protected override void Jump()
+
+    protected override void Jump()
     {
         if (Time.time > jumpDelay)
         {
             if (IsGrounded())
             {
-                jumpDelay = Time.time + timeBetweenJumps;
+                jumpDelay = Time.time + jumpCooldown;
                 RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
             }
         }

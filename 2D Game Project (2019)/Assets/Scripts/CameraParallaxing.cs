@@ -5,7 +5,7 @@ using UnityEngine;
 // Handles all camera parallazing effects, moves the elements stored within an array based on their z axis, the closer (larger) the z axis the faster the element moves across the scene.
 public class CameraParallaxing : MonoBehaviour
 {
-    [SerializeField] private Transform[] elements; // Array of objects that will be parallaxed
+    [SerializeField] private Transform[] elements = new Transform[0]; // Array of objects that will be parallaxed
     private float[] parallaxScales; // The proportion of the game's movement to move the elements by
     [SerializeField] private float parallaxSmoothing = 1f; // How smooth the parallax is going to be, keep this above 0
 

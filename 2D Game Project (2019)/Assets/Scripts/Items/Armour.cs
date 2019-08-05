@@ -16,11 +16,11 @@ public class Armour : Equipment
     }
     public override void ApplyEquipmentStats()
     {
-        PlayerController.armour += armour;
+        player.Armour += armour;
     }
 
     public override void RemoveEquipmentStats()
     {
-        PlayerController.armour -= armour;
+        player.Armour -= armour;
     }
 }
