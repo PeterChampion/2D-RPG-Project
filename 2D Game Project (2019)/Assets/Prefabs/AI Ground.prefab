@@ -94,26 +94,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49b36af63b08a34468abce63696f9b61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maximumHealth: 10
+  maximumHealth: 100
   speed: 5
   jumpStrength: 12
-  jumpRaycastLength: 2
+  jumpRaycastLength: 1
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
   attackRange: 2
   damage: 5
-  knockbackPower: 5
-  attackCooldown: 1
+  knockbackPower: 10
+  attackCooldown: 1.5
   armour: 0
   magicResist: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
+  knockbackDuration: 0
   detectionRange: 8
   minimumRange: 2
   rayCastOffset: {x: 1, y: 0}
-  timeBetweenJumps: 1.5
+  jumpCooldown: 1.5
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!70 &8613347986703909916
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

@@ -32,7 +32,7 @@ public abstract class Character2D : MonoBehaviour
     public int MagicResist { get { return magicResist; } set { magicResist = value; } }
     [SerializeField] private LayerMask enemyLayer = new LayerMask();
     public LayerMask EnemyLayer { get { return enemyLayer; } }
-
+    [SerializeField] private float knockbackDuration = 0;
 
     protected virtual void Awake() // Set References & Variable set up
     {
@@ -57,7 +57,7 @@ public abstract class Character2D : MonoBehaviour
             }
             beenHits.Add(newHit);
             newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
-            newHit.collider.GetComponent<Character2D>().Knockback(movementDirection, knockbackPower, 0.5f);
+            newHit.collider.GetComponent<Character2D>().Knockback(movementDirection, knockbackPower, knockbackDuration);
             Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
         }
     }
@@ -92,10 +92,10 @@ public abstract class Character2D : MonoBehaviour
             RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
         }
     }
-    protected bool IsGrounded()
+    protected virtual bool IsGrounded()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, groundLayer);
-        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 5f);
+        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
 
         if (hit.collider != null)
         {

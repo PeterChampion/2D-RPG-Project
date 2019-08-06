@@ -7,12 +7,12 @@ public class ItemPickUp : MonoBehaviour
 {
     [SerializeField] private Item item = null;
     [SerializeField] private int interactionRange = 2;
-    private GameObject player;
+    private PlayerController player;
     [SerializeField] private GameObject interactionPrompt = null;
 
     private void Awake()
     {
-        player = FindObjectOfType<PlayerController>().gameObject;
+        player = FindObjectOfType<PlayerController>();
         interactionPrompt.SetActive(false);
     }
 

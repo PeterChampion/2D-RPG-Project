@@ -11,11 +11,13 @@ public class Weapon : Equipment
 
     public override void ApplyEquipmentStats()
     {
+        base.ApplyEquipmentStats();
         player.Damage += damageValue;
     }
 
     public override void RemoveEquipmentStats()
     {
+        base.RemoveEquipmentStats();
         player.Damage -= damageValue;
     }
 }

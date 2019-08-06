@@ -37,10 +37,7 @@ public class Inventory : MonoBehaviour
         else
         {
             inventoryItems.Add(item);
-            if (onItemChangedCallback != null)
-            {
-                onItemChangedCallback();
-            }
+            onItemChangedCallback?.Invoke(); // '?' = a check to see if the variable is true or not, if so perform the operation 
             //Debug.Log("Item added to inventory!");
             return true;
         }
@@ -49,9 +46,6 @@ public class Inventory : MonoBehaviour
     {
         //Debug.Log("Attempting to remove item from inventory...");
         inventoryItems.Remove(item);
-        if (onItemChangedCallback != null)
-        {
-            onItemChangedCallback();
-        }
+        onItemChangedCallback?.Invoke();
     }
 }

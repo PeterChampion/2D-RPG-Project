@@ -3,16 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // TBD
-public class Equipment : Item
+public abstract class Equipment : Item
 {
     public enum EquipmentSlot { Head, Chest, Legs, Feet, Weapon, Shield, Trinket }
     public EquipmentSlot equipSlot;
     protected PlayerController player;
-
-    private void OnEnable()
-    {
-        player = FindObjectOfType<PlayerController>();
-    }
 
     public override void Use()
     {
@@ -22,11 +17,13 @@ public class Equipment : Item
 
     public virtual void ApplyEquipmentStats()
     {
+        player = FindObjectOfType<PlayerController>();
         // Intended to be overwritten
     }
 
     public virtual void RemoveEquipmentStats()
     {
+        player = FindObjectOfType<PlayerController>();
         // Intended to be overwritten
     }
 }

@@ -16,10 +16,15 @@ public class PlayerController : Character2D
     public bool dodging;
     private List<Collider2D> ignoredColliders = new List<Collider2D>();
     private float xMovement;
+    [SerializeField] private LayerMask wallLayer = new LayerMask();
 
     // Stamina Recovery
     private bool recoverStamina = false;
     private Coroutine staminaCoroutine;
+
+    // Test
+    private float stunduration = 0;
+    private float stunCooldown = 0.1f;
 
     protected override void Awake()
     {
@@ -44,32 +49,9 @@ public class PlayerController : Character2D
         PlayerMovement();
     }
 
-    private void NewAttack()
-    {
-        Debug.DrawRay(transform.position, movementDirection * attackRange, Color.blue, 0.5f);
-        RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, movementDirection, attackRange, EnemyLayer);
-        List<RaycastHit2D> beenHits = new List<RaycastHit2D>();
-
-        foreach (RaycastHit2D newHit in newHits)
-        {
-            foreach (RaycastHit2D beenHit in beenHits)
-            {
-                if (newHit == beenHit)
-                {
-                    break;
-                }
-            }
-            beenHits.Add(newHit);
-            newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
-            newHit.collider.GetComponent<Character2D>().Knockback(movementDirection, knockbackPower, 0.5f);
-            Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
-            Debug.Log(newHit.collider);
-        }
-    }
-
     private void PlayerMovement()
     {
-        if (knockedback)
+        if (knockedback || dodging)
         {
             movementEnabled = false;
         }
@@ -94,9 +76,14 @@ public class PlayerController : Character2D
         }
         else
         {
-            if (IsGrounded() && !knockedback)
+            if (Time.time > stunduration)
             {
-                movementEnabled = true;
+                stunduration = Time.time + stunCooldown;
+
+                if (IsGrounded() && (!knockedback || !dodging))
+                {
+                    movementEnabled = true;
+                }
             }
         }
     }
@@ -113,8 +100,7 @@ public class PlayerController : Character2D
             if (Time.time > attackDelay)
             {
                 attackDelay = (Time.time + attackCooldown);
-                //Attack();
-                NewAttack();
+                Attack();
             }
         }
 
@@ -143,42 +129,58 @@ public class PlayerController : Character2D
     protected override void Attack()
     {
         // Attack, plays animation + damages all targets hit
-        DrainStamina(10);
-        base.Attack();
+        if (DrainStamina(10))
+        {
+            base.Attack();
+        }
     }
 
     private void Block()
     {
         // Block, plays animation + activates collider in front of the player that blocks incoming damage
-        DrainStamina(0.5f);
+        if (DrainStamina(0.5f))
+        {
+
+        }
     }
 
     private void Dodgeroll()
     {
         // Dodge, plays animation + deactives players trigger hitbox used for damage for a short interval
-        DrainStamina(10);
-
         if (Time.time > dodgeDelay)
         {
             dodgeDelay = (Time.time + dodgeCooldown);
-            StartCoroutine(DodgerollEffect(0.3f));
-        }                     
+
+            if (DrainStamina(10))
+            {
+                StartCoroutine(DodgerollEffect(0.3f));
+            }            
+        }                          
     }
 
-    private void DrainStamina(float drainValue)
+    private bool DrainStamina(float drainValue)
     {
-        if (staminaCoroutine == null)
+        if ((currentStamina - drainValue) >= 0)
         {
-            staminaCoroutine = StartCoroutine(StaminaRecoveryProcess(3));
+            if (staminaCoroutine == null)
+            {
+                staminaCoroutine = StartCoroutine(StaminaRecoveryProcess(3));
+            }
+            else
+            {
+                StopCoroutine(staminaCoroutine);
+                staminaCoroutine = StartCoroutine(StaminaRecoveryProcess(3));
+            }
+
+            currentStamina -= drainValue;
+            GameManager.instance.UpdateStaminaUI((int)currentStamina);
+            return true;
         }
         else
         {
-            StopCoroutine(staminaCoroutine);
-            staminaCoroutine = StartCoroutine(StaminaRecoveryProcess(3));
+            Debug.Log("Cannot perform action, not enough stamina");
+            return false;
         }        
-
-        currentStamina -= drainValue;
-        GameManager.instance.UpdateStaminaUI((int)currentStamina);
     }
 
     private void CheckStamina()
@@ -208,6 +210,25 @@ public class PlayerController : Character2D
         Debug.Log("Player died");
     }
 
+    protected override bool IsGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, groundLayer);
+
+        RaycastHit2D hit2 = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, wallLayer);
+
+        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
+
+        if (hit.collider || hit2.collider != null )
+        {
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+        return grounded;
+    }
+
     private IEnumerator StaminaRecoveryProcess(float delay)
     {
         recoverStamina = false;
@@ -218,11 +239,13 @@ public class PlayerController : Character2D
     {
         dodging = true;
         Debug.Log("Start Dodge");
-        Physics2D.IgnoreLayerCollision(9, 10, true);
-        RB.AddForce(movementDirection * 8.5f, ForceMode2D.Impulse);
+        gameObject.layer = 13;
+        Physics2D.IgnoreLayerCollision(13, 10, true);
+        RB.AddForce(movementDirection * 10f, ForceMode2D.Impulse);
         yield return new WaitForSeconds(duration);
         dodging = false;
-        Physics2D.IgnoreLayerCollision(9, 10, false);
+        Physics2D.IgnoreLayerCollision(13, 10, false);
+        gameObject.layer = 9;
         Debug.Log("End Dodge");
     }
 }

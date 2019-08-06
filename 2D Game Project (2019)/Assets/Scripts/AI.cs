@@ -14,10 +14,11 @@ public class AI : Character2D
     private float ydistanceFromPlayer;
     [SerializeField] Vector2 rayCastOffset = new Vector2(1,0);
     [SerializeField] private float jumpCooldown = 1.5f;
-    private float jumpDelay = 0;    
+    private float jumpDelay = 0;
     private bool playerInRange = false;
     private int directionOfMovement = -1;
-
+    [SerializeField] private LayerMask wallLayer = new LayerMask();
+    
     protected override void Awake()
     {
         base.Awake();
@@ -25,67 +26,62 @@ public class AI : Character2D
         Physics2D.IgnoreLayerCollision(10, 11, true);
     }
 
-    void Update()
+    void Update() // Update is every frame, e.g 101 FPS = 101 times ran a second
     {
-        ComputeVelocity();
+        AIMovement();
         CheckHealth();
         Attack();
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() // Fixed Update is every Physics Update, e.g Physics updates happene every 16th frame
     {
-        float xDirection = directionOfMovement * speed * Time.deltaTime; // Test
-
         // If we ARE NOT in minimum range AND ARE on the ground = chase
         // If we ARE in minimum range AND ARE on the ground = stop
         // If we ARE NOT in minimum range and ARE NOT on the ground = chase
         // If we ARE in minimum range and ARE NOT on the ground = chase
 
-        // If we ARE in minimum range and ARE NOT on the ground
-        if (Mathf.Abs(xdistanceFromPlayer) < minimumRange && playerInRange) // && IsGrounded() ????
+        if (!knockedback)
         {
-            if (!IsGrounded())
+            if (directionOfMovement == 1) // Right
             {
-                transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
+                //transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);                
+                movementDirection = Vector2.right;
+                transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
+                RB.velocity = new Vector2(movementDirection.x * speed, RB.velocity.y);
             }
-        }
-        else
-        {
-            if (!knockedback)
+            else if (directionOfMovement == -1) // Left
             {
-                if (directionOfMovement == 1) // Right
-                {
-                    transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
-                    transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
-                    movementDirection = Vector2.right;
-                }
-                else if (directionOfMovement == -1) // Left
-                {
-                    transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
-                    transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
-                    movementDirection = Vector2.left;
-                }
-            }            
-        }   
+                //transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);                
+                movementDirection = Vector2.left;
+                transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
+                RB.velocity = new Vector2(movementDirection.x * speed, RB.velocity.y);
+            }
+
+            if (Mathf.Abs(xdistanceFromPlayer) < minimumRange)
+            {
+                RB.velocity = new Vector2(0, RB.velocity.y);
+            }
+        }       
     }
 
     protected override void Attack()
     {
         if (xdistanceFromPlayer < attackRange && ydistanceFromPlayer < attackRange)
         {
+            attackDelay = (Time.time + attackCooldown);
             if (Time.time > attackDelay)
             {
-                attackDelay = (Time.time + attackCooldown);
                 base.Attack();
             }
         }
     }
 
-    protected virtual void ComputeVelocity()
+    protected virtual void AIMovement()
     {
-        xdistanceFromPlayer = Player.transform.position.x - transform.position.x;
-        ydistanceFromPlayer = Player.transform.position.y - transform.position.y;        
+        xdistanceFromPlayer = Player.transform.position.x - transform.position.x; // Calculate distance on X axis
+        ydistanceFromPlayer = Player.transform.position.y - transform.position.y; // Calculate distance on Y axis
 
+        // If the player is within the detection range...
         if (Mathf.Abs(xdistanceFromPlayer) < detectionRange && Mathf.Abs(ydistanceFromPlayer) < detectionRange)
         {
             playerInRange = true;
@@ -99,27 +95,28 @@ public class AI : Character2D
         {
             if (xdistanceFromPlayer < 0)
             {
-                directionOfMovement = -1;
+                directionOfMovement = -1; // Player is on the left so set directionOfMovement to match
             }
             else
             {
-                directionOfMovement = 1;
+                directionOfMovement = 1; // Player is on the right so set directionOfMovement to match
             }
         }
 
+        // If we are moving to the right...
         if (directionOfMovement == 1)
         {
-            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 1.5f, groundLayer);
+            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 1.5f, wallLayer);
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.right, Color.yellow);
 
             if (rightWall.collider != null)
             {
-                if (!playerInRange)
+                if (!playerInRange && IsGrounded() )
                 {
                     directionOfMovement = -1;
-                    Debug.Log("Turn Around");
+                    Debug.Log("Turn Around, I hit a wall RIGHT");
                 }
-                else
+                else if (xdistanceFromPlayer > minimumRange)
                 {
                     Jump();
                 }
@@ -134,31 +131,31 @@ public class AI : Character2D
                 {
                     Jump();
                 }
-                else
+                else if (IsGrounded())
                 {
                     directionOfMovement = -1;
-                    Debug.Log("Turn Around");
+                    Debug.Log("Turn Around, no ground ahead RIGHT");
                 }
             }
         }
         else
         {
-            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 1.5f, groundLayer);
+            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 1.5f, wallLayer);
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.left, Color.yellow);
 
             if (leftWall.collider != null)
             {
-                if (!playerInRange)
+                if (!playerInRange && IsGrounded())
                 {
                     directionOfMovement = 1;
-                    Debug.Log("Turn Around");
+                    Debug.Log("Turn Around, I hit a wall LEFT");
                 }
-                else
+                else if (xdistanceFromPlayer * -1 > minimumRange)
                 {
                     Jump();
                 }
             }
-
+            
             RaycastHit2D leftLedge = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), Vector2.down, 1f, groundLayer);
             Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), 1f * Vector2.down, Color.yellow);
 
@@ -168,10 +165,10 @@ public class AI : Character2D
                 {
                     Jump();
                 }
-                else
+                else if (IsGrounded())
                 {
                     directionOfMovement = 1;
-                    Debug.Log("Turn Around");
+                    Debug.Log("Turn Around, no ground ahead LEFT");
                 }
             }
         }   

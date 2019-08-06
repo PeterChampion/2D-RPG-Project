@@ -16,11 +16,13 @@ public class Armour : Equipment
     }
     public override void ApplyEquipmentStats()
     {
+        base.ApplyEquipmentStats();
         player.Armour += armour;
     }
 
     public override void RemoveEquipmentStats()
     {
+        base.RemoveEquipmentStats();
         player.Armour -= armour;
     }
 }

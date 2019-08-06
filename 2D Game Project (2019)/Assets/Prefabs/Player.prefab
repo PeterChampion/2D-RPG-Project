@@ -138,7 +138,7 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
-  attackRange: 2
+  attackRange: 5
   damage: 5
   knockbackPower: 5
   attackCooldown: 1
@@ -146,7 +146,11 @@ MonoBehaviour:
   magicResist: 0
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
+  knockbackDuration: 0.6
   maximumStamina: 100
   currentStamina: 100
   dodging: 0
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 4096
