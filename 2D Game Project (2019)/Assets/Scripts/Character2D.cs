@@ -40,6 +40,10 @@ public abstract class Character2D : MonoBehaviour
         RB = GetComponent<Rigidbody2D>();
         currentHealth = maximumHealth;
         originalLayer = gameObject.layer;
+        Physics2D.IgnoreLayerCollision(10, 11, true); // Ignore collisions with pickups
+        Physics2D.IgnoreLayerCollision(10, 13, true); // Ignore collisions with invulnerable characters
+        Physics2D.IgnoreLayerCollision(13, 13, true); // Ignore collisions with invulnerable characters while also invulnerable
+        Physics2D.IgnoreLayerCollision(13, 11, true); // Ignore collisions with pickups when invulnerable
     }
     
     protected virtual void ClampVelocity()
@@ -64,7 +68,7 @@ public abstract class Character2D : MonoBehaviour
             }
             beenHits.Add(newHit);
             newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
-            newHit.collider.GetComponent<Character2D>().Knockback(xMovementDirection, knockbackPower, knockbackDuration);
+            newHit.collider.GetComponent<Character2D>().Knockback(new Vector2(xMovementDirection.x, 0.5f), knockbackPower, knockbackDuration);
             Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
         }
     }

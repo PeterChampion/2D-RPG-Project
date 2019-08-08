@@ -23,10 +23,7 @@ public abstract class AI : Character2D
     {
         base.Awake();
         player = FindObjectOfType<PlayerController>().gameObject;
-        Physics2D.IgnoreLayerCollision(10, 11, true); // Ignore collisions with pickups
         Physics2D.IgnoreLayerCollision(10, 10, true); // Ignore collisions with other enemies
-        Physics2D.IgnoreLayerCollision(10, 13, true); // Ignore collisions with invulnerable characters
-        Physics2D.IgnoreLayerCollision(13, 13, true); // Ignore collisions with invulnerable characters
     }
 
     protected virtual void Update()

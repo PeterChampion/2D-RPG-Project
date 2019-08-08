@@ -6,13 +6,15 @@ public class FlyingAI : AI
 {
     private Vector2 yMovementDirection;
     [SerializeField] private LayerMask platformLayer;
+    private bool lookingForPlatforms = true;
 
     protected override void FixedUpdate()
     {
         if (!knockedback)
         {
-            if (playerInRange && xdistanceFromPlayer < 6)
+            if (playerInRange && Mathf.Abs(xdistanceFromPlayer) < 6)
             {
+                Debug.Log("Descending");
                 if (player.transform.position.y > transform.position.y && yMovementDirection != Vector2.up)
                 {
                     yMovementDirection = Vector2.up;
@@ -27,14 +29,13 @@ public class FlyingAI : AI
             else
             {
                 yMovementDirection = Vector2.zero;
-                RB.velocity = new Vector2(RB.velocity.x, 0);
+                //RB.velocity = new Vector2(RB.velocity.x, 0);
             }
 
             if (directionOfMovement == 1) // Right
             {              
                 xMovementDirection = Vector2.right;
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
-                //RB.velocity = new Vector2(xMovementDirection.x * speed, yMovementDirection.y * speed);
             }
             else if (directionOfMovement == -1) // Left
             {             
@@ -55,68 +56,73 @@ public class FlyingAI : AI
     {
         base.AIMovement();
 
-        // If we are moving to the right...
-        if (directionOfMovement == 1)
+        if (lookingForPlatforms)
         {
-            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 1.5f, wallLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.right, Color.yellow);
-
-            if (rightWall.collider != null)
+            // If we are moving to the right...
+            if (directionOfMovement == 1)
             {
-                if (!playerInRange)
+                RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 2f, wallLayer);
+                Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2f * Vector2.right, Color.yellow);
+
+                if (rightWall.collider != null)
                 {
-                    directionOfMovement = -1;
-                    Debug.Log("Turn Around, I hit a wall RIGHT");
-                }
-                else 
-                {
-                    // Boost upwards
-                    RB.AddForce(new Vector2(0, 2), ForceMode2D.Impulse);
-                    Debug.Log("Upwards boost applied");
+                    if (!playerInRange)
+                    {
+                        directionOfMovement = -1;
+                        RB.velocity = new Vector2(RB.velocity.x / 2, RB.velocity.y);
+                        Debug.Log("Turn Around, I hit a wall RIGHT");
+                    }
+                    else
+                    {
+                        // Boost upwards
+                        RB.AddForce(new Vector2(0, 3), ForceMode2D.Impulse);
+                        Debug.Log("Upwards boost applied");
+                    }
                 }
             }
-        }
-        else
-        {
-            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 1.5f, wallLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.left, Color.yellow);
-
-            if (leftWall.collider != null)
+            else
             {
-                if (!playerInRange)
+                RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 2f, wallLayer);
+                Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2f * Vector2.left, Color.yellow);
+
+                if (leftWall.collider != null)
                 {
-                    directionOfMovement = 1;
-                    Debug.Log("Turn Around, I hit a wall LEFT");
+                    if (!playerInRange)
+                    {
+                        directionOfMovement = 1;
+                        RB.velocity = new Vector2(RB.velocity.x / 2, RB.velocity.y);
+                        Debug.Log("Turn Around, I hit a wall LEFT");
+                    }
+                    else
+                    {
+                        // Boost upwards
+                        RB.AddForce(new Vector2(0, 3), ForceMode2D.Impulse);
+                        Debug.Log("Upwards boost applied");
+                    }
                 }
-                else
-                {
-                    // Boost upwards
-                    RB.AddForce(new Vector2(0, 1), ForceMode2D.Impulse);
-                    Debug.Log("Upwards boost applied");
-                }
-            }            
-        }
+            }
+        }        
 
         if (ydistanceFromPlayer >= 0.2)
         {
-            RaycastHit2D abovePlatform = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.up, 1.5f, platformLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.up, Color.yellow);
+            RaycastHit2D abovePlatform = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.up, 2f, platformLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2f * Vector2.up, Color.yellow);
 
             if (abovePlatform.collider != null)
             {
-                StartCoroutine(MoveAroundObstruction(1));
+                StartCoroutine(MoveAroundObstruction(1f));
             }
         }
         else if (ydistanceFromPlayer <= -0.2)
         {
-            RaycastHit2D belowPlatform = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.down, 1.5f, platformLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.down, Color.yellow);
+            RaycastHit2D belowPlatform = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.down, 2f, platformLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2f * Vector2.down, Color.yellow);
 
             if (belowPlatform.collider != null)
             {
                 StartCoroutine(MoveAroundObstruction(1f));
             }
-        }
+        }      
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -124,7 +130,7 @@ public class FlyingAI : AI
         if (collision.gameObject == player)
         {
             player.GetComponent<PlayerController>().TakeDamage(damage);
-            player.GetComponent<PlayerController>().Knockback(xMovementDirection, knockbackPower, knockbackDuration);
+            player.GetComponent<PlayerController>().Knockback(new Vector2(xMovementDirection.x, 0.5f), knockbackPower, knockbackDuration);
             StartCoroutine(MoveOnCollision(0.5f));
             Debug.Log("Collision!");
         }
@@ -133,7 +139,7 @@ public class FlyingAI : AI
     IEnumerator MoveOnCollision(float duration)
     {
         knockedback = true;
-        RB.AddForce(new Vector2(-directionOfMovement * 10, 10), ForceMode2D.Impulse);
+        RB.AddForce(new Vector2(-directionOfMovement * 5, 5), ForceMode2D.Impulse);
         yield return new WaitForSeconds(duration);
         knockedback = false;
     }
@@ -141,9 +147,11 @@ public class FlyingAI : AI
     IEnumerator MoveAroundObstruction(float duration)
     {
         knockedback = true;
-        RB.AddForce(new Vector2(xMovementDirection.x * 2, 0), ForceMode2D.Impulse);
-        Debug.Log("Move cunt");
+        lookingForPlatforms = false;
+        RB.AddForce(new Vector2(xMovementDirection.x * 0.1f, 0), ForceMode2D.Impulse);
+        Debug.Log("Boost around obstacle!");
         yield return new WaitForSeconds(duration);
         knockedback = false;
+        lookingForPlatforms = true;
     }
 }

@@ -37,8 +37,8 @@ public class GroundAI : AI
         // If we are moving to the right...
         if (directionOfMovement == 1)
         {
-            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 1.5f, wallLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.right, Color.yellow);
+            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 2.5f, wallLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2.5f * Vector2.right, Color.yellow);
 
             if (rightWall.collider != null)
             {
@@ -71,8 +71,8 @@ public class GroundAI : AI
         }
         else
         {
-            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 1.5f, wallLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 1.5f * Vector2.left, Color.yellow);
+            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 2.5f, wallLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2.5f * Vector2.left, Color.yellow);
 
             if (leftWall.collider != null)
             {

@@ -71,6 +71,10 @@ public class PlayerController : Character2D
             { 
                 RB.AddForce(movement, ForceMode2D.Impulse);
             }
+            else if (IsGrounded())
+            {
+                RB.velocity = new Vector2(0, RB.velocity.y);
+            }
 
             //xMovement.Normalize();
             //RB.velocity = new Vector2(xMovement * speed, RB.velocity.y);            
