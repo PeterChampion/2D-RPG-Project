@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8613347986703909918}
   - component: {fileID: 8613347986703909917}
-  - component: {fileID: 8613347986703909919}
+  - component: {fileID: 3847992862447097090}
   - component: {fileID: 8613347986703909916}
   - component: {fileID: 8613347986703909912}
   m_Layer: 10
-  m_Name: AI
+  m_Name: AI Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82,7 +82,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8613347986703909919
+--- !u!114 &3847992862447097090
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8613347986703909906}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49b36af63b08a34468abce63696f9b61, type: 3}
+  m_Script: {fileID: 11500000, guid: 90de73618e3cdeb4fbc429aedcbee891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maximumHealth: 100
@@ -103,15 +103,15 @@ MonoBehaviour:
     m_Bits: 256
   attackRange: 2
   damage: 5
-  knockbackPower: 10
-  attackCooldown: 1.5
+  knockbackPower: 5
+  attackCooldown: 1
   armour: 0
   magicResist: 0
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
-  knockbackDuration: 0
-  detectionRange: 8
+  knockbackDuration: 0.5
+  detectionRange: 10
   minimumRange: 2
   rayCastOffset: {x: 1, y: 0}
   jumpCooldown: 1.5
@@ -127,7 +127,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 8613347986703909906}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 486b58bc53017dd4ebf4fdf74a7233a0, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

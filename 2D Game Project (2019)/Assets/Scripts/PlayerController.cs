@@ -36,7 +36,6 @@ public class PlayerController : Character2D
     {
         if (GameManager.instance.IsGamePaused == false)
         {
-            xMovement = (Input.GetAxis("Horizontal"));
             PlayerActions();
             CheckHealth();
             CheckStamina();
@@ -47,6 +46,12 @@ public class PlayerController : Character2D
     private void FixedUpdate()
     {
         PlayerMovement();
+        ClampVelocity();
+    }
+    
+    protected override void ClampVelocity()
+    {
+        RB.velocity = new Vector2(Mathf.Clamp(RB.velocity.x, -8, 8), Mathf.Clamp(RB.velocity.y, -15, 15));
     }
 
     private void PlayerMovement()
@@ -58,20 +63,29 @@ public class PlayerController : Character2D
 
         if (movementEnabled)
         {
+            xMovement = (Input.GetAxis("Horizontal"));
+
+            Vector2 movement = new Vector2(xMovement * speed, 0);
+
+            if (xMovement != 0)
+            { 
+                RB.AddForce(movement, ForceMode2D.Impulse);
+            }
+
             //xMovement.Normalize();
-            RB.velocity = new Vector2(xMovement * speed, RB.velocity.y);
+            //RB.velocity = new Vector2(xMovement * speed, RB.velocity.y);            
             //float xDirection = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
             //transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
 
             if (RB.velocity.x > 0) // Moving Right
             {
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
-                movementDirection = Vector2.right;
+                xMovementDirection = Vector2.right;
             }
             else if (RB.velocity.x < 0) // Moving Left
             {
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
-                movementDirection = Vector2.left;
+                xMovementDirection = Vector2.left;
             }
         }
         else
@@ -90,7 +104,7 @@ public class PlayerController : Character2D
 
     private void PlayerActions()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !knockedback)
         {
             Jump();
         }
@@ -109,7 +123,7 @@ public class PlayerController : Character2D
             Block();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftControl) && !knockedback)
         {
             Dodgeroll();
         }
@@ -240,11 +254,9 @@ public class PlayerController : Character2D
         dodging = true;
         Debug.Log("Start Dodge");
         gameObject.layer = 13;
-        Physics2D.IgnoreLayerCollision(13, 10, true);
-        RB.AddForce(movementDirection * 10f, ForceMode2D.Impulse);
+        RB.AddForce(xMovementDirection * 10f, ForceMode2D.Impulse);
         yield return new WaitForSeconds(duration);
         dodging = false;
-        Physics2D.IgnoreLayerCollision(13, 10, false);
         gameObject.layer = 9;
         Debug.Log("End Dodge");
     }

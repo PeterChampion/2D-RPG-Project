@@ -17,7 +17,7 @@ public abstract class Character2D : MonoBehaviour
     protected bool grounded;
     protected bool knockedback;
     protected Rigidbody2D RB;
-    protected Vector2 movementDirection;
+    protected Vector2 xMovementDirection;
 
     // Combat
     protected float attackDelay;
@@ -32,18 +32,25 @@ public abstract class Character2D : MonoBehaviour
     public int MagicResist { get { return magicResist; } set { magicResist = value; } }
     [SerializeField] private LayerMask enemyLayer = new LayerMask();
     public LayerMask EnemyLayer { get { return enemyLayer; } }
-    [SerializeField] private float knockbackDuration = 0;
+    [SerializeField] protected float knockbackDuration = 0;
+    private int originalLayer = 0;
 
     protected virtual void Awake() // Set References & Variable set up
     {
         RB = GetComponent<Rigidbody2D>();
         currentHealth = maximumHealth;
+        originalLayer = gameObject.layer;
+    }
+    
+    protected virtual void ClampVelocity()
+    {
+        RB.velocity = new Vector2(Mathf.Clamp(RB.velocity.x, -3, 3), Mathf.Clamp(RB.velocity.y, -15, 15));
     }
 
     protected virtual void Attack()
     {
-        Debug.DrawRay(transform.position, movementDirection * attackRange, Color.blue, 0.5f);
-        RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, movementDirection, attackRange, enemyLayer);
+        Debug.DrawRay(transform.position, xMovementDirection * attackRange, Color.blue, 0.5f);
+        RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, xMovementDirection, attackRange, enemyLayer);
         List<RaycastHit2D> beenHits = new List<RaycastHit2D>();
 
         foreach (RaycastHit2D newHit in newHits)
@@ -57,7 +64,7 @@ public abstract class Character2D : MonoBehaviour
             }
             beenHits.Add(newHit);
             newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
-            newHit.collider.GetComponent<Character2D>().Knockback(movementDirection, knockbackPower, knockbackDuration);
+            newHit.collider.GetComponent<Character2D>().Knockback(xMovementDirection, knockbackPower, knockbackDuration);
             Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
         }
     }
@@ -115,10 +122,13 @@ public abstract class Character2D : MonoBehaviour
 
     public IEnumerator KnockBackEffect(Vector2 knockbackDirection, float knockbackStrength, float movementLockoutDuration)
     {
-        knockedback = true;
+        knockedback = true;        
+        gameObject.layer = 13;
+        RB.velocity = new Vector2(0, RB.velocity.y);
         RB.AddForce(knockbackDirection * knockbackStrength, ForceMode2D.Impulse);
         Debug.Log("Knockback force applied!");
         yield return new WaitForSeconds(movementLockoutDuration);
+        gameObject.layer = originalLayer;
         knockedback = false;
     }
 }
