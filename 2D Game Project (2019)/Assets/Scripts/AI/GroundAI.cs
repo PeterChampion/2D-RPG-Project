@@ -32,7 +32,12 @@ public class GroundAI : AI
         if (IsGrounded())
         {
             base.AIMovement();
-        }       
+        }
+
+        if (playerInRange && Mathf.Abs(ydistanceFromPlayer) > 0.5f)
+        {
+            StartCoroutine(JumpWithDelay(0.1f));
+        }
 
         // If we are moving to the right...
         if (directionOfMovement == 1)
@@ -103,5 +108,11 @@ public class GroundAI : AI
                 }
             }
         }
+    }
+
+    IEnumerator JumpWithDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Jump();
     }
 }

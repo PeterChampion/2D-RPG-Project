@@ -7,6 +7,9 @@ public class FlyingAI : AI
     private Vector2 yMovementDirection;
     [SerializeField] private LayerMask platformLayer;
     private bool lookingForPlatforms = true;
+    private bool coroutineRunning = false;
+    private Coroutine flightCoroutine = null;
+    private bool descending = false;
 
     protected override void FixedUpdate()
     {
@@ -15,6 +18,7 @@ public class FlyingAI : AI
             if (playerInRange && Mathf.Abs(xdistanceFromPlayer) < 6)
             {
                 Debug.Log("Descending");
+                descending = true;
                 if (player.transform.position.y > transform.position.y && yMovementDirection != Vector2.up)
                 {
                     yMovementDirection = Vector2.up;
@@ -28,6 +32,7 @@ public class FlyingAI : AI
             }
             else
             {
+                descending = false;
                 yMovementDirection = Vector2.zero;
                 //RB.velocity = new Vector2(RB.velocity.x, 0);
             }
@@ -55,6 +60,23 @@ public class FlyingAI : AI
     protected override void AIMovement()
     {
         base.AIMovement();
+
+        if (!coroutineRunning && !descending)
+        {
+            flightCoroutine = StartCoroutine(UpAndDownFlight(1f));
+        }        
+
+        if (!playerInRange || !descending)
+        {
+            RaycastHit2D ground = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.down, 4f, groundLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 4f * Vector2.down, Color.green);
+
+            if (ground.collider != null)
+            {
+                RB.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
+                Debug.Log("Ground below, BOOST");
+            }
+        }
 
         if (lookingForPlatforms)
         {
@@ -101,7 +123,7 @@ public class FlyingAI : AI
                     }
                 }
             }
-        }        
+        }  
 
         if (ydistanceFromPlayer >= 0.2)
         {
@@ -153,5 +175,23 @@ public class FlyingAI : AI
         yield return new WaitForSeconds(duration);
         knockedback = false;
         lookingForPlatforms = true;
+    }
+
+    IEnumerator UpAndDownFlight(float alternatingDelay)
+    {
+        coroutineRunning = true;
+        RB.AddForce(new Vector2(0, 1f), ForceMode2D.Impulse);
+        Debug.Log("Up");
+
+        yield return new WaitForSeconds(alternatingDelay);
+
+        RB.velocity = new Vector2(RB.velocity.x, 0);
+        RB.AddForce(new Vector2(0, -1f), ForceMode2D.Impulse);
+        Debug.Log("Down");
+
+        yield return new WaitForSeconds(alternatingDelay);
+
+        RB.velocity = new Vector2(RB.velocity.x, 0);
+        coroutineRunning = false;
     }
 }
