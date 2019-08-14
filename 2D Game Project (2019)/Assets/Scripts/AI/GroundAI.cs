@@ -12,7 +12,7 @@ public class GroundAI : AI
 
     protected override void Attack()
     {
-        if (xdistanceFromPlayer < attackRange && ydistanceFromPlayer < attackRange)
+        if (Mathf.Abs(xDistanceFromPlayer) < attackRange && Mathf.Abs(yDistanceFromPlayer) < attackRange)
         {
             if (Time.time > attackDelay)
             {
@@ -34,9 +34,9 @@ public class GroundAI : AI
             base.AIMovement();
         }
 
-        if (playerInRange && Mathf.Abs(ydistanceFromPlayer) > 0.5f)
+        if (playerInRange && Mathf.Abs(yDistanceFromPlayer) > 0.5f && Mathf.Abs(xDistanceFromPlayer) < attackRange)
         {
-            StartCoroutine(JumpWithDelay(0.1f));
+            StartCoroutine(JumpWithDelay(0.2f));
         }
 
         // If we are moving to the right...
@@ -47,12 +47,12 @@ public class GroundAI : AI
 
             if (rightWall.collider != null)
             {
-                if (!playerInRange && IsGrounded())
+                if (!playerInRange && !setToPatrol && IsGrounded())
                 {
                     directionOfMovement = -1;
                     Debug.Log("Turn Around, I hit a wall RIGHT");
                 }
-                else if (xdistanceFromPlayer > minimumRange)
+                else if (Mathf.Abs(xDistanceFromPlayer) > minimumRange)
                 {
                     Jump();
                 }
@@ -81,12 +81,12 @@ public class GroundAI : AI
 
             if (leftWall.collider != null)
             {
-                if (!playerInRange && IsGrounded())
+                if (!playerInRange && !setToPatrol && IsGrounded())
                 {
                     directionOfMovement = 1;
                     Debug.Log("Turn Around, I hit a wall LEFT");
                 }
-                else if (xdistanceFromPlayer * -1 > minimumRange)
+                else if (Mathf.Abs(xDistanceFromPlayer) > minimumRange)
                 {
                     Jump();
                 }

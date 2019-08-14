@@ -10,14 +10,17 @@ public abstract class AI : Character2D
     protected GameObject player;
     [SerializeField] protected int detectionRange = 5;
     [SerializeField] protected int minimumRange = 2;
-    protected float xdistanceFromPlayer;
-    protected float ydistanceFromPlayer;
+    protected float xDistanceFromPlayer;
+    protected float yDistanceFromPlayer;
     [SerializeField] protected Vector2 rayCastOffset = new Vector2(1,0);
     [SerializeField] protected float jumpCooldown = 1.5f;
     protected float jumpDelay = 0;
     protected bool playerInRange = false;
     protected int directionOfMovement = -1;
     [SerializeField] protected LayerMask wallLayer = new LayerMask();
+    [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
+    private int patrolpointIndex = 0;
+    [SerializeField] protected bool setToPatrol = false;
     
     protected override void Awake()
     {
@@ -58,7 +61,7 @@ public abstract class AI : Character2D
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
             }
 
-            if (Mathf.Abs(xdistanceFromPlayer) < minimumRange && IsGrounded())
+            if (Mathf.Abs(xDistanceFromPlayer) < minimumRange && Mathf.Abs(yDistanceFromPlayer) < minimumRange && IsGrounded())
             {
                 RB.velocity = new Vector2(0, RB.velocity.y);
             }
@@ -72,22 +75,27 @@ public abstract class AI : Character2D
 
     protected virtual void AIMovement()
     {
-        xdistanceFromPlayer = player.transform.position.x - transform.position.x; // Calculate distance on X axis
-        ydistanceFromPlayer = player.transform.position.y - transform.position.y; // Calculate distance on Y axis
+        xDistanceFromPlayer = player.transform.position.x - transform.position.x; // Calculate distance on X axis
+        yDistanceFromPlayer = player.transform.position.y - transform.position.y; // Calculate distance on Y axis
 
         // If the player is within the detection range...
-        if (Mathf.Abs(xdistanceFromPlayer) < detectionRange && Mathf.Abs(ydistanceFromPlayer) < detectionRange)
+        if (Mathf.Abs(xDistanceFromPlayer) < detectionRange && Mathf.Abs(yDistanceFromPlayer) < detectionRange)
         {
             playerInRange = true;
+            Debug.Log("PLAYER IN RANGE");
         }
         else // Otherwise if the player is not...
         {
             playerInRange = false;
+            if (setToPatrol)
+            {
+                Patrol();
+            }
         }
 
         if (playerInRange)
         {
-            if (xdistanceFromPlayer < 0)
+            if (xDistanceFromPlayer < 0)
             {
                 directionOfMovement = -1; // Player is on the left so set directionOfMovement to match
                 //RB.velocity = new Vector2(0, RB.velocity.y);
@@ -111,5 +119,49 @@ public abstract class AI : Character2D
                 RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
             }
         }
+    }
+
+    private void Patrol()
+    {
+        // If player is not in range, and we are set to patrol, then we patrol between points.
+        // Look at current index of list
+        // Compare x positions to determine direction to travel to
+        // Once difference between x positions is negligible, increment index
+        // If index would exceed List, wrap back to 0.
+        // Repeat
+
+        float xDistanceFromPoint = patrolPoints[patrolpointIndex].position.x - transform.position.x;
+
+        Debug.Log(patrolpointIndex);
+
+        if (Mathf.Abs(xDistanceFromPoint) < 1)
+        {
+            Debug.Log("Patrol point reached");
+            if (patrolpointIndex + 1 > patrolPoints.Count - 1)
+            {
+                patrolpointIndex = 0;
+                Debug.Log("Reset patrol index");
+            }
+            else
+            {
+                patrolpointIndex++;
+                Debug.Log("Increment patrol index");
+            }
+        }
+
+        if (xDistanceFromPoint < 0)
+        {
+            directionOfMovement = -1; // Point is on the left so set directionOfMovement to match
+        }
+        else
+        {
+            directionOfMovement = 1; // Point is on the right so set directionOfMovement to match
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
     }
 }

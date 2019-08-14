@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TBD
 public class FlyingAI : AI
 {
     private Vector2 yMovementDirection;
@@ -15,7 +16,7 @@ public class FlyingAI : AI
     {
         if (!knockedback)
         {
-            if (playerInRange && Mathf.Abs(xdistanceFromPlayer) < 6)
+            if (playerInRange && Mathf.Abs(xDistanceFromPlayer) < 6)
             {
                 Debug.Log("Descending");
                 descending = true;
@@ -125,7 +126,7 @@ public class FlyingAI : AI
             }
         }  
 
-        if (ydistanceFromPlayer >= 0.2)
+        if (yDistanceFromPlayer >= 0.2)
         {
             RaycastHit2D abovePlatform = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.up, 2f, platformLayer);
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2f * Vector2.up, Color.yellow);
@@ -135,7 +136,7 @@ public class FlyingAI : AI
                 StartCoroutine(MoveAroundObstruction(1f));
             }
         }
-        else if (ydistanceFromPlayer <= -0.2)
+        else if (yDistanceFromPlayer <= -0.2)
         {
             RaycastHit2D belowPlatform = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.down, 2f, platformLayer);
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2f * Vector2.down, Color.yellow);

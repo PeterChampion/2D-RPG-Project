@@ -16,6 +16,8 @@ public class PlayerController : Character2D
     public bool dodging;
     private List<Collider2D> ignoredColliders = new List<Collider2D>();
     private float xMovement;
+    private float jumpDelay;
+    private float jumpCooldown = 0.5f;
     [SerializeField] private LayerMask wallLayer = new LayerMask();
 
     // Stamina Recovery
@@ -108,8 +110,9 @@ public class PlayerController : Character2D
 
     private void PlayerActions()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !knockedback)
+        if (Input.GetKeyDown(KeyCode.Space) && !knockedback && Time.time > jumpDelay)
         {
+            jumpDelay = Time.time + jumpCooldown;
             Jump();
         }
 
