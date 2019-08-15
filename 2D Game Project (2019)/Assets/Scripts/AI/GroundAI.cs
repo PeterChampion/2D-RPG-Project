@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GroundAI : AI
 {
+    private enum NPCType { Melee, Ranged }
+    [SerializeField] private NPCType attackType;
+    [SerializeField] private GameObject projectile;
+
     protected override void Update()
     {
         base.Update();
@@ -17,7 +21,19 @@ public class GroundAI : AI
             if (Time.time > attackDelay)
             {
                 attackDelay = (Time.time + attackCooldown);
-                base.Attack();
+
+                if (attackType == NPCType.Melee)
+                {
+                    base.Attack();
+                }
+                else
+                {
+                    GameObject projectileFired = Instantiate(projectile, transform.position + new Vector3(directionOfMovement, 0, 0), Quaternion.identity);
+                    projectileFired.GetComponent<Projectile>().DamageValue = damage;
+                    projectileFired.GetComponent<Projectile>().DirectionOfFlight = xMovementDirection;
+                    projectileFired.GetComponent<Projectile>().KnockbackDuration = knockbackDuration;
+                    projectileFired.GetComponent<Projectile>().KnockbackPower = knockbackPower;
+                }
             }
         }
     }
