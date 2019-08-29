@@ -21,7 +21,7 @@ public abstract class AI : Character2D
     [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
     private int patrolpointIndex = 0;
     [SerializeField] protected bool setToPatrol = false;
-    
+
     protected override void Awake()
     {
         base.Awake();
@@ -130,33 +130,36 @@ public abstract class AI : Character2D
         // If index would exceed List, wrap back to 0.
         // Repeat
 
-        float xDistanceFromPoint = patrolPoints[patrolpointIndex].position.x - transform.position.x;
-
-        Debug.Log(patrolpointIndex);
-
-        if (Mathf.Abs(xDistanceFromPoint) < 1)
+        if (patrolPoints.Count > 0)
         {
-            Debug.Log("Patrol point reached");
-            if (patrolpointIndex + 1 > patrolPoints.Count - 1)
+            float xDistanceFromPoint = patrolPoints[patrolpointIndex].position.x - transform.position.x;
+
+            Debug.Log(patrolpointIndex);
+
+            if (Mathf.Abs(xDistanceFromPoint) < 1)
             {
-                patrolpointIndex = 0;
-                Debug.Log("Reset patrol index");
+                Debug.Log("Patrol point reached");
+                if (patrolpointIndex + 1 > patrolPoints.Count - 1)
+                {
+                    patrolpointIndex = 0;
+                    Debug.Log("Reset patrol index");
+                }
+                else
+                {
+                    patrolpointIndex++;
+                    Debug.Log("Increment patrol index");
+                }
+            }
+
+            if (xDistanceFromPoint < 0)
+            {
+                directionOfMovement = -1; // Point is on the left so set directionOfMovement to match
             }
             else
             {
-                patrolpointIndex++;
-                Debug.Log("Increment patrol index");
+                directionOfMovement = 1; // Point is on the right so set directionOfMovement to match
             }
-        }
-
-        if (xDistanceFromPoint < 0)
-        {
-            directionOfMovement = -1; // Point is on the left so set directionOfMovement to match
-        }
-        else
-        {
-            directionOfMovement = 1; // Point is on the right so set directionOfMovement to match
-        }
+        }        
     }
 
     private void OnDrawGizmosSelected()
