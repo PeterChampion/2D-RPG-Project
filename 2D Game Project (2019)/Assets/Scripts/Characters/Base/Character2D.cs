@@ -17,6 +17,7 @@ public abstract class Character2D : MonoBehaviour
     protected bool grounded;
     protected bool knockedback;
     protected Rigidbody2D RB;
+    public Rigidbody2D RigidBody { get { return RB; } }
     protected Vector2 xMovementDirection;
 
     // Combat
@@ -130,7 +131,6 @@ public abstract class Character2D : MonoBehaviour
         gameObject.layer = 13;
         RB.velocity = new Vector2(0, RB.velocity.y);
         RB.AddForce(knockbackDirection * knockbackStrength, ForceMode2D.Impulse);
-        Debug.Log("Knockback force applied!");
         yield return new WaitForSeconds(movementLockoutDuration);
         gameObject.layer = originalLayer;
         knockedback = false;

@@ -6,13 +6,9 @@ public class Projectile : MonoBehaviour
 {
     private Rigidbody2D RB;
     private int damageValue = 0;
-    public int DamageValue { get { return damageValue; } set { damageValue = value; } }
     private Vector2 directionOfFlight;
-    public Vector2 DirectionOfFlight { get { return directionOfFlight; } set { directionOfFlight = value; } }
     private float knockbackPower = 0;
-    public float KnockbackPower { get { return knockbackPower; } set { knockbackPower = value; } }
     private float knockbackDuration = 0;
-    public float KnockbackDuration { get { return knockbackDuration; } set { knockbackDuration = value; } }
 
     private void Awake()
     {
@@ -27,6 +23,15 @@ public class Projectile : MonoBehaviour
         RB.AddForce(directionOfFlight * 10, ForceMode2D.Impulse);
 
         Destroy(gameObject, 5);
+    }
+
+    public void AssignValues(int _damage, Vector2 _direction, float _knockbackPower, float _knockbackDuration)
+    {
+        damageValue = _damage;
+        directionOfFlight = _direction;
+        knockbackPower = _knockbackPower;
+        knockbackDuration = _knockbackDuration;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

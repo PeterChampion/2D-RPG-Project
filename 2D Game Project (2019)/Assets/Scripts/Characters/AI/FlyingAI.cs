@@ -18,7 +18,6 @@ public class FlyingAI : AI
         {
             if (playerInRange && Mathf.Abs(xDistanceFromPlayer) < 6)
             {
-                Debug.Log("Descending");
                 descending = true;
                 if (player.transform.position.y > transform.position.y && yMovementDirection != Vector2.up)
                 {
@@ -75,7 +74,6 @@ public class FlyingAI : AI
             if (ground.collider != null)
             {
                 RB.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
-                Debug.Log("Ground below, BOOST");
             }
         }
 
@@ -114,13 +112,11 @@ public class FlyingAI : AI
                     {
                         directionOfMovement = 1;
                         RB.velocity = new Vector2(RB.velocity.x / 2, RB.velocity.y);
-                        Debug.Log("Turn Around, I hit a wall LEFT");
                     }
                     else
                     {
                         // Boost upwards
                         RB.AddForce(new Vector2(0, 3), ForceMode2D.Impulse);
-                        Debug.Log("Upwards boost applied");
                     }
                 }
             }
@@ -172,7 +168,6 @@ public class FlyingAI : AI
         knockedback = true;
         lookingForPlatforms = false;
         RB.AddForce(new Vector2(xMovementDirection.x * 0.1f, 0), ForceMode2D.Impulse);
-        Debug.Log("Boost around obstacle!");
         yield return new WaitForSeconds(duration);
         knockedback = false;
         lookingForPlatforms = true;
@@ -182,13 +177,11 @@ public class FlyingAI : AI
     {
         coroutineRunning = true;
         RB.AddForce(new Vector2(0, 1f), ForceMode2D.Impulse);
-        Debug.Log("Up");
 
         yield return new WaitForSeconds(alternatingDelay);
 
         RB.velocity = new Vector2(RB.velocity.x, 0);
         RB.AddForce(new Vector2(0, -1f), ForceMode2D.Impulse);
-        Debug.Log("Down");
 
         yield return new WaitForSeconds(alternatingDelay);
 

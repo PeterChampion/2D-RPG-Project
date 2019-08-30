@@ -82,7 +82,6 @@ public abstract class AI : Character2D
         if (Mathf.Abs(xDistanceFromPlayer) < detectionRange && Mathf.Abs(yDistanceFromPlayer) < detectionRange)
         {
             playerInRange = true;
-            Debug.Log("PLAYER IN RANGE");
         }
         else // Otherwise if the player is not...
         {
@@ -115,7 +114,6 @@ public abstract class AI : Character2D
             if (IsGrounded())
             {
                 jumpDelay = Time.time + jumpCooldown;
-                Debug.Log("Jump");
                 RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
             }
         }
@@ -134,20 +132,15 @@ public abstract class AI : Character2D
         {
             float xDistanceFromPoint = patrolPoints[patrolpointIndex].position.x - transform.position.x;
 
-            Debug.Log(patrolpointIndex);
-
             if (Mathf.Abs(xDistanceFromPoint) < 1)
             {
-                Debug.Log("Patrol point reached");
                 if (patrolpointIndex + 1 > patrolPoints.Count - 1)
                 {
                     patrolpointIndex = 0;
-                    Debug.Log("Reset patrol index");
                 }
                 else
                 {
                     patrolpointIndex++;
-                    Debug.Log("Increment patrol index");
                 }
             }
 

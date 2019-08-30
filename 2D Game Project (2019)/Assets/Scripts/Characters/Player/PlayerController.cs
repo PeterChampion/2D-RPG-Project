@@ -9,16 +9,20 @@ public class PlayerController : Character2D
     [SerializeField] private int maximumStamina = 100;
     [SerializeField] private float currentStamina = 100;
 
-    // Movement + Dodge
+    // Movement / Dodge / GrapplingHook
     private bool movementEnabled = true;
     private float dodgeDelay;
     private float dodgeCooldown = 1;
     public bool dodging;
-    private List<Collider2D> ignoredColliders = new List<Collider2D>();
     private float xMovement;
     private float jumpDelay;
     private float jumpCooldown = 0.5f;
     [SerializeField] private LayerMask wallLayer = new LayerMask();
+    public DistanceJoint2D hookJoint;
+    public GameObject grapplingHook;
+    private float grapplingHookDelay;
+    private float grapplingHookCooldown = 0.5f;
+    private Coroutine HookCoroutine;
 
     // Stamina Recovery
     private bool recoverStamina = false;
@@ -32,7 +36,10 @@ public class PlayerController : Character2D
     {
         base.Awake();
         RB.gravityScale = 2;
+        hookJoint = GetComponent<DistanceJoint2D>();
+        hookJoint.enabled = false;
         Physics2D.IgnoreLayerCollision(9, 11, true); // Ignore collision with items layer
+        Physics2D.IgnoreLayerCollision(9, 15, true); // Ignore collision with hook layer
     }
     void Update()
     {
@@ -120,7 +127,7 @@ public class PlayerController : Character2D
         {
             if (Time.time > attackDelay)
             {
-                attackDelay = (Time.time + attackCooldown);
+                attackDelay = Time.time + attackCooldown;
                 Attack();
             }
         }
@@ -133,6 +140,62 @@ public class PlayerController : Character2D
         if (Input.GetKeyDown(KeyCode.LeftControl) && !knockedback)
         {
             Dodgeroll();
+        }
+
+        if (Input.GetMouseButtonDown(2))
+        { 
+            if (grapplingHook.activeSelf && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
+            {
+                grapplingHook.SetActive(false);
+                grapplingHook.GetComponent<GrapplingHook>().line.enabled = false;
+                grapplingHookDelay = Time.time;
+            }
+            else if (Time.time > grapplingHookDelay)
+            {
+                grapplingHookDelay = Time.time + grapplingHookCooldown;
+
+                if (!grapplingHook.activeSelf)
+                {
+                    if (HookCoroutine != null)
+                    {
+                        print("Stopping coroutine");
+                        StopCoroutine(HookCoroutine);
+                    }
+                    HookCoroutine = StartCoroutine(FireHook());
+                    print("Starting coroutine");
+                }
+            }            
+        }
+    }
+
+    private IEnumerator FireHook()
+    {
+        print("BEGIN");
+        grapplingHook.GetComponent<Rigidbody2D>().isKinematic = false;
+        grapplingHook.SetActive(true);
+        grapplingHook.transform.position = transform.position; // remove?        
+        grapplingHook.GetComponent<SpriteRenderer>().enabled = true;
+        grapplingHook.transform.parent = null;
+        grapplingHook.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        if (!IsGrounded())
+        {
+            grapplingHook.GetComponent<Rigidbody2D>().AddForce(new Vector2(xMovementDirection.x, 0.5f) * 20, ForceMode2D.Impulse);
+        }
+        else
+        {
+            grapplingHook.GetComponent<Rigidbody2D>().AddForce(xMovementDirection * 20, ForceMode2D.Impulse);
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        if (!grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
+        {
+            print("END");
+            grapplingHook.GetComponent<Rigidbody2D>().isKinematic = true;
+            grapplingHook.transform.parent = transform;
+            grapplingHook.GetComponent<SpriteRenderer>().enabled = false;
+            grapplingHook.transform.position = transform.position;
+            grapplingHook.SetActive(false);
         }
     }
 

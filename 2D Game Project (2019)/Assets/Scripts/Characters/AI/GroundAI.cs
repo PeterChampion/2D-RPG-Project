@@ -29,10 +29,7 @@ public class GroundAI : AI
                 else
                 {
                     GameObject projectileFired = Instantiate(projectile, transform.position + new Vector3(directionOfMovement, 0, 0), Quaternion.identity);
-                    projectileFired.GetComponent<Projectile>().DamageValue = damage;
-                    projectileFired.GetComponent<Projectile>().DirectionOfFlight = xMovementDirection;
-                    projectileFired.GetComponent<Projectile>().KnockbackDuration = knockbackDuration;
-                    projectileFired.GetComponent<Projectile>().KnockbackPower = knockbackPower;
+                    projectileFired.GetComponent<Projectile>().AssignValues(damage, xMovementDirection, knockbackPower, knockbackDuration);
                 }
             }
         }
