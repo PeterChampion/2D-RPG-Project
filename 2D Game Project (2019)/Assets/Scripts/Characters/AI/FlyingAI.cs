@@ -14,7 +14,7 @@ public class FlyingAI : AI
 
     protected override void FixedUpdate()
     {
-        if (!knockedback)
+        if (!Stunned)
         {
             if (playerInRange && Mathf.Abs(xDistanceFromPlayer) < 6)
             {
@@ -68,7 +68,7 @@ public class FlyingAI : AI
 
         if (!playerInRange || !descending)
         {
-            RaycastHit2D ground = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.down, 4f, groundLayer);
+            RaycastHit2D ground = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.down, 4f, jumpableLayers);
             Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 4f * Vector2.down, Color.green);
 
             if (ground.collider != null)
@@ -157,19 +157,19 @@ public class FlyingAI : AI
 
     IEnumerator MoveOnCollision(float duration)
     {
-        knockedback = true;
+        Stunned = true;
         RB.AddForce(new Vector2(-directionOfMovement * 5, 5), ForceMode2D.Impulse);
         yield return new WaitForSeconds(duration);
-        knockedback = false;
+        Stunned = false;
     }
 
     IEnumerator MoveAroundObstruction(float duration)
     {
-        knockedback = true;
+        Stunned = true;
         lookingForPlatforms = false;
         RB.AddForce(new Vector2(xMovementDirection.x * 0.1f, 0), ForceMode2D.Impulse);
         yield return new WaitForSeconds(duration);
-        knockedback = false;
+        Stunned = false;
         lookingForPlatforms = true;
     }
 

@@ -13,9 +13,8 @@ public abstract class Character2D : MonoBehaviour
     [SerializeField] protected int speed = 5;
     [SerializeField] protected int jumpStrength = 8;
     [SerializeField] protected float jumpRaycastLength = 1;
-    [SerializeField] protected LayerMask groundLayer;
+    [SerializeField] protected LayerMask jumpableLayers;
     protected bool grounded;
-    protected bool knockedback;
     protected Rigidbody2D RB;
     public Rigidbody2D RigidBody { get { return RB; } }
     protected Vector2 xMovementDirection;
@@ -35,6 +34,9 @@ public abstract class Character2D : MonoBehaviour
     public LayerMask EnemyLayer { get { return enemyLayer; } }
     [SerializeField] protected float knockbackDuration = 0;
     private int originalLayer = 0;
+    private bool stunned;
+    public bool Stunned { get { return stunned; } set { stunned = value; } }
+    [SerializeField] GameObject attackArea;
 
     protected virtual void Awake() // Set References & Variable set up
     {
@@ -54,24 +56,26 @@ public abstract class Character2D : MonoBehaviour
 
     protected virtual void Attack()
     {
-        Debug.DrawRay(transform.position, xMovementDirection * attackRange, Color.blue, 0.5f);
-        RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, xMovementDirection, attackRange, enemyLayer);
-        List<RaycastHit2D> beenHits = new List<RaycastHit2D>();
+        Instantiate(attackArea, (Vector2)transform.position + xMovementDirection, Quaternion.identity, transform);
 
-        foreach (RaycastHit2D newHit in newHits)
-        {
-            foreach (RaycastHit2D beenHit in beenHits)
-            {
-                if (newHit == beenHit)
-                {
-                    break;
-                }
-            }
-            beenHits.Add(newHit);
-            newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
-            newHit.collider.GetComponent<Character2D>().Knockback(new Vector2(xMovementDirection.x, 0.5f), knockbackPower, knockbackDuration);
-            Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
-        }
+        //Debug.DrawRay(transform.position, xMovementDirection * attackRange, Color.blue, 0.5f);
+        //RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, xMovementDirection, attackRange, enemyLayer);
+        //List<RaycastHit2D> beenHits = new List<RaycastHit2D>();
+
+        //foreach (RaycastHit2D newHit in newHits)
+        //{
+        //    foreach (RaycastHit2D beenHit in beenHits)
+        //    {
+        //        if (newHit == beenHit)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    beenHits.Add(newHit);
+        //    newHit.collider.GetComponent<Character2D>().TakeDamage(damage);
+        //    newHit.collider.GetComponent<Character2D>().Knockback(new Vector2(xMovementDirection.x, 0.5f), knockbackPower, knockbackDuration);
+        //    Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
+        //}
     }
 
     public virtual void TakeDamage(int damageValue)
@@ -106,7 +110,7 @@ public abstract class Character2D : MonoBehaviour
     }
     protected virtual bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, jumpableLayers);
         Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
 
         if (hit.collider != null)
@@ -127,12 +131,40 @@ public abstract class Character2D : MonoBehaviour
 
     public IEnumerator KnockBackEffect(Vector2 knockbackDirection, float knockbackStrength, float movementLockoutDuration)
     {
-        knockedback = true;        
+        Stunned = true;        
         gameObject.layer = 13;
         RB.velocity = new Vector2(0, RB.velocity.y);
         RB.AddForce(knockbackDirection * knockbackStrength, ForceMode2D.Impulse);
+
         yield return new WaitForSeconds(movementLockoutDuration);
+
         gameObject.layer = originalLayer;
-        knockedback = false;
+        Stunned = false;
+    }
+
+    public void ApplyStunEffect(float stunDuration)
+    {
+        StartCoroutine(StunEffect(stunDuration));
+    }
+
+    private IEnumerator StunEffect(float stunDuration)
+    {
+        print("Stun starting...");
+        Stunned = true;
+        yield return new WaitForSeconds(stunDuration);
+        Stunned = false;
+        print("Stun ending...");
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        GameObject collidedObject = collision.gameObject;
+
+        if (collidedObject.layer == 16) // If attack layer...
+        {
+            AttackArea attackArea = collidedObject.GetComponent<AttackArea>();
+            TakeDamage(attackArea.Damage);
+            Knockback(new Vector2(attackArea.KnockbackDirection.x, 0.5f), attackArea.KnockbackPower, attackArea.KnockbackDuration);
+        }
     }
 }

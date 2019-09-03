@@ -33,10 +33,10 @@ public abstract class AI : Character2D
     {
         AIMovement();
         CheckHealth();
-        if (!knockedback)
+        if (!Stunned)
         {
             ClampVelocity();
-        }        
+        }
     }
 
     protected virtual void FixedUpdate()
@@ -46,7 +46,7 @@ public abstract class AI : Character2D
         // If we ARE NOT in minimum range and ARE NOT on the ground = chase
         // If we ARE in minimum range and ARE NOT on the ground = chase
 
-        if (!knockedback)
+        if (!Stunned)
         {
             if (directionOfMovement == 1) // Right
             {
@@ -162,5 +162,14 @@ public abstract class AI : Character2D
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    public void ApplyDirectionalForce(Vector2 direction, float force)
+    {
+        RB.velocity = Vector2.zero;
+        //transform.position = Vector2.Lerp(transform.position, player.transform.Find("PullPoint").transform.position, 20);
+
+        RB.AddForce(direction * (force / 2), ForceMode2D.Impulse);
+        print("Applying directional force!");
     }
 }

@@ -63,7 +63,6 @@ public class GroundAI : AI
                 if (!playerInRange && !setToPatrol && IsGrounded())
                 {
                     directionOfMovement = -1;
-                    Debug.Log("Turn Around, I hit a wall RIGHT");
                 }
                 else if (Mathf.Abs(xDistanceFromPlayer) > minimumRange)
                 {
@@ -71,7 +70,7 @@ public class GroundAI : AI
                 }
             }
 
-            RaycastHit2D rightLedge = Physics2D.Raycast(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), Vector2.down, 1f, groundLayer);
+            RaycastHit2D rightLedge = Physics2D.Raycast(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), Vector2.down, 1f, jumpableLayers);
             Debug.DrawRay(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), 1f * Vector2.down, Color.yellow);
 
             if (rightLedge.collider == null)
@@ -83,7 +82,6 @@ public class GroundAI : AI
                 else if (IsGrounded())
                 {
                     directionOfMovement = -1;
-                    Debug.Log("Turn Around, no ground ahead RIGHT");
                 }
             }
         }
@@ -97,7 +95,6 @@ public class GroundAI : AI
                 if (!playerInRange && !setToPatrol && IsGrounded())
                 {
                     directionOfMovement = 1;
-                    Debug.Log("Turn Around, I hit a wall LEFT");
                 }
                 else if (Mathf.Abs(xDistanceFromPlayer) > minimumRange)
                 {
@@ -105,7 +102,7 @@ public class GroundAI : AI
                 }
             }
 
-            RaycastHit2D leftLedge = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), Vector2.down, 1f, groundLayer);
+            RaycastHit2D leftLedge = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), Vector2.down, 1f, jumpableLayers);
             Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), 1f * Vector2.down, Color.yellow);
 
             if (leftLedge.collider == null)
@@ -117,7 +114,6 @@ public class GroundAI : AI
                 else if (IsGrounded())
                 {
                     directionOfMovement = 1;
-                    Debug.Log("Turn Around, no ground ahead LEFT");
                 }
             }
         }

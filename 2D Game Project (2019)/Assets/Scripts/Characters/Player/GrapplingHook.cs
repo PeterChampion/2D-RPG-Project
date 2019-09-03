@@ -9,26 +9,33 @@ public class GrapplingHook : MonoBehaviour
     [SerializeField] private Vector2 direction;
     private Rigidbody2D RB;
     [SerializeField] public LineRenderer line;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         player = FindObjectOfType<PlayerController>();
         RB = GetComponent<Rigidbody2D>();
-        line.enabled = false;
+        line.enabled = true;
+        spriteRenderer = GetComponent<SpriteRenderer>();
         Physics2D.IgnoreLayerCollision(15, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(15, 15, true); // Ignore collision with hook layer
     }
 
-    private void Update()
+    private void Start()
     {
-        if (RB.isKinematic)
-        {
-            line.SetPosition(0, player.transform.position);
-            line.SetPosition(1, transform.position);            
+        gameObject.SetActive(false);
+    }
 
+    private void LateUpdate()
+    {
+        line.SetPosition(0, player.transform.position);
+        line.SetPosition(1, transform.position);
+
+        if (RB.isKinematic)
+        {        
             if (player.hookJoint.distance > 1)
             {
-                player.hookJoint.distance -= 0.1f;
+                player.hookJoint.distance -= 0.2f;
             }
             else
             {
@@ -38,22 +45,67 @@ public class GrapplingHook : MonoBehaviour
         }
     }
 
-    public void FireHook(Vector2 direction)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        RB.AddForce(direction * force, ForceMode2D.Impulse);
+        GameObject collidedObject = collision.gameObject;
+        // If enemy layer...
+        if (collidedObject.layer == 10)
+        {
+            print("Enemy hit!");
+            collidedObject.GetComponent<AI>().ApplyStunEffect(1.5f);
+            collidedObject.GetComponent<AI>().ApplyDirectionalForce(-direction, force);
+            //collidedObject.GetComponent<Rigidbody2D>().AddForce(-direction * force, ForceMode2D.Impulse);
+            ToggleActiveState();
+        }
+        else
+        {
+            RB.isKinematic = true;
+            RB.velocity = Vector2.zero;
+            player.hookJoint.enabled = true;
+            player.hookJoint.connectedBody = RB;
+            player.hookJoint.distance = Vector2.Distance(transform.position, player.transform.position);
+        }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void ToggleActiveState()
     {
-        Debug.Log("Hook landed!");
-        RB.isKinematic = true;
-        line.enabled = true;
-        RB.velocity = Vector2.zero;
-        player.hookJoint.enabled = true;
-        player.hookJoint.connectedBody = RB;
-        player.hookJoint.distance = Vector2.Distance(transform.position, player.transform.position);
+        if (gameObject.activeSelf)
+        {
+            line.enabled = false;
+            RB.isKinematic = true;
+            spriteRenderer.enabled = false;
+            transform.position = player.transform.position;
+            player.hookJoint.enabled = false;
+            gameObject.SetActive(false);            
+        }
+        else
+        {
+            line.enabled = true;
+            RB.isKinematic = false;
+            spriteRenderer.enabled = true;
+            transform.position = player.transform.position;
+            RB.velocity = Vector2.zero;
+            gameObject.SetActive(true);
+        }
+    }
 
-        line.SetPosition(0, player.transform.position);
-        line.SetPosition(1, transform.position);
-    }    
+    public void JumpShot(Vector2 xDirection)
+    {
+        direction = xDirection;
+        RB.AddForce(new Vector2(xDirection.x, 0.5f) * 20, ForceMode2D.Impulse);
+    }
+
+    public void StandardShot(Vector2 xDirection)
+    {
+        direction = xDirection;
+        RB.AddForce(xDirection * 20, ForceMode2D.Impulse);
+    }
+
+    public void CollisionCheck()
+    {
+        if (!RB.isKinematic)
+        {
+            ToggleActiveState();
+        }
+    }
 }

@@ -17,12 +17,12 @@ public class PlayerController : Character2D
     private float xMovement;
     private float jumpDelay;
     private float jumpCooldown = 0.5f;
-    [SerializeField] private LayerMask wallLayer = new LayerMask();
     public DistanceJoint2D hookJoint;
-    public GameObject grapplingHook;
+    private GrapplingHook grapplingHook;
     private float grapplingHookDelay;
     private float grapplingHookCooldown = 0.5f;
     private Coroutine HookCoroutine;
+    private bool grappeling;
 
     // Stamina Recovery
     private bool recoverStamina = false;
@@ -38,17 +38,31 @@ public class PlayerController : Character2D
         RB.gravityScale = 2;
         hookJoint = GetComponent<DistanceJoint2D>();
         hookJoint.enabled = false;
+        grapplingHook = FindObjectOfType<GrapplingHook>();
         Physics2D.IgnoreLayerCollision(9, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(9, 15, true); // Ignore collision with hook layer
     }
     void Update()
     {
-        if (GameManager.instance.IsGamePaused == false)
+        if (!GameManager.instance.IsGamePaused)
         {
-            PlayerActions();
             CheckHealth();
             CheckStamina();
             StaminaRecovery();
+
+            if (!Stunned)
+            {
+                PlayerActions();
+            }
+        }
+
+        if (hookJoint.enabled)
+        {
+            grappeling = true;
+        }
+        else
+        {
+            grappeling = false;
         }
     }
 
@@ -65,7 +79,7 @@ public class PlayerController : Character2D
 
     private void PlayerMovement()
     {
-        if (knockedback || dodging)
+        if (Stunned || dodging)
         {
             movementEnabled = false;
         }
@@ -107,7 +121,7 @@ public class PlayerController : Character2D
             {
                 stunduration = Time.time + stunCooldown;
 
-                if (IsGrounded() && (!knockedback || !dodging))
+                if (IsGrounded() && (!Stunned || !dodging))
                 {
                     movementEnabled = true;
                 }
@@ -117,7 +131,7 @@ public class PlayerController : Character2D
 
     private void PlayerActions()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !knockedback && Time.time > jumpDelay)
+        if (Input.GetKeyDown(KeyCode.Space) && !Stunned && Time.time > jumpDelay)
         {
             jumpDelay = Time.time + jumpCooldown;
             Jump();
@@ -137,66 +151,54 @@ public class PlayerController : Character2D
             Block();
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl) && !knockedback)
+        if (Input.GetKeyDown(KeyCode.LeftControl) && !Stunned)
         {
             Dodgeroll();
         }
-
+        
         if (Input.GetMouseButtonDown(2))
         { 
-            if (grapplingHook.activeSelf && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
-            {
-                grapplingHook.SetActive(false);
-                grapplingHook.GetComponent<GrapplingHook>().line.enabled = false;
-                grapplingHookDelay = Time.time;
-            }
-            else if (Time.time > grapplingHookDelay)
+            if (Time.time > grapplingHookDelay)
             {
                 grapplingHookDelay = Time.time + grapplingHookCooldown;
 
-                if (!grapplingHook.activeSelf)
+                if (!grapplingHook.gameObject.activeSelf)
                 {
                     if (HookCoroutine != null)
                     {
-                        print("Stopping coroutine");
                         StopCoroutine(HookCoroutine);
                     }
                     HookCoroutine = StartCoroutine(FireHook());
-                    print("Starting coroutine");
                 }
             }            
+        }
+
+        if (!Input.GetMouseButton(2))
+        {
+            if (grapplingHook.gameObject.activeSelf && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
+            {
+                grapplingHookDelay = Time.time;
+                grapplingHook.ToggleActiveState();
+            }
         }
     }
 
     private IEnumerator FireHook()
     {
-        print("BEGIN");
-        grapplingHook.GetComponent<Rigidbody2D>().isKinematic = false;
-        grapplingHook.SetActive(true);
-        grapplingHook.transform.position = transform.position; // remove?        
-        grapplingHook.GetComponent<SpriteRenderer>().enabled = true;
-        grapplingHook.transform.parent = null;
-        grapplingHook.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        grapplingHook.ToggleActiveState();
+
         if (!IsGrounded())
         {
-            grapplingHook.GetComponent<Rigidbody2D>().AddForce(new Vector2(xMovementDirection.x, 0.5f) * 20, ForceMode2D.Impulse);
+            grapplingHook.JumpShot(xMovementDirection);
         }
         else
         {
-            grapplingHook.GetComponent<Rigidbody2D>().AddForce(xMovementDirection * 20, ForceMode2D.Impulse);
+            grapplingHook.StandardShot(xMovementDirection);
         }
 
         yield return new WaitForSeconds(1.5f);
 
-        if (!grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
-        {
-            print("END");
-            grapplingHook.GetComponent<Rigidbody2D>().isKinematic = true;
-            grapplingHook.transform.parent = transform;
-            grapplingHook.GetComponent<SpriteRenderer>().enabled = false;
-            grapplingHook.transform.position = transform.position;
-            grapplingHook.SetActive(false);
-        }
+        grapplingHook.CollisionCheck();
     }
 
     public override void TakeDamage(int damageValue)
@@ -296,13 +298,11 @@ public class PlayerController : Character2D
 
     protected override bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, groundLayer);
-
-        RaycastHit2D hit2 = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, wallLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, jumpableLayers);;
 
         Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
 
-        if (hit.collider || hit2.collider != null )
+        if (hit.collider != null )
         {
             grounded = true;
         }
@@ -329,5 +329,24 @@ public class PlayerController : Character2D
         dodging = false;
         gameObject.layer = 9;
         Debug.Log("End Dodge");
+    }
+
+    protected override void Jump()
+    {
+        if (IsGrounded())
+        {
+            RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
+        }
+        else if (grapplingHook.gameObject.activeSelf && hookJoint.distance < 1)
+        {
+            RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
+
+            if (grapplingHook.gameObject.activeSelf && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
+            {
+                grapplingHook.ToggleActiveState();
+                hookJoint.enabled = false;
+                grapplingHookDelay = Time.time;
+            }
+        }
     }
 }
