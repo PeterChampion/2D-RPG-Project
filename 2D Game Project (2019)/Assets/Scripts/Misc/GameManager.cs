@@ -53,17 +53,23 @@ public class GameManager : MonoBehaviour
         StartCoroutine(InputListener());
     }
 
+    private void Update()
+    {
+        healthSlider.value = player.CurrentHealth;
+        staminaSlider.value = player.CurrentStamina;
+    }
+
     private void UpdatePlayerStatsUI()
     {
         statsText.text = "Damage: " + player.Damage.ToString() +"\nArmour: " + player.Armour.ToString() + "\nMagic Resist: " + player.MagicResist.ToString();
     }
 
-    public void UpdateHealthUI(int healthValue)
+    public void UpdateHealthUI(float healthValue)
     {
         healthSlider.value = healthValue;
     }
 
-    public void UpdateStaminaUI(int staminaValue)
+    public void UpdateStaminaUI(float staminaValue)
     {
         staminaSlider.value = staminaValue;
     }

@@ -23,15 +23,15 @@ public class PlayerController : Character2D
     private float grapplingHookDelay;
     private float grapplingHookCooldown = 0.5f;
     private Coroutine HookCoroutine;
+    private float stunduration = 0;
+    private float stunCooldown = 0.1f;
 
     // Stamina Recovery
     private bool recoverStamina = false;
     private Coroutine staminaCoroutine;
 
-    // Test
-    private float stunduration = 0;
-    private float stunCooldown = 0.1f;
-    float timeMouseHeldDown;
+    // Combat
+    private float timeMouseHeldDown;
 
     protected override void Awake()
     {
@@ -362,12 +362,11 @@ public class PlayerController : Character2D
         {
             RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
         }
-        else if (grapplingHook.gameObject.activeSelf && hookJoint.distance < 1)
+        else if (grapplingHook.gameObject.activeSelf && hookJoint.distance < 1f)
         {
-            RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
-
             if (grapplingHook.gameObject.activeSelf && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
             {
+                RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
                 grapplingHook.ToggleActiveState();
                 hookJoint.enabled = false;
                 grapplingHookDelay = Time.time;
@@ -375,31 +374,37 @@ public class PlayerController : Character2D
         }
     }
 
-    public void ConsumableEffect(Consumable.ConsumableType consumableType, int value, float duration)
+    public void UseConsumable(Consumable.ConsumableType consumableType, int value, float duration)
     {
+        float health = currentHealth;
+        float stamina = currentStamina;
+
+        ConsumableEffect consumableEffect;
+
         switch (consumableType)
         {
             case Consumable.ConsumableType.Health:
                 currentHealth += value;
                 break;
             case Consumable.ConsumableType.HealthRegen:
+                consumableEffect = gameObject.AddComponent<ConsumableEffect>();
 
+                consumableEffect.player = this;
+                consumableEffect.type = consumableType;
+                consumableEffect.value = value;
+                consumableEffect.duration = duration;
                 break;
             case Consumable.ConsumableType.Stamina:
                 currentStamina += value;
                 break;
             case Consumable.ConsumableType.StaminaRegen:
-                break;
-            default:
-                break;
-        }
-    }
+                consumableEffect = gameObject.AddComponent<ConsumableEffect>();
 
-    private IEnumerator TimedConsumable(float duration)
-    {
-        while (true)
-        {
-
+                consumableEffect.player = this;
+                consumableEffect.type = consumableType;
+                consumableEffect.value = value;
+                consumableEffect.duration = duration;
+                break;
         }
     }
 }

@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d95bee76652c4aa4f8264817403e79c2, type: 3}
-  m_Name: Test Trinket
+  m_Script: {fileID: 11500000, guid: 6b6472f2337a1ad40b7b4c7cad0a036f, type: 3}
+  m_Name: Stamina Regen Potion
   m_EditorClassIdentifier: 
-  itemName: Test Trinket
+  itemName: Stamina Regen Potion
   sprite: {fileID: 21300000, guid: e0e1cbd3dfed986479116682f5cc0007, type: 3}
-  goldValue: 9999
-  equipSlot: 6
+  goldValue: 75
+  type: 3
+  consumableValue: 100
+  consumableDuration: 10
