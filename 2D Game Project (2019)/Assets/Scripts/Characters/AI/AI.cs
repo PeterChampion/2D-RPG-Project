@@ -9,7 +9,7 @@ public abstract class AI : Character2D
 {
     protected GameObject player;
     [SerializeField] protected int detectionRange = 5;
-    [SerializeField] protected int minimumRange = 2;
+    [SerializeField] protected float minimumRange = 2;
     protected float xDistanceFromPlayer;
     protected float yDistanceFromPlayer;
     [SerializeField] protected Vector2 rayCastOffset = new Vector2(1,0);
@@ -21,6 +21,7 @@ public abstract class AI : Character2D
     [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
     private int patrolpointIndex = 0;
     [SerializeField] protected bool setToPatrol = false;
+
 
     protected override void Awake()
     {

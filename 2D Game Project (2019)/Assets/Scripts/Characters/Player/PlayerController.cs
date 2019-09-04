@@ -8,6 +8,7 @@ public class PlayerController : Character2D
     // General Stats
     [SerializeField] private int maximumStamina = 100;
     [SerializeField] private float currentStamina = 100;
+    public float CurrentStamina { get { return currentStamina; } set { currentStamina = value; } }
 
     // Movement / Dodge / GrapplingHook
     private bool movementEnabled = true;
@@ -22,7 +23,6 @@ public class PlayerController : Character2D
     private float grapplingHookDelay;
     private float grapplingHookCooldown = 0.5f;
     private Coroutine HookCoroutine;
-    private bool grappeling;
 
     // Stamina Recovery
     private bool recoverStamina = false;
@@ -31,6 +31,7 @@ public class PlayerController : Character2D
     // Test
     private float stunduration = 0;
     private float stunCooldown = 0.1f;
+    float timeMouseHeldDown;
 
     protected override void Awake()
     {
@@ -42,6 +43,7 @@ public class PlayerController : Character2D
         Physics2D.IgnoreLayerCollision(9, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(9, 15, true); // Ignore collision with hook layer
     }
+
     void Update()
     {
         if (!GameManager.instance.IsGamePaused)
@@ -54,15 +56,6 @@ public class PlayerController : Character2D
             {
                 PlayerActions();
             }
-        }
-
-        if (hookJoint.enabled)
-        {
-            grappeling = true;
-        }
-        else
-        {
-            grappeling = false;
         }
     }
 
@@ -99,11 +92,6 @@ public class PlayerController : Character2D
                 RB.velocity = new Vector2(0, RB.velocity.y);
             }
 
-            //xMovement.Normalize();
-            //RB.velocity = new Vector2(xMovement * speed, RB.velocity.y);            
-            //float xDirection = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-            //transform.position = new Vector2(transform.position.x + xDirection, transform.position.y);
-
             if (RB.velocity.x > 0) // Moving Right
             {
                 transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
@@ -137,13 +125,41 @@ public class PlayerController : Character2D
             Jump();
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (Time.time > attackDelay)
+            timeMouseHeldDown += Time.deltaTime;            
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            print("Mouse was held down for: " + timeMouseHeldDown + " seconds");
+            if (timeMouseHeldDown < 0.5f)
             {
-                attackDelay = Time.time + attackCooldown;
-                Attack();
+                // Light Attack
+                print("Light attack");
+
+                if (Time.time > attackDelay)
+                {
+                    attackDelay = Time.time + attackCooldown;
+                    StandardAttack();
+                }
             }
+            else if (timeMouseHeldDown >= 0.5f)
+            {
+                // Heavy Attack
+                print("Heavy attack");
+                if (Time.time > attackDelay)
+                {
+                    attackDelay = Time.time + attackCooldown;
+                    HeavyAttack();
+                }
+            }
+            else if (timeMouseHeldDown > 1.5f)
+            {
+                // Cancel
+            }
+
+            timeMouseHeldDown = 0;
         }
 
         if (Input.GetKey(KeyCode.Mouse1))
@@ -212,12 +228,21 @@ public class PlayerController : Character2D
         }
     }
 
-    protected override void Attack()
+    protected override void StandardAttack()
     {
         // Attack, plays animation + damages all targets hit
         if (DrainStamina(10))
         {
-            base.Attack();
+            base.StandardAttack();
+        }
+    }
+
+    protected override void HeavyAttack()
+    {
+        // Attack, plays animation + damages all targets hit
+        if (DrainStamina(10))
+        {
+            base.HeavyAttack();
         }
     }
 
@@ -347,6 +372,34 @@ public class PlayerController : Character2D
                 hookJoint.enabled = false;
                 grapplingHookDelay = Time.time;
             }
+        }
+    }
+
+    public void ConsumableEffect(Consumable.ConsumableType consumableType, int value, float duration)
+    {
+        switch (consumableType)
+        {
+            case Consumable.ConsumableType.Health:
+                currentHealth += value;
+                break;
+            case Consumable.ConsumableType.HealthRegen:
+
+                break;
+            case Consumable.ConsumableType.Stamina:
+                currentStamina += value;
+                break;
+            case Consumable.ConsumableType.StaminaRegen:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private IEnumerator TimedConsumable(float duration)
+    {
+        while (true)
+        {
+
         }
     }
 }

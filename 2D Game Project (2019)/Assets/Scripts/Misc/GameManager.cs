@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     private Slider healthSlider;
     private Slider staminaSlider;
     private TextMeshProUGUI statsText;
-    private PlayerController player;
+    public PlayerController player;
 
     // Camera Shake
     private Camera gameCamera;
@@ -49,6 +49,8 @@ public class GameManager : MonoBehaviour
         staminaSlider = GameObject.Find("StaminaSlider").GetComponent<Slider>();
         statsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
         EquipmentManager.instance.onEquipmentChangedCallback += UpdatePlayerStatsUI;
+
+        StartCoroutine(InputListener());
     }
 
     private void UpdatePlayerStatsUI()
@@ -86,5 +88,41 @@ public class GameManager : MonoBehaviour
         virtualCameraNoise.m_FrequencyGain = shakeFrequency;
         yield return new WaitForSeconds(shakeDuration);
         virtualCameraNoise.m_AmplitudeGain = 0f;
+    }
+
+
+    // TEST VARIABLES AND METHODS BELOW, FREE TO REMOVE
+
+    private float doubleClickTimeLimit = 0.25f;
+
+    private IEnumerator InputListener()
+    {
+        while (enabled)
+        { //Run as long as this is active
+
+            if (Input.GetMouseButtonDown(0))
+                yield return ClickEvent();
+
+            yield return null;
+        }
+    }
+
+    private IEnumerator ClickEvent()
+    {
+        //pause a frame so you don't pick up the same mouse down event.
+        yield return new WaitForEndOfFrame();
+
+        float count = 0f;
+        while (count < doubleClickTimeLimit)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                print("Double Click");
+                yield break;
+            }
+            count += Time.deltaTime;// increment counter by change in time between frames
+            yield return null; // wait for the next frame
+        }        
+        print("Single click");
     }
 }

@@ -7,7 +7,9 @@ public abstract class Character2D : MonoBehaviour
 {
     // Health
     [SerializeField] protected int maximumHealth = 100;
+    public int MaximumHealth { get { return maximumHealth; } set { maximumHealth = value; } }
     protected int currentHealth;
+    public int CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
 
     // Movement
     [SerializeField] protected int speed = 5;
@@ -30,13 +32,14 @@ public abstract class Character2D : MonoBehaviour
     public int Armour { get { return armour; } set { armour = value; } }
     [SerializeField] private int magicResist = 0;
     public int MagicResist { get { return magicResist; } set { magicResist = value; } }
-    [SerializeField] private LayerMask enemyLayer = new LayerMask();
-    public LayerMask EnemyLayer { get { return enemyLayer; } }
+    //[SerializeField] private LayerMask enemyLayer = new LayerMask();
+    //public LayerMask EnemyLayer { get { return enemyLayer; } }
     [SerializeField] protected float knockbackDuration = 0;
     private int originalLayer = 0;
     private bool stunned;
     public bool Stunned { get { return stunned; } set { stunned = value; } }
     [SerializeField] GameObject attackArea;
+    private Coroutine stunCoroutine;
 
     protected virtual void Awake() // Set References & Variable set up
     {
@@ -54,9 +57,13 @@ public abstract class Character2D : MonoBehaviour
         RB.velocity = new Vector2(Mathf.Clamp(RB.velocity.x, -3, 3), Mathf.Clamp(RB.velocity.y, -15, 15));
     }
 
-    protected virtual void Attack()
+    protected virtual void StandardAttack()
     {
-        Instantiate(attackArea, (Vector2)transform.position + xMovementDirection, Quaternion.identity, transform);
+        AttackArea attack = Instantiate(attackArea, (Vector2)transform.position + xMovementDirection, Quaternion.identity, transform).GetComponent<AttackArea>();
+        attack.Damage = damage;
+        attack.KnockbackDirection = xMovementDirection;
+        attack.KnockbackPower = knockbackPower;
+        attack.KnockbackDuration = knockbackDuration;
 
         //Debug.DrawRay(transform.position, xMovementDirection * attackRange, Color.blue, 0.5f);
         //RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, xMovementDirection, attackRange, enemyLayer);
@@ -76,6 +83,16 @@ public abstract class Character2D : MonoBehaviour
         //    newHit.collider.GetComponent<Character2D>().Knockback(new Vector2(xMovementDirection.x, 0.5f), knockbackPower, knockbackDuration);
         //    Debug.Log(damage + " damage dealt to " + newHit.collider.gameObject.name + "!");
         //}
+    }
+
+    protected virtual void HeavyAttack()
+    {
+        AttackArea attack = Instantiate(attackArea, (Vector2)transform.position + xMovementDirection, Quaternion.identity, transform).GetComponent<AttackArea>();
+        attack.Damage = damage * 2;
+        attack.KnockbackDirection = xMovementDirection;
+        attack.KnockbackPower = knockbackPower * 2;
+        attack.KnockbackDuration = knockbackDuration * 1.5f;
+        attack.gameObject.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
     public virtual void TakeDamage(int damageValue)
@@ -144,27 +161,17 @@ public abstract class Character2D : MonoBehaviour
 
     public void ApplyStunEffect(float stunDuration)
     {
-        StartCoroutine(StunEffect(stunDuration));
+        if (stunCoroutine != null)
+        {
+            StopCoroutine(stunCoroutine);
+        }
+        stunCoroutine = StartCoroutine(StunEffect(stunDuration));
     }
 
     private IEnumerator StunEffect(float stunDuration)
     {
-        print("Stun starting...");
         Stunned = true;
         yield return new WaitForSeconds(stunDuration);
         Stunned = false;
-        print("Stun ending...");
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        GameObject collidedObject = collision.gameObject;
-
-        if (collidedObject.layer == 16) // If attack layer...
-        {
-            AttackArea attackArea = collidedObject.GetComponent<AttackArea>();
-            TakeDamage(attackArea.Damage);
-            Knockback(new Vector2(attackArea.KnockbackDirection.x, 0.5f), attackArea.KnockbackPower, attackArea.KnockbackDuration);
-        }
     }
 }

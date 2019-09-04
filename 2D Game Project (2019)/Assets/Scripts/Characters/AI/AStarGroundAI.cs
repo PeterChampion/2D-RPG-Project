@@ -90,10 +90,10 @@ public class AStarGroundAI : AI
     protected override void Update()
     {
         base.Update();
-        Attack();
+        StandardAttack();
     }
 
-    protected override void Attack()
+    protected override void StandardAttack()
     {
         if (Mathf.Abs(xDistanceFromPlayer) < attackRange && Mathf.Abs(yDistanceFromPlayer) < attackRange)
         {
@@ -103,7 +103,7 @@ public class AStarGroundAI : AI
 
                 if (attackType == NPCType.Melee)
                 {
-                    base.Attack();
+                    base.StandardAttack();
                 }
                 else
                 {

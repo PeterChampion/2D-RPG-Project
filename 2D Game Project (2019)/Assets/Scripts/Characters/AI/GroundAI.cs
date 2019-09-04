@@ -7,16 +7,19 @@ public class GroundAI : AI
     private enum NPCType { Melee, Ranged }
     [SerializeField] private NPCType attackType;
     [SerializeField] private GameObject projectile;
+    [SerializeField] private float raycastXSize = 1;
+    [SerializeField] private float raycastYSize = 1;
+    [SerializeField] private float heightDifferenceThreshhold = 0.5f;
 
     protected override void Update()
     {
         base.Update();
-        Attack();
+        StandardAttack();
     }
 
-    protected override void Attack()
+    protected override void StandardAttack()
     {
-        if (Mathf.Abs(xDistanceFromPlayer) < attackRange && Mathf.Abs(yDistanceFromPlayer) < attackRange)
+        if (Mathf.Abs(xDistanceFromPlayer) < attackRange && Mathf.Abs(yDistanceFromPlayer) < attackRange && !Stunned)
         {
             if (Time.time > attackDelay)
             {
@@ -24,7 +27,7 @@ public class GroundAI : AI
 
                 if (attackType == NPCType.Melee)
                 {
-                    base.Attack();
+                    base.StandardAttack();
                 }
                 else
                 {
@@ -47,7 +50,7 @@ public class GroundAI : AI
             base.AIMovement();
         }
 
-        if (playerInRange && Mathf.Abs(yDistanceFromPlayer) > 0.5f && Mathf.Abs(xDistanceFromPlayer) < attackRange)
+        if (playerInRange && Mathf.Abs(yDistanceFromPlayer) > heightDifferenceThreshhold && Mathf.Abs(xDistanceFromPlayer) < attackRange)
         {
             StartCoroutine(JumpWithDelay(0.2f));
         }
@@ -55,8 +58,8 @@ public class GroundAI : AI
         // If we are moving to the right...
         if (directionOfMovement == 1)
         {
-            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, 2.5f, wallLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2.5f * Vector2.right, Color.yellow);
+            RaycastHit2D rightWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right, raycastXSize, wallLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.right * raycastXSize, Color.yellow);
 
             if (rightWall.collider != null)
             {
@@ -70,8 +73,8 @@ public class GroundAI : AI
                 }
             }
 
-            RaycastHit2D rightLedge = Physics2D.Raycast(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), Vector2.down, 1f, jumpableLayers);
-            Debug.DrawRay(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), 1f * Vector2.down, Color.yellow);
+            RaycastHit2D rightLedge = Physics2D.Raycast(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), Vector2.down, raycastYSize, jumpableLayers);
+            Debug.DrawRay(new Vector2(transform.position.x + rayCastOffset.x, transform.position.y), Vector2.down * raycastYSize, Color.yellow);
 
             if (rightLedge.collider == null)
             {
@@ -87,8 +90,8 @@ public class GroundAI : AI
         }
         else
         {
-            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, 2.5f, wallLayer);
-            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), 2.5f * Vector2.left, Color.yellow);
+            RaycastHit2D leftWall = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left, raycastXSize, wallLayer);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + rayCastOffset.y), Vector2.left * raycastXSize, Color.yellow);
 
             if (leftWall.collider != null)
             {
@@ -102,8 +105,8 @@ public class GroundAI : AI
                 }
             }
 
-            RaycastHit2D leftLedge = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), Vector2.down, 1f, jumpableLayers);
-            Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), 1f * Vector2.down, Color.yellow);
+            RaycastHit2D leftLedge = Physics2D.Raycast(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), Vector2.down, raycastYSize, jumpableLayers);
+            Debug.DrawRay(new Vector2(transform.position.x - rayCastOffset.x, transform.position.y), Vector2.down * raycastYSize, Color.yellow);
 
             if (leftLedge.collider == null)
             {
