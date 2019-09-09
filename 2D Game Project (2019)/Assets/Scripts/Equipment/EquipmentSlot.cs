@@ -37,7 +37,6 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         icon.sprite = equipment.sprite;
         icon.enabled = true;
         removeButton.interactable = true;
-        audioSource.Play();
     }
 
     public void ClearSlot()
@@ -55,6 +54,7 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             EquipmentManager.instance.Unequip((int)equipment.equipSlot);
             audioSource.Play();
+            print("Remove");
         }        
         HideToolTip();
     }
@@ -66,6 +66,8 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             equipment.Use();
             HideToolTip();
+            audioSource.Play();
+            print("Equip");
         }
     }
 

@@ -7,11 +7,14 @@ public abstract class Interactable : MonoBehaviour
     [SerializeField] protected int interactionRange = 2;
     [SerializeField] protected PlayerController player;
     [SerializeField] protected GameObject interactionPrompt = null;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip interactionAudioClip;
 
     protected virtual void Awake()
     {
         player = FindObjectOfType<PlayerController>();
         interactionPrompt.SetActive(false);
+        audioSource = GetComponent<AudioSource>();
         Physics2D.IgnoreLayerCollision(gameObject.layer, gameObject.layer);
     }
 
@@ -43,5 +46,7 @@ public abstract class Interactable : MonoBehaviour
     protected virtual void Effect()
     {
         // Intended to be overwritten by derived classes
+        audioSource.clip = interactionAudioClip;
+        audioSource.Play();
     }
 }

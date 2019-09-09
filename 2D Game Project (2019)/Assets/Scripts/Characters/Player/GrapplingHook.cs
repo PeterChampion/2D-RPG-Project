@@ -10,6 +10,9 @@ public class GrapplingHook : MonoBehaviour
     private Rigidbody2D RB;
     [SerializeField] public LineRenderer line;
     private SpriteRenderer spriteRenderer;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip fireAudioClip;
+    [SerializeField] private AudioClip landAudioClip;
 
     private void Awake()
     {
@@ -17,6 +20,7 @@ public class GrapplingHook : MonoBehaviour
         RB = GetComponent<Rigidbody2D>();
         line.enabled = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
         Physics2D.IgnoreLayerCollision(15, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(15, 15, true); // Ignore collision with hook layer
     }
@@ -67,6 +71,9 @@ public class GrapplingHook : MonoBehaviour
             player.hookJoint.connectedBody = RB;
             player.hookJoint.distance = Vector2.Distance(transform.position, player.transform.position);
         }
+
+        audioSource.clip = landAudioClip;
+        audioSource.Play();
     }
 
     public void ToggleActiveState()
@@ -99,30 +106,32 @@ public class GrapplingHook : MonoBehaviour
         if (xDirection == Vector2.right)
         {
             transform.rotation = Quaternion.Euler(0, 0, -45);
-            print("Rotated right");
         }
         else
         {
             transform.rotation = Quaternion.Euler(0, 0, 45);
-            print("Rotated left");
         }
+
+        audioSource.clip = fireAudioClip;
+        audioSource.Play();
     }
 
     public void StandardShot(Vector2 xDirection)
     {
+        direction = xDirection;
+        RB.AddForce(xDirection * 20, ForceMode2D.Impulse);
+
         if (xDirection == Vector2.right)
         {
             transform.rotation = Quaternion.Euler(0, 0, -90);
-            print("Rotated right");
         }
         else
         {
             transform.rotation = Quaternion.Euler(0, 0, 90);
-            print("Rotated left");
         }
 
-        direction = xDirection;
-        RB.AddForce(xDirection * 20, ForceMode2D.Impulse);
+        audioSource.clip = fireAudioClip;
+        audioSource.Play();
     }
 
     public void CollisionCheck()

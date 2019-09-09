@@ -9,9 +9,13 @@ public class ItemPickUp : Interactable
 
     protected override void Effect()
     {
+        base.Effect();
         if (Inventory.instance.AddToInventory(item))
         {
-            Destroy(gameObject);
+            interactionPrompt.SetActive(false);
+            GetComponent<SpriteRenderer>().enabled = false;
+            interactionRange = 0;
+            Destroy(gameObject, 1);
         }
     }
 }

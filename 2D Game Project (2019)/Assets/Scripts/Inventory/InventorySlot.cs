@@ -65,6 +65,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             Inventory.instance.RemoveFromInventory(item);
             audioSource.Play();
+            print("Remove");
         }        
     }
 
@@ -76,6 +77,17 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             Debug.Log("Item used!");
             item.Use();
             audioSource.Play();
+            if (IsMouseOver())
+            {
+                if (item != null)
+                {
+                    ShowToolTip(transform.position, item.GetTooltipInfo());
+                }
+                else
+                {
+                    HideToolTip();
+                }
+            }            
         }
     }
 
@@ -103,5 +115,10 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerExit(PointerEventData eventData)
     {
         HideToolTip();
+    }
+
+    private bool IsMouseOver()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }

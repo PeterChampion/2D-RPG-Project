@@ -123,7 +123,6 @@ public abstract class AI : Character2D
 
         if (healthBarCoroutine != null)
         {
-            print("Stopping");
             StopCoroutine(healthBarCoroutine);
         }
         healthBarCoroutine = StartCoroutine(DisplayHealthBar(3));

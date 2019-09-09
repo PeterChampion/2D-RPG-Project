@@ -18,22 +18,22 @@ public class Trinket : Equipment
         switch (type)
         {
             case TrinketTypes.Damage:
-                tooltipInfo = itemName + " Increases damage stat by " + value;
+                tooltipInfo = itemName + "\nIncreases damage stat by " + value;
                 break;
             case TrinketTypes.Armour:
-                tooltipInfo = itemName + " Increases armour stat by " + value;
+                tooltipInfo = itemName + "\nIncreases armour stat by " + value;
                 break;
             case TrinketTypes.FlatHealth:
-                tooltipInfo = itemName + " Increases maximum health by " + value;
+                tooltipInfo = itemName + "\nIncreases maximum health by " + value;
                 break;
             case TrinketTypes.FlatStamina:
-                tooltipInfo = itemName + " Increases maximum stamina by " + value;
+                tooltipInfo = itemName + "\nIncreases maximum stamina by " + value;
                 break;
             case TrinketTypes.HealthRegen:
-                tooltipInfo = itemName + " Gain health regeneration of " + value / 20 + " per second";
+                tooltipInfo = itemName + "\nGain health regeneration of\n" + value / 20 + " per second";
                 break;
             case TrinketTypes.StaminaRegen:
-                tooltipInfo = itemName + " Gain  stamina regeneration of " + value / 20 + " per second";
+                tooltipInfo = itemName + "\nGain stamina regeneration of\n" + value / 20 + " per second";
                 break;
         }
         tooltipInfo = tooltipInfo + "\nValue: " + goldValue;

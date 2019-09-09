@@ -15,6 +15,8 @@ public class DoorLever : Interactable
 
     protected override void Effect()
     {
+        base.Effect();
+
         foreach (GameObject door in Doors)
         {
             if (door.activeSelf)

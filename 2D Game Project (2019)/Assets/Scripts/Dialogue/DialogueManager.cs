@@ -11,6 +11,8 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI dialogueText;
     public Animator dialogueAnimator;
     public Queue<string> sentences;
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip[] dialogueAudioClips;
 
     private void Awake()
     {
@@ -22,6 +24,8 @@ public class DialogueManager : MonoBehaviour
         {
             Destroy(this); // Destroy this instance of this class to prevent duplicates
         }
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -67,16 +71,24 @@ public class DialogueManager : MonoBehaviour
         dialogueAnimator.SetBool("IsOpen",false);
     }
 
+    private void DialogueSounds()
+    {
+
+    }
+
     // IEnumerator used for a coroutine, takes the current sentence and converts it into a char array - Each letter is printed to the screen with a short delay
     IEnumerator TypeSentence(string sentence)
     {
         dialogueText.text = ""; // Set dialogue text to be clear
-        yield return new WaitForSeconds(0.2f); // Initial brief delay, used to attempt to sync up the first text displaying along with the opening animation
+        yield return new WaitForSeconds(0.6f); // Initial brief delay, used to attempt to sync up the first text displaying along with the opening animation
 
         foreach (char letter in sentence.ToCharArray()) // Conversion of string to char array
         {
             dialogueText.text += letter; // Add the letter to the end of the current dialogue
-            yield return null;
+            int clipToPlay = Random.Range(0, dialogueAudioClips.Length);
+            audioSource.clip = dialogueAudioClips[clipToPlay];
+            audioSource.Play();
+            yield return null; // Wait for a frame
         }
     }
 }

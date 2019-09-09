@@ -115,10 +115,10 @@ public abstract class Character2D : MonoBehaviour
 
     public virtual void TakeDamage(int damageValue)
     {
-        StartCoroutine(FlashOnHit(0.2f));
         currentHealth -= damageValue;
         Invoke("ToggleHurtAnimation", 0);
-        Invoke("ToggleHurtAnimation", 0.25f);
+        Invoke("ToggleHurtAnimation", 0.3f);
+        StartCoroutine(FlashOnHit(0.3f));
         int clipToPlay = Random.Range(0, damagedAudioClips.Length);
         audioSource.clip = damagedAudioClips[clipToPlay];
         audioSource.Play();

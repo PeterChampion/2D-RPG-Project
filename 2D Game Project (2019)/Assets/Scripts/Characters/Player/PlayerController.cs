@@ -36,6 +36,12 @@ public class PlayerController : Character2D
     // Combat
     private float timeMouseHeldDown;
 
+    // Audio
+    [SerializeField] private AudioClip[] attackAudioClips;
+
+    // Respawn
+    private Vector3 respawnPoint;
+
     protected override void Awake()
     {
         base.Awake();
@@ -43,6 +49,7 @@ public class PlayerController : Character2D
         hookJoint = GetComponent<DistanceJoint2D>();
         hookJoint.enabled = false;
         grapplingHook = FindObjectOfType<GrapplingHook>();
+        respawnPoint = transform.position;
         Physics2D.IgnoreLayerCollision(9, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(9, 15, true); // Ignore collision with hook layer
     }
@@ -60,7 +67,7 @@ public class PlayerController : Character2D
                 PlayerActions();
             }
 
-            if (RB.velocity.y < -1f)
+            if (RB.velocity.y < -2f)
             {
                 characterAnim.SetBool("IsFalling", true);
                 characterAnim.SetBool("IsJumping", false);
@@ -70,7 +77,7 @@ public class PlayerController : Character2D
                 characterAnim.SetBool("IsFalling", false);
             }
 
-            if (grapplingHook.gameObject.GetComponent<Rigidbody2D>().isKinematic && RB.velocity.y > 1f)
+            if (grapplingHook.gameObject.GetComponent<Rigidbody2D>().isKinematic && RB.velocity.y > 4f)
             {
                 characterAnim.SetBool("IsJumping", true);
             }
@@ -287,6 +294,10 @@ public class PlayerController : Character2D
             base.StandardAttack();
             Invoke("ToggleLightAttackAnimation", 0);
             Invoke("ToggleLightAttackAnimation", 0.25f);
+
+            int clipToPlay = Random.Range(0, attackAudioClips.Length);
+            audioSource.clip = attackAudioClips[clipToPlay];
+            audioSource.Play();
         }
     }
 
@@ -298,6 +309,10 @@ public class PlayerController : Character2D
             base.HeavyAttack();
             Invoke("ToggleHeavyAttackAnimation", 0);
             Invoke("ToggleHeavyAttackAnimation", 0.25f);
+
+            int clipToPlay = Random.Range(0, attackAudioClips.Length);
+            audioSource.clip = attackAudioClips[clipToPlay];
+            audioSource.Play();
         }
     }
 
@@ -373,7 +388,9 @@ public class PlayerController : Character2D
 
     protected override void Die()
     {
-        Debug.Log("Player died");
+        transform.position = respawnPoint;
+        currentHealth = maximumHealth;
+        currentStamina = maximumStamina;
     }
 
     protected override bool IsGrounded()
