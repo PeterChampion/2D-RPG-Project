@@ -11,6 +11,7 @@ public class AttackArea : MonoBehaviour
     public float KnockbackPower { get { return knockbackPower; } set { knockbackPower = value; } }
     private float knockbackDuration;
     public float KnockbackDuration { get { return knockbackDuration; } set { knockbackDuration = value; } }
+    public LayerMask layerToIgnore;
 
     private List<GameObject> hitCharacters = new List<GameObject>();
 
@@ -32,13 +33,25 @@ public class AttackArea : MonoBehaviour
     {
         GameObject collidedObject = collision.gameObject;
 
-        if (collidedObject.GetComponent<Character2D>() && collidedObject.transform != transform.parent && !hitCharacters.Contains(collidedObject) && collidedObject.layer != 13)
+        if (collidedObject.GetComponent<Character2D>() && collidedObject.layer != layerToIgnore && !hitCharacters.Contains(collidedObject) && collidedObject.layer != 13)
         {
-            print("Hit!");
-            hitCharacters.Add(collidedObject);
-            Character2D characterHit = collidedObject.GetComponent<Character2D>();
-            characterHit.TakeDamage(Damage);
-            characterHit.Knockback(new Vector2(KnockbackDirection.x, 0.5f), KnockbackPower, KnockbackDuration);
+            if (collidedObject.GetComponent<AI>())
+            {
+                if (!collidedObject.GetComponent<AI>().isDead)
+                {
+                    hitCharacters.Add(collidedObject);
+                    Character2D characterHit = collidedObject.GetComponent<Character2D>();
+                    characterHit.TakeDamage(Damage);
+                    characterHit.Knockback(new Vector2(KnockbackDirection.x, 0.5f), KnockbackPower, KnockbackDuration);
+                }
+            }
+            else
+            {
+                hitCharacters.Add(collidedObject);
+                Character2D characterHit = collidedObject.GetComponent<Character2D>();
+                characterHit.TakeDamage(Damage);
+                characterHit.Knockback(new Vector2(KnockbackDirection.x, 0.5f), KnockbackPower, KnockbackDuration);
+            }
         }
     }
 }

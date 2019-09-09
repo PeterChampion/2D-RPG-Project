@@ -40,12 +40,27 @@ public abstract class Character2D : MonoBehaviour
     public bool Stunned { get { return stunned; } set { stunned = value; } }
     [SerializeField] GameObject attackArea;
     private Coroutine stunCoroutine;
+    private Transform attackPoint;
+
+    // Audio
+    protected AudioSource audioSource;
+    [SerializeField] private AudioClip[] damagedAudioClips;
+
+    // Animation
+    protected Animator characterAnim;
+
+    // SpriteRenderer
+    protected SpriteRenderer spriteRenderer;
 
     protected virtual void Awake() // Set References & Variable set up
     {
         RB = GetComponent<Rigidbody2D>();
         currentHealth = maximumHealth;
         originalLayer = gameObject.layer;
+        characterAnim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        attackPoint = gameObject.transform.Find("AttackPoint");
         Physics2D.IgnoreLayerCollision(10, 11, true); // Ignore collisions with pickups
         Physics2D.IgnoreLayerCollision(10, 13, true); // Ignore collisions with invulnerable characters
         Physics2D.IgnoreLayerCollision(13, 13, true); // Ignore collisions with invulnerable characters while also invulnerable
@@ -59,11 +74,14 @@ public abstract class Character2D : MonoBehaviour
 
     protected virtual void StandardAttack()
     {
-        AttackArea attack = Instantiate(attackArea, (Vector2)transform.position + xMovementDirection, Quaternion.identity, transform).GetComponent<AttackArea>();
+        AttackArea attack = Instantiate(attackArea, attackPoint.position, Quaternion.identity, transform).GetComponent<AttackArea>();
         attack.Damage = damage;
         attack.KnockbackDirection = xMovementDirection;
         attack.KnockbackPower = knockbackPower;
         attack.KnockbackDuration = knockbackDuration;
+        attack.layerToIgnore = gameObject.layer;
+        Invoke("ToggleAttackAnimation", 0);
+        Invoke("ToggleAttackAnimation", 0.25f);
 
         //Debug.DrawRay(transform.position, xMovementDirection * attackRange, Color.blue, 0.5f);
         //RaycastHit2D[] newHits = Physics2D.RaycastAll(transform.position, xMovementDirection, attackRange, enemyLayer);
@@ -87,7 +105,7 @@ public abstract class Character2D : MonoBehaviour
 
     protected virtual void HeavyAttack()
     {
-        AttackArea attack = Instantiate(attackArea, (Vector2)transform.position + xMovementDirection, Quaternion.identity, transform).GetComponent<AttackArea>();
+        AttackArea attack = Instantiate(attackArea, attackPoint.position, Quaternion.identity, transform).GetComponent<AttackArea>();
         attack.Damage = damage * 2;
         attack.KnockbackDirection = xMovementDirection;
         attack.KnockbackPower = knockbackPower * 2;
@@ -97,7 +115,13 @@ public abstract class Character2D : MonoBehaviour
 
     public virtual void TakeDamage(int damageValue)
     {
+        StartCoroutine(FlashOnHit(0.2f));
         currentHealth -= damageValue;
+        Invoke("ToggleHurtAnimation", 0);
+        Invoke("ToggleHurtAnimation", 0.25f);
+        int clipToPlay = Random.Range(0, damagedAudioClips.Length);
+        audioSource.clip = damagedAudioClips[clipToPlay];
+        audioSource.Play();
     }
 
     protected virtual void CheckHealth()
@@ -115,7 +139,13 @@ public abstract class Character2D : MonoBehaviour
 
     protected virtual void Die()
     {
-        Destroy(gameObject);
+        characterAnim.SetBool("IsDead", true);
+        CancelInvoke("ToggleAttackAnimation");
+        Physics2D.IgnoreCollision(FindObjectOfType<PlayerController>().GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        speed = 0;
+        RB.gravityScale = 2;
+        RB.velocity = new Vector2(RB.velocity.x / 2, RB.velocity.y);
+        Destroy(gameObject, 3);
     }
 
     protected virtual void Jump()
@@ -173,5 +203,26 @@ public abstract class Character2D : MonoBehaviour
         Stunned = true;
         yield return new WaitForSeconds(stunDuration);
         Stunned = false;
+    }
+
+    private IEnumerator FlashOnHit(float duration)
+    {
+        yield return new WaitForSeconds(0.1f);
+        Color originalColour = Color.white;
+        spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(duration);
+        spriteRenderer.color = originalColour;
+    }
+
+    protected void ToggleHurtAnimation()
+    {
+        if (!characterAnim.GetBool("IsHurt"))
+        {
+            characterAnim.SetBool("IsHurt", true);
+        }
+        else
+        {
+            characterAnim.SetBool("IsHurt", false);
+        }
     }
 }

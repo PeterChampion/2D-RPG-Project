@@ -24,6 +24,8 @@ public class GrapplingHook : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(false);
+        line.startColor = Color.grey;
+        line.endColor = Color.grey;
     }
 
     private void LateUpdate()
@@ -53,7 +55,7 @@ public class GrapplingHook : MonoBehaviour
         {
             print("Enemy hit!");
             collidedObject.GetComponent<AI>().ApplyStunEffect(1.5f);
-            collidedObject.GetComponent<AI>().ApplyDirectionalForce(-direction, force);
+            collidedObject.GetComponent<AI>().ApplyDirectionalForce(-direction, force * 2);
             //collidedObject.GetComponent<Rigidbody2D>().AddForce(-direction * force, ForceMode2D.Impulse);
             ToggleActiveState();
         }
@@ -74,7 +76,7 @@ public class GrapplingHook : MonoBehaviour
             line.enabled = false;
             RB.isKinematic = true;
             spriteRenderer.enabled = false;
-            transform.position = player.transform.position;
+            transform.position = (Vector2)player.transform.position;
             player.hookJoint.enabled = false;
             gameObject.SetActive(false);            
         }
@@ -83,7 +85,7 @@ public class GrapplingHook : MonoBehaviour
             line.enabled = true;
             RB.isKinematic = false;
             spriteRenderer.enabled = true;
-            transform.position = player.transform.position;
+            transform.position = (Vector2)player.transform.position;
             RB.velocity = Vector2.zero;
             gameObject.SetActive(true);
         }
@@ -93,10 +95,32 @@ public class GrapplingHook : MonoBehaviour
     {
         direction = xDirection;
         RB.AddForce(new Vector2(xDirection.x, 0.5f) * 20, ForceMode2D.Impulse);
+
+        if (xDirection == Vector2.right)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, -45);
+            print("Rotated right");
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 45);
+            print("Rotated left");
+        }
     }
 
     public void StandardShot(Vector2 xDirection)
     {
+        if (xDirection == Vector2.right)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, -90);
+            print("Rotated right");
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 90);
+            print("Rotated left");
+        }
+
         direction = xDirection;
         RB.AddForce(xDirection * 20, ForceMode2D.Impulse);
     }

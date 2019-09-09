@@ -11,6 +11,36 @@ public class Trinket : Equipment
     public TrinketTypes type;
     public float value;
 
+    public override string GetTooltipInfo()
+    {
+        string tooltipInfo = string.Empty;
+
+        switch (type)
+        {
+            case TrinketTypes.Damage:
+                tooltipInfo = itemName + " Increases damage stat by " + value;
+                break;
+            case TrinketTypes.Armour:
+                tooltipInfo = itemName + " Increases armour stat by " + value;
+                break;
+            case TrinketTypes.FlatHealth:
+                tooltipInfo = itemName + " Increases maximum health by " + value;
+                break;
+            case TrinketTypes.FlatStamina:
+                tooltipInfo = itemName + " Increases maximum stamina by " + value;
+                break;
+            case TrinketTypes.HealthRegen:
+                tooltipInfo = itemName + " Gain health regeneration of " + value / 20 + " per second";
+                break;
+            case TrinketTypes.StaminaRegen:
+                tooltipInfo = itemName + " Gain  stamina regeneration of " + value / 20 + " per second";
+                break;
+        }
+        tooltipInfo = tooltipInfo + "\nValue: " + goldValue;
+
+        return tooltipInfo;
+    }
+
     public override void ApplyEquipmentStats()
     {
         base.ApplyEquipmentStats();

@@ -14,6 +14,7 @@ public class Armour : Equipment
         string tooltipInfo = itemName + "\nArmour: " + armour +"\nValue: " + goldValue;
         return tooltipInfo;
     }
+
     public override void ApplyEquipmentStats()
     {
         base.ApplyEquipmentStats();

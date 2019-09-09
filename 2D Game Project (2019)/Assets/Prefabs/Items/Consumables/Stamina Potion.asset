@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b6472f2337a1ad40b7b4c7cad0a036f, type: 3}
   m_Name: Stamina Potion
   m_EditorClassIdentifier: 
-  itemName: Stamina Potion
-  sprite: {fileID: 21300000, guid: e0e1cbd3dfed986479116682f5cc0007, type: 3}
+  itemName: Potion of Stamina
+  sprite: {fileID: 184315483859946875, guid: 1b41c5de688142748b219e71c8099dfa, type: 3}
   goldValue: 50
   type: 2
   consumableValue: 50

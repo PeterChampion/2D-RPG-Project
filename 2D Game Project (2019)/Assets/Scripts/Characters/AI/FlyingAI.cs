@@ -40,12 +40,12 @@ public class FlyingAI : AI
             if (directionOfMovement == 1) // Right
             {              
                 xMovementDirection = Vector2.right;
-                transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
+                transform.rotation = new Quaternion(transform.rotation.x, 0, 0, 0);
             }
             else if (directionOfMovement == -1) // Left
             {             
                 xMovementDirection = Vector2.left;
-                transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);                
+                transform.rotation = new Quaternion(transform.rotation.x, 180, 0, 0);                
             }
 
             RB.AddForce(new Vector2(xMovementDirection.x * speed, yMovementDirection.y * speed));
@@ -91,7 +91,6 @@ public class FlyingAI : AI
                     {
                         directionOfMovement = -1;
                         RB.velocity = new Vector2(RB.velocity.x / 2, RB.velocity.y);
-                        Debug.Log("Turn Around, I hit a wall RIGHT");
                     }
                     else
                     {

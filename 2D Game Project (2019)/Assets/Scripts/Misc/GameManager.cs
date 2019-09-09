@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
         EquipmentManager.instance.onEquipmentChangedCallback += UpdatePlayerStatsUI;
 
         StartCoroutine(InputListener());
+        UpdatePlayerStatsUI();
+        Canvas.ForceUpdateCanvases();
     }
 
     private void Update()
@@ -61,7 +63,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdatePlayerStatsUI()
     {
-        statsText.text = "Damage: " + player.Damage.ToString() +"\nArmour: " + player.Armour.ToString() + "\nMagic Resist: " + player.MagicResist.ToString();
+        statsText.text = "Damage: " + player.Damage.ToString() +"\nArmour: " + player.Armour.ToString();
     }
 
     public void UpdateHealthUI(float healthValue)

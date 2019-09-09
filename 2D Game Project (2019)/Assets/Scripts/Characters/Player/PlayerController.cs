@@ -25,6 +25,9 @@ public class PlayerController : Character2D
     private Coroutine HookCoroutine;
     private float stunduration = 0;
     private float stunCooldown = 0.1f;
+    [SerializeField] private float dashSpeed = 15;
+    private bool velocityClamped = true;
+    [SerializeField] private AudioClip jumpAudioClip;
 
     // Stamina Recovery
     private bool recoverStamina = false;
@@ -56,13 +59,61 @@ public class PlayerController : Character2D
             {
                 PlayerActions();
             }
+
+            if (RB.velocity.y < -1f)
+            {
+                characterAnim.SetBool("IsFalling", true);
+                characterAnim.SetBool("IsJumping", false);
+            }
+            else
+            {
+                characterAnim.SetBool("IsFalling", false);
+            }
+
+            if (grapplingHook.gameObject.GetComponent<Rigidbody2D>().isKinematic && RB.velocity.y > 1f)
+            {
+                characterAnim.SetBool("IsJumping", true);
+            }
+
+            if (grapplingHook.gameObject.activeSelf && Vector2.Distance(transform.position, grapplingHook.transform.position) < 2f && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
+            {
+                movementEnabled = false;
+                RB.velocity = Vector2.zero;
+                xMovement = 0;
+                characterAnim.SetFloat("Speed", Mathf.Abs(xMovement));
+
+                if (grapplingHook.transform.position.x > transform.position.x)
+                {
+                    transform.rotation = new Quaternion(transform.rotation.x, 0, 0, 0);
+                    xMovementDirection = Vector2.right;
+                }
+                else
+                {
+                    transform.rotation = new Quaternion(transform.rotation.x, 180, 0, 0);
+                    xMovementDirection = Vector2.left;
+                }
+
+                if (!IsGrounded())
+                {
+                    characterAnim.SetBool("IsGrappled", true);
+                }
+            }
+            else
+            {
+                movementEnabled = true;
+                characterAnim.SetBool("IsGrappled", false);
+            }
         }
     }
 
     private void FixedUpdate()
     {
         PlayerMovement();
-        ClampVelocity();
+
+        if (velocityClamped)
+        {
+            ClampVelocity();
+        }       
     }
     
     protected override void ClampVelocity()
@@ -80,6 +131,7 @@ public class PlayerController : Character2D
         if (movementEnabled)
         {
             xMovement = (Input.GetAxis("Horizontal"));
+            characterAnim.SetFloat("Speed", Mathf.Abs(xMovement));
 
             Vector2 movement = new Vector2(xMovement * speed, 0);
 
@@ -92,14 +144,14 @@ public class PlayerController : Character2D
                 RB.velocity = new Vector2(0, RB.velocity.y);
             }
 
-            if (RB.velocity.x > 0) // Moving Right
+            if (xMovement > 0) // Moving Right
             {
-                transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0, 0);
+                transform.rotation = new Quaternion(transform.rotation.x, 0, 0, 0);
                 xMovementDirection = Vector2.right;
             }
-            else if (RB.velocity.x < 0) // Moving Left
+            else if (xMovement < 0) // Moving Left
             {
-                transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 180, 0);
+                transform.rotation = new Quaternion(transform.rotation.x, 180, 0, 0);
                 xMovementDirection = Vector2.left;
             }
         }
@@ -132,12 +184,10 @@ public class PlayerController : Character2D
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            print("Mouse was held down for: " + timeMouseHeldDown + " seconds");
+            //print("Mouse was held down for: " + timeMouseHeldDown + " seconds");
             if (timeMouseHeldDown < 0.5f)
             {
                 // Light Attack
-                print("Light attack");
-
                 if (Time.time > attackDelay)
                 {
                     attackDelay = Time.time + attackCooldown;
@@ -147,7 +197,6 @@ public class PlayerController : Character2D
             else if (timeMouseHeldDown >= 0.5f)
             {
                 // Heavy Attack
-                print("Heavy attack");
                 if (Time.time > attackDelay)
                 {
                     attackDelay = Time.time + attackCooldown;
@@ -225,6 +274,8 @@ public class PlayerController : Character2D
             base.TakeDamage(damageValue);
             StartCoroutine(GameManager.instance.CameraShake());
             GameManager.instance.UpdateHealthUI(currentHealth);
+            Invoke("ToggleHurtAnimation", 0);
+            Invoke("ToggleHurtAnimation", 0.25f);
         }
     }
 
@@ -234,6 +285,8 @@ public class PlayerController : Character2D
         if (DrainStamina(10))
         {
             base.StandardAttack();
+            Invoke("ToggleLightAttackAnimation", 0);
+            Invoke("ToggleLightAttackAnimation", 0.25f);
         }
     }
 
@@ -243,6 +296,8 @@ public class PlayerController : Character2D
         if (DrainStamina(10))
         {
             base.HeavyAttack();
+            Invoke("ToggleHeavyAttackAnimation", 0);
+            Invoke("ToggleHeavyAttackAnimation", 0.25f);
         }
     }
 
@@ -264,7 +319,7 @@ public class PlayerController : Character2D
 
             if (DrainStamina(10))
             {
-                StartCoroutine(DodgerollEffect(0.3f));
+                StartCoroutine(DodgerollEffect(0.5f));
             }            
         }                          
     }
@@ -323,9 +378,9 @@ public class PlayerController : Character2D
 
     protected override bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, jumpableLayers);;
+        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + Vector2.down, Vector2.down, jumpRaycastLength, jumpableLayers);;
 
-        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
+        Debug.DrawRay((Vector2)transform.position + Vector2.down, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
 
         if (hit.collider != null )
         {
@@ -346,31 +401,44 @@ public class PlayerController : Character2D
     }
     private IEnumerator DodgerollEffect(float duration)
     {
+        characterAnim.SetBool("IsRolling", true);
         dodging = true;
         Debug.Log("Start Dodge");
         gameObject.layer = 13;
-        RB.AddForce(xMovementDirection * 10f, ForceMode2D.Impulse);
+        velocityClamped = false;
+        //RB.AddForce(new Vector2(xMovementDirection.x * dashSpeed, 0), ForceMode2D.Impulse);
+        RB.velocity = new Vector2(xMovementDirection.x * dashSpeed, 0);
+        
         yield return new WaitForSeconds(duration);
+
+        velocityClamped = true;
         dodging = false;
         gameObject.layer = 9;
         Debug.Log("End Dodge");
+        characterAnim.SetBool("IsRolling", false);
     }
 
     protected override void Jump()
     {
-        if (IsGrounded())
-        {
-            RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
-        }
-        else if (grapplingHook.gameObject.activeSelf && hookJoint.distance < 1f)
+        if (grapplingHook.gameObject.activeSelf && hookJoint.distance < 1f)
         {
             if (grapplingHook.gameObject.activeSelf && grapplingHook.GetComponent<Rigidbody2D>().isKinematic)
             {
                 RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
+                characterAnim.SetBool("IsJumping", true);
                 grapplingHook.ToggleActiveState();
                 hookJoint.enabled = false;
                 grapplingHookDelay = Time.time;
+                audioSource.clip = jumpAudioClip;
+                audioSource.Play();
             }
+        }
+        else if (IsGrounded() && !grapplingHook.gameObject.activeSelf)
+        {
+            RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
+            audioSource.clip = jumpAudioClip;
+            audioSource.Play();
+            characterAnim.SetBool("IsJumping", true);
         }
     }
 
@@ -386,7 +454,7 @@ public class PlayerController : Character2D
             case Consumable.ConsumableType.Health:
                 currentHealth += value;
                 break;
-            case Consumable.ConsumableType.HealthRegen:
+            case Consumable.ConsumableType.HealthRegeneration:
                 consumableEffect = gameObject.AddComponent<ConsumableEffect>();
 
                 consumableEffect.player = this;
@@ -397,7 +465,7 @@ public class PlayerController : Character2D
             case Consumable.ConsumableType.Stamina:
                 currentStamina += value;
                 break;
-            case Consumable.ConsumableType.StaminaRegen:
+            case Consumable.ConsumableType.StaminaRegeneration:
                 consumableEffect = gameObject.AddComponent<ConsumableEffect>();
 
                 consumableEffect.player = this;
@@ -405,6 +473,33 @@ public class PlayerController : Character2D
                 consumableEffect.value = value;
                 consumableEffect.duration = duration;
                 break;
+        }
+    }
+
+    private void ToggleLightAttackAnimation()
+    {
+        if (!characterAnim.GetBool("IsLightAttacking"))
+        {
+            int animationToPlay = Random.Range(1, 3);
+
+            characterAnim.SetInteger("AttackAnimation", animationToPlay);
+            characterAnim.SetBool("IsLightAttacking", true);
+        }
+        else
+        {
+            characterAnim.SetBool("IsLightAttacking", false);
+        }
+    }
+
+    private void ToggleHeavyAttackAnimation()
+    {
+        if (!characterAnim.GetBool("IsHeavyAttacking"))
+        {
+            characterAnim.SetBool("IsHeavyAttacking", true);
+        }
+        else
+        {
+            characterAnim.SetBool("IsHeavyAttacking", false);
         }
     }
 }

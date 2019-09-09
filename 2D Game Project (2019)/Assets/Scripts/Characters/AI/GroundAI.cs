@@ -5,6 +5,7 @@ using UnityEngine;
 public class GroundAI : AI
 {
     private enum NPCType { Melee, Ranged }
+    [SerializeField] private float initialAttackWindUp = 0.5f;
     [SerializeField] private NPCType attackType;
     [SerializeField] private GameObject projectile;
     [SerializeField] private float raycastXSize = 1;
@@ -14,12 +15,22 @@ public class GroundAI : AI
     protected override void Update()
     {
         base.Update();
-        StandardAttack();
+        Attack();
+
+        if (RB.velocity.y > 1f)
+        {
+            characterAnim.SetBool("IsJumping", true);
+        }
+
+        if (RB.velocity.y < -1f)
+        {
+            characterAnim.SetBool("IsJumping", false);
+        }
     }
 
-    protected override void StandardAttack()
+    private void Attack()
     {
-        if (Mathf.Abs(xDistanceFromPlayer) < attackRange && Mathf.Abs(yDistanceFromPlayer) < attackRange && !Stunned)
+        if (Mathf.Abs(xDistanceFromPlayer) < attackRange && Mathf.Abs(yDistanceFromPlayer) < attackRange && !Stunned && !isDead)
         {
             if (Time.time > attackDelay)
             {
@@ -27,7 +38,8 @@ public class GroundAI : AI
 
                 if (attackType == NPCType.Melee)
                 {
-                    base.StandardAttack();
+                    CancelInvoke("StandardAttack");
+                    Invoke("StandardAttack", Random.Range(0, initialAttackWindUp));
                 }
                 else
                 {
@@ -120,11 +132,38 @@ public class GroundAI : AI
                 }
             }
         }
+
+        characterAnim.SetFloat("Speed", Mathf.Abs(RB.velocity.x));
+    }
+
+    protected override void Jump()
+    {
+        if (Time.time > jumpDelay)
+        {
+            if (IsGrounded())
+            {
+                jumpDelay = Time.time + jumpCooldown;
+                RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
+                characterAnim.SetBool("IsJumping", true);
+            }
+        }
     }
 
     IEnumerator JumpWithDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         Jump();
+    }
+
+    private void ToggleAttackAnimation()
+    {
+        if (!characterAnim.GetBool("IsAttacking"))
+        {
+            characterAnim.SetBool("IsAttacking", true);
+        }
+        else
+        {
+            characterAnim.SetBool("IsAttacking", false);
+        }
     }
 }

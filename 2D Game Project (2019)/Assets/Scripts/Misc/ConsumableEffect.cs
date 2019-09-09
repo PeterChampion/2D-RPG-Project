@@ -18,10 +18,10 @@ public class ConsumableEffect : MonoBehaviour
     {
         switch (type)
         {
-            case Consumable.ConsumableType.HealthRegen:
+            case Consumable.ConsumableType.HealthRegeneration:
                 player.CurrentHealth += value / duration * Time.deltaTime;
                 break;
-            case Consumable.ConsumableType.StaminaRegen:
+            case Consumable.ConsumableType.StaminaRegeneration:
                 player.CurrentStamina += value / duration * Time.deltaTime;
                 break;
         }

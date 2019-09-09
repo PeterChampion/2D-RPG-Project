@@ -9,6 +9,12 @@ public class Weapon : Equipment
     public enum WeaponType { OneHander, TwoHander, Polearm, }
     public int damageValue;
 
+    public override string GetTooltipInfo()
+    {
+        string tooltipInfo = itemName + "\nDamage: " + damageValue + "\nValue: " + goldValue;
+        return tooltipInfo;
+    }
+
     public override void ApplyEquipmentStats()
     {
         base.ApplyEquipmentStats();

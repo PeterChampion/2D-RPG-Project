@@ -10,6 +10,7 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public Image icon;
     public Button removeButton;
     private Equipment equipment;
+    private AudioSource audioSource;
 
     // Tooltip Info
     private GameObject tooltip;
@@ -21,6 +22,7 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         tooltip = GameObject.Find("TooltipPanel");
         tooltipText = tooltip.GetComponentInChildren<TextMeshProUGUI>();
         tooltipOriginalPosition = tooltip.transform.position;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -35,6 +37,7 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         icon.sprite = equipment.sprite;
         icon.enabled = true;
         removeButton.interactable = true;
+        audioSource.Play();
     }
 
     public void ClearSlot()
@@ -48,7 +51,11 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnRemoveButton()
     {
         Debug.Log("Removing Equipment");
-        EquipmentManager.instance.Unequip((int)equipment.equipSlot);
+        if (equipment != null)
+        {
+            EquipmentManager.instance.Unequip((int)equipment.equipSlot);
+            audioSource.Play();
+        }        
         HideToolTip();
     }
 
@@ -65,7 +72,7 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void ShowToolTip(Vector2 position, string text)
     {
         tooltip.SetActive(true);
-        tooltip.transform.position = position + new Vector2(60, 50);
+        tooltip.transform.position = position + new Vector2(-80, -60);
         tooltipText.text = text;
     }
 

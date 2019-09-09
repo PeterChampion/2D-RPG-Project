@@ -11,6 +11,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private Image icon = null;
     [SerializeField] private Button removeButton = null;
     private Item item;
+    private AudioSource audioSource;
 
     // Tooltip Info
     private GameObject tooltip;
@@ -22,11 +23,20 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         tooltip = GameObject.Find("TooltipPanel");
         tooltipText = tooltip.GetComponentInChildren<TextMeshProUGUI>();
         tooltipOriginalPosition = tooltip.transform.position;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
         tooltip.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (tooltip.activeSelf)
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tooltip.GetComponent<RectTransform>());
+        }
     }
 
     public void AddItem(Item newItem)
@@ -51,7 +61,11 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         //Debug.Log("Removing item from inventory...");
         HideToolTip();
-        Inventory.instance.RemoveFromInventory(item);
+        if (item != null)
+        {
+            Inventory.instance.RemoveFromInventory(item);
+            audioSource.Play();
+        }        
     }
 
     public void UseItem()
@@ -61,13 +75,14 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             Debug.Log("Item used!");
             item.Use();
+            audioSource.Play();
         }
     }
 
     private void ShowToolTip(Vector2 position, string text)
     {
         tooltip.SetActive(true);
-        tooltip.transform.position = position + new Vector2(60,50);
+        tooltip.transform.position = position + new Vector2(-80,-60);
         tooltipText.text = text;
     }
 
