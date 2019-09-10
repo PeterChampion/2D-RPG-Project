@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     // Game State
     public bool IsGamePaused = false;
+    public GameObject pausePanel;
 
     // Player Stats
     private Slider healthSlider;
@@ -48,6 +49,8 @@ public class GameManager : MonoBehaviour
         healthSlider = GameObject.Find("HealthSlider").GetComponent<Slider>();
         staminaSlider = GameObject.Find("StaminaSlider").GetComponent<Slider>();
         statsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
+        pausePanel = GameObject.Find("PausePanel");
+        pausePanel.SetActive(false);
         EquipmentManager.instance.onEquipmentChangedCallback += UpdatePlayerStatsUI;
 
         StartCoroutine(InputListener());
@@ -59,6 +62,12 @@ public class GameManager : MonoBehaviour
     {
         healthSlider.value = player.CurrentHealth;
         staminaSlider.value = player.CurrentStamina;
+
+        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !Inventory.instance.open)
+        {
+            TogglePauseState();
+            pausePanel.SetActive(!pausePanel.activeSelf);
+        }
     }
 
     private void UpdatePlayerStatsUI()

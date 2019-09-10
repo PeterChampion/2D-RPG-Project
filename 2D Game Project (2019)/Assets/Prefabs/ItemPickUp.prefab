@@ -102,7 +102,7 @@ MonoBehaviour:
   interactionPrompt: {fileID: 9118452309080110336}
   interactionAudioClip: {fileID: 8300000, guid: 0c2533bcc2031084f871a49286c2c5f7,
     type: 3}
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: b301c23fddf875244b92b5acebcdb9d2, type: 2}
 --- !u!50 &7303968969690253040
 Rigidbody2D:
   serializedVersion: 4
@@ -141,14 +141,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.6, y: 1.6}
+    oldSize: {x: 1.0666667, y: 1.0666667}
     newSize: {x: 0.89, y: 0.86}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.89, y: 0.86}
+  m_Size: {x: 1.0666667, y: 1.0666667}
   m_EdgeRadius: 0
 --- !u!82 &936027978992795487
 AudioSource:
@@ -266,7 +266,7 @@ PrefabInstance:
     - target: {fileID: 3341684097256790109, guid: 058ec78f5ef52794f865f9db3c39c14d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1
+      value: 0.82
       objectReference: {fileID: 0}
     - target: {fileID: 3341684097256790109, guid: 058ec78f5ef52794f865f9db3c39c14d,
         type: 3}

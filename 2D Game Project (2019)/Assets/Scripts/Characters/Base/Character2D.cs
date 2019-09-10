@@ -20,6 +20,7 @@ public abstract class Character2D : MonoBehaviour
     protected Rigidbody2D RB;
     public Rigidbody2D RigidBody { get { return RB; } }
     protected Vector2 xMovementDirection;
+    public Vector2 XMovementDirection { get { return xMovementDirection; } }
 
     // Combat
     protected float attackDelay;

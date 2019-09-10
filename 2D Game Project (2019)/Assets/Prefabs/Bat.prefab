@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2879504722786497562}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: 0, y: 0.46, z: 0}
   m_LocalScale: {x: 1, y: 0.099999994, z: 1}
   m_Children: []
   m_Father: {fileID: 3084026111566285468}
@@ -174,12 +174,12 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 3084026111566285479}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 486b58bc53017dd4ebf4fdf74a7233a0, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.89, y: 0.86}
+  m_Size: {x: 0.43333334, y: 0.43333334}
   m_Direction: 0
 --- !u!50 &3084026111566285464
 Rigidbody2D:
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maximumHealth: 25
-  speed: 8
+  speed: 2
   jumpStrength: 8
   jumpRaycastLength: 1
   jumpableLayers:

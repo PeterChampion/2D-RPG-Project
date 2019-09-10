@@ -25,16 +25,18 @@ public class InventoryUI : MonoBehaviour
         inventory.onItemChangedCallback += UpdateUI;
         InventoryPanel.SetActive(false);
         tooltip.SetActive(false);
+        inventory.open = false;
         UpdateUI();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false)
+        if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false && !GameManager.instance.pausePanel.activeInHierarchy)
         {
             tooltip.SetActive(false);
             GameManager.instance.TogglePauseState();
             InventoryPanel.SetActive(!InventoryPanel.activeSelf);
+            inventory.open = !inventory.open;
         }
     }
 

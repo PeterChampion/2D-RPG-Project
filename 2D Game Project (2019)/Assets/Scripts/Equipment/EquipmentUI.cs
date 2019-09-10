@@ -28,7 +28,7 @@ public class EquipmentUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false)
+        if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false && !GameManager.instance.pausePanel.activeInHierarchy)
         {
             tooltip.SetActive(false);
             equipmentPanel.SetActive(!equipmentPanel.activeSelf);

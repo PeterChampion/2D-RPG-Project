@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     public int goldAmount;
     public int maxInventorySpace = 20;
     public List<Item> inventoryItems = new List<Item>();
+    public bool open;
 
     private void Awake()
     {

@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5397586310114123159}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 0.099999994, z: 1}
+  m_LocalPosition: {x: 0, y: 1.7, z: 0}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 8613347986703909918}
   m_RootOrder: 1
@@ -179,13 +179,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maximumHealth: 100
-  speed: 5
+  speed: 6
   jumpStrength: 12
   jumpRaycastLength: 2
   jumpableLayers:
     serializedVersion: 2
     m_Bits: 20736
-  attackRange: 2
+  attackRange: 2.5
   damage: 20
   knockbackPower: 5
   attackCooldown: 1
@@ -198,9 +198,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6196bc284b80c4c54a21b261031f4830, type: 3}
   - {fileID: 8300000, guid: c8677862719e441688678e6632161da9, type: 3}
   - {fileID: 8300000, guid: aa2fcafe8628340078c5a01209215a07, type: 3}
-  detectionRange: 10
+  detectionRange: 8
   minimumRange: 2
-  rayCastOffset: {x: 1, y: 0}
+  rayCastOffset: {x: 0.5, y: 0}
   jumpCooldown: 1.5
   wallLayer:
     serializedVersion: 2
@@ -213,7 +213,7 @@ MonoBehaviour:
   projectile: {fileID: 0}
   raycastXSize: 2
   raycastYSize: 2
-  heightDifferenceThreshhold: 0.5
+  heightDifferenceThreshhold: 1
 --- !u!70 &8613347986703909916
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -227,8 +227,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.4087807, y: -0.019037485}
-  m_Size: {x: 1.2833867, y: 2.7704554}
+  m_Offset: {x: 0.60061646, y: -0.04004097}
+  m_Size: {x: 1.0971375, y: 2.7628403}
   m_Direction: 0
 --- !u!50 &8613347986703909912
 Rigidbody2D:

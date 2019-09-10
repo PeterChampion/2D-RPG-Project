@@ -65,7 +65,7 @@ public abstract class AI : Character2D
                 transform.rotation = new Quaternion(transform.rotation.x, 0, 0, 0);
             }
 
-            if (Mathf.Abs(xDistanceFromPlayer) < minimumRange && Mathf.Abs(yDistanceFromPlayer) < minimumRange && IsGrounded())
+            if (Mathf.Abs(xDistanceFromPlayer) < minimumRange && Mathf.Abs(yDistanceFromPlayer) < minimumRange + 3 && IsGrounded())
             {
                 RB.velocity = new Vector2(0, RB.velocity.y);
             }

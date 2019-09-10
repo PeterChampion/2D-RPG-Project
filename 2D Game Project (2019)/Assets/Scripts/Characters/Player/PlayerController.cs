@@ -20,7 +20,7 @@ public class PlayerController : Character2D
     private float jumpCooldown = 0.5f;
     public DistanceJoint2D hookJoint;
     private GrapplingHook grapplingHook;
-    private float grapplingHookDelay;
+    public float grapplingHookDelay;
     private float grapplingHookCooldown = 0.5f;
     private Coroutine HookCoroutine;
     private float stunduration = 0;
@@ -220,7 +220,7 @@ public class PlayerController : Character2D
 
         if (Input.GetKey(KeyCode.Mouse1))
         {
-            Block();
+           // Block();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl) && !Stunned)
@@ -395,9 +395,9 @@ public class PlayerController : Character2D
 
     protected override bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast((Vector2)transform.position + Vector2.down, Vector2.down, jumpRaycastLength, jumpableLayers);;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, jumpableLayers);;
 
-        Debug.DrawRay((Vector2)transform.position + Vector2.down, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
+        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
 
         if (hit.collider != null )
         {
