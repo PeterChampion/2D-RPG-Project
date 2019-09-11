@@ -125,7 +125,7 @@ PrefabInstance:
     - target: {fileID: 8613347986703909906, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
       propertyPath: m_Name
-      value: Goblin (1)
+      value: Goblin
       objectReference: {fileID: 0}
     - target: {fileID: 8613347986703909918, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
@@ -200,7 +200,7 @@ PrefabInstance:
     - target: {fileID: 3847992862447097090, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
       propertyPath: damage
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3847992862447097090, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}

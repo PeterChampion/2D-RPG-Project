@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b728ed64415ff84ea07264883158171, type: 3}
-  m_Name: Tutorial Greaves
+  m_Name: Simple Greaves
   m_EditorClassIdentifier: 
-  itemName: Tutorial Greaves
+  itemName: Simple Greaves
   sprite: {fileID: 21300000, guid: b8fb302c5768e334ca82005f50e58121, type: 3}
-  goldValue: 25
+  goldValue: 5
   equipSlot: 2
-  armour: 3
+  armour: 1

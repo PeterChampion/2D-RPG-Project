@@ -222,7 +222,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   attackRange: 0
-  damage: 5
+  damage: 10
   knockbackPower: 10
   attackCooldown: 2
   armour: 0

@@ -186,7 +186,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 20736
   attackRange: 2.5
-  damage: 20
+  damage: 35
   knockbackPower: 5
   attackCooldown: 1
   armour: 0

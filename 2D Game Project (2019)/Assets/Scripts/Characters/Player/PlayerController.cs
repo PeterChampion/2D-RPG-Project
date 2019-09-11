@@ -284,6 +284,14 @@ public class PlayerController : Character2D
             Invoke("ToggleHurtAnimation", 0);
             Invoke("ToggleHurtAnimation", 0.25f);
         }
+        else
+        {
+            base.TakeDamage(1);
+            StartCoroutine(GameManager.instance.CameraShake());
+            GameManager.instance.UpdateHealthUI(currentHealth);
+            Invoke("ToggleHurtAnimation", 0);
+            Invoke("ToggleHurtAnimation", 0.25f);
+        }
     }
 
     protected override void StandardAttack()

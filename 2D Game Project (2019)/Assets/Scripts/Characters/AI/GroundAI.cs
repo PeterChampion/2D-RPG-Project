@@ -17,12 +17,11 @@ public class GroundAI : AI
         base.Update();
         Attack();
 
-        if (RB.velocity.y > 1f)
+        if (RB.velocity.y > 3f)
         {
             characterAnim.SetBool("IsJumping", true);
         }
-
-        if (RB.velocity.y < -1f)
+        else
         {
             characterAnim.SetBool("IsJumping", false);
         }
