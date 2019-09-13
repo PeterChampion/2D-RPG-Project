@@ -150,7 +150,6 @@ public class FlyingAI : AI
             player.GetComponent<PlayerController>().TakeDamage(damage);
             player.GetComponent<PlayerController>().Knockback(new Vector2(xMovementDirection.x, 0.5f), knockbackPower, knockbackDuration);
             StartCoroutine(MoveOnCollision(0.5f));
-            Debug.Log("Collision!");
         }
     }
 

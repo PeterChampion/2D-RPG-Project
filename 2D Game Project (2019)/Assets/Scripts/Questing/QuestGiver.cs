@@ -2,30 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// A trigger for dialogue that runs on a 2D element, when the player is within the interaction range a prompt is displayed, when the interaction key is pressed the dialogue specific to the object is shown and looped through.
-public class DialogueTrigger : MonoBehaviour
+public class QuestGiver : DialogueTrigger
 {
-    [SerializeField] protected new string name;
-    [SerializeField] protected Dialogue standardDialogue = new Dialogue(); // Dialogue of the DialogueTrigger
-    protected GameObject player;
-    [SerializeField] protected float interactionRange = 2.5F;
-    public static bool dialogueOpen; // Used so that multiple DialogueTrigger's can exist in the same scene without conflicting based on their different distances to the player
-    protected bool recentlyInteracted; // Used to flag which specific DialogueTrigger is being interacted with
-    [SerializeField] protected GameObject interactionPrompt = null;
+    private GameObject quests;
+    [SerializeField] private string QuestToAssign;
+    public Quest Quest { get; set; }
 
-    // Set up references
-    private void Awake()
+    public bool AssignedQuest { get; set; }
+    public bool QuestHandedIn { get; set; }
+    [SerializeField] protected Dialogue inProgressDialogue = new Dialogue();
+    [SerializeField] protected Dialogue rewardDialogue = new Dialogue();
+    [SerializeField] protected Dialogue completedDialogue = new Dialogue();
+
+    private void Start()
     {
-        player = FindObjectOfType<PlayerController>().gameObject;
-        interactionPrompt.SetActive(false);
+        quests = GameObject.Find("Quests");
     }
 
-    private void Update()
-    {
-        CheckForInteraction();
-    }
-
-    protected virtual void CheckForInteraction()
+    protected override void CheckForInteraction()
     {
         // If the player is within the interaction range on the X axis AND the Y axis AND the dialogue IS NOT open...
         if (Mathf.Abs(transform.position.x - player.transform.position.x) < interactionRange && Mathf.Abs(transform.position.y - player.transform.position.y) < interactionRange && dialogueOpen == false)
@@ -47,12 +41,40 @@ public class DialogueTrigger : MonoBehaviour
         if (Mathf.Abs(transform.position.x - player.transform.position.x) < interactionRange && Mathf.Abs(transform.position.y - player.transform.position.y) < interactionRange && Input.GetKeyDown(KeyCode.E))
         {
             interactionPrompt.SetActive(false); // Hide interactionPrompt as we are already interacting with the DialogueTrigger
-            recentlyInteracted = true;
+            recentlyInteracted = true;            
 
             // If the dialogue isn't already open...
             if (!dialogueOpen)
             {
-                TriggerDialogue(standardDialogue);
+                if (!AssignedQuest && !QuestHandedIn)
+                {
+                    AssignQuest();
+                    // Assign Quest Dialoague
+                    TriggerDialogue(standardDialogue);
+                }
+                else if (AssignedQuest && !QuestHandedIn)
+                {
+                    // Check completion
+                    // In Progress Dialogue
+                    CheckQuest();
+
+                    if (Quest.IsCompleted)
+                    {
+                        // Completion Dialogue
+                        TriggerDialogue(rewardDialogue);
+                    }
+                    else
+                    {
+                        // In Progress Dialogue
+                        TriggerDialogue(inProgressDialogue);
+                    }
+                }
+                else
+                {
+                    // Completed Dialogue
+                    TriggerDialogue(completedDialogue);
+                }
+
                 dialogueOpen = true;
             }
             // Else if the dialogue is already open...
@@ -75,15 +97,19 @@ public class DialogueTrigger : MonoBehaviour
         }
     }
 
-    // Uses 'DialogueManager' singleton to start dialogue
-    protected void TriggerDialogue(Dialogue dialogue)
+    private void AssignQuest()
     {
-        DialogueManager.instance.StartDialogue(dialogue, name);
+        AssignedQuest = true;
+        Quest = (Quest)quests.AddComponent(System.Type.GetType(QuestToAssign));
     }
 
-    // Uses 'DialogueManager' singleton to end dialogue
-    protected void EndDialogue()
+    private void CheckQuest()
     {
-        DialogueManager.instance.EndDialogue();
+        if (Quest.IsCompleted)
+        {
+            Quest.GiveReward();
+            QuestHandedIn = true;
+            Debug.Log("Quest completed!");
+        }
     }
 }

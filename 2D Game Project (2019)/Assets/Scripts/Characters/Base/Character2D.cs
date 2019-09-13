@@ -42,6 +42,7 @@ public abstract class Character2D : MonoBehaviour
     [SerializeField] GameObject attackArea;
     private Coroutine stunCoroutine;
     private Transform attackPoint;
+    public bool isDead;
 
     // Audio
     protected AudioSource audioSource;
@@ -129,7 +130,10 @@ public abstract class Character2D : MonoBehaviour
     {
         if (currentHealth <= 0)
         {
-            Die();
+            if (!isDead)
+            {
+                Die();
+            }
         }
 
         if (currentHealth > maximumHealth)

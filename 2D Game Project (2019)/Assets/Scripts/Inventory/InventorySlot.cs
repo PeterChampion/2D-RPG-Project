@@ -65,16 +65,13 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             Inventory.instance.RemoveFromInventory(item);
             audioSource.Play();
-            print("Remove");
         }        
     }
 
     public void UseItem()
     {
-        Debug.Log("Attempting to use item...");
         if (item != null)
         {
-            Debug.Log("Item used!");
             item.Use();
             audioSource.Play();
             if (IsMouseOver())

@@ -32,7 +32,6 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void AddEquipment(Equipment newEquipment)
     {
-        Debug.Log("Adding Equipment");
         equipment = newEquipment;
         icon.sprite = equipment.sprite;
         icon.enabled = true;
@@ -49,25 +48,21 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnRemoveButton()
     {
-        Debug.Log("Removing Equipment");
         if (equipment != null)
         {
             EquipmentManager.instance.Unequip((int)equipment.equipSlot);
             audioSource.Play();
-            print("Remove");
         }        
         HideToolTip();
     }
 
     public void UseEquipment()
     {
-        Debug.Log("Using Equipment");
         if (equipment != null)
         {
             equipment.Use();
             HideToolTip();
             audioSource.Play();
-            print("Equip");
         }
     }
 

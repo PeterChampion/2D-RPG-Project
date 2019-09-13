@@ -29,6 +29,10 @@ public class GameManager : MonoBehaviour
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineBasicMultiChannelPerlin virtualCameraNoise;
 
+    // Test
+    public delegate void OnCharacterDeath(AI.EnemyType type);
+    public OnCharacterDeath OnCharacterDeathCallback;
+
     private void Awake()
     {
         if (instance == null)

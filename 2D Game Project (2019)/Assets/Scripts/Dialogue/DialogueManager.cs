@@ -34,10 +34,10 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Gains reference to all sentences that need to be displayed, begins the opening animation
-    public void StartDialogue(Dialogue dialogue)
+    public void StartDialogue(Dialogue dialogue , string name)
     {
         dialogueAnimator.SetBool("IsOpen", true); // Animation
-        nameText.text = dialogue.name; // Reference to the name of who is speaking the dialogue
+        nameText.text = name; // Reference to the name of who is speaking the dialogue
         sentences.Clear(); // Clears the queue of any previous sentences 
 
         // Queue up the sentences in their respective order

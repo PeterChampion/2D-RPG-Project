@@ -7,7 +7,7 @@ using TMPro;
 public class Inventory : MonoBehaviour
 {
     public static Inventory instance; // Singleton
-    public delegate void OnItemChanged(); // Delegate
+    public delegate void OnItemChanged(Item item); // Delegate
     public OnItemChanged onItemChangedCallback;
     public TextMeshProUGUI goldText;
     public int goldAmount;
@@ -38,15 +38,13 @@ public class Inventory : MonoBehaviour
         else
         {
             inventoryItems.Add(item);
-            onItemChangedCallback?.Invoke(); // '?' = a check to see if the variable is true or not, if so perform the operation 
-            //Debug.Log("Item added to inventory!");
+            onItemChangedCallback?.Invoke(item); // '?' = a check to see if the variable is true or not, if so perform the operation 
             return true;
         }
     }
     public void RemoveFromInventory(Item item)
     {
-        //Debug.Log("Attempting to remove item from inventory...");
         inventoryItems.Remove(item);
-        onItemChangedCallback?.Invoke();
+        onItemChangedCallback?.Invoke(item);
     }
 }

@@ -7,7 +7,6 @@ using UnityEngine;
 [System.Serializable] // Allows the class to be displayed in the Unity IDE
 public class Dialogue
 {
-    public string name;
     [TextArea(3, 10)] // Increases the text area in the Unity IDE
     public List<string> sentences;
 

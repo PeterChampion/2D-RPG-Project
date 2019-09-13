@@ -35,7 +35,6 @@ public class EquipmentManager : MonoBehaviour
 
     public void Equip(Equipment newEquipment)
     {
-        Debug.Log("Attempting to Equip an item");
         slotIndex = (int)newEquipment.equipSlot;
         Equipment oldEquipment = null;
 
@@ -44,11 +43,9 @@ public class EquipmentManager : MonoBehaviour
             currentEquipment[slotIndex].RemoveEquipmentStats();
             oldEquipment = currentEquipment[slotIndex];
             inventory.AddToInventory(oldEquipment);
-            Debug.Log("Old equipped item returned to inventory!");
         }
         currentEquipment[slotIndex] = newEquipment;
         currentEquipment[slotIndex].ApplyEquipmentStats();
-        Debug.Log("Item Equipped!");
 
         if (onEquipmentChangedCallback != null)
         {
@@ -63,7 +60,6 @@ public class EquipmentManager : MonoBehaviour
 
     public void Unequip(int slotIndex)
     {
-        Debug.Log("Attempting to Unequip an item");
         Equipment oldEquipment = currentEquipment[slotIndex];
 
         if (inventory.maxInventorySpace > inventory.inventoryItems.Count)
@@ -75,7 +71,6 @@ public class EquipmentManager : MonoBehaviour
 
                 currentEquipment[slotIndex].RemoveEquipmentStats();
                 currentEquipment[slotIndex] = null;
-                Debug.Log("Attempt to Unequip an item was successful");
 
                 if (onEquipmentChangedCallback != null)
                 {

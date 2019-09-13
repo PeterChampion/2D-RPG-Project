@@ -26,7 +26,7 @@ public class InventoryUI : MonoBehaviour
         InventoryPanel.SetActive(false);
         tooltip.SetActive(false);
         inventory.open = false;
-        UpdateUI();
+        UpdateUI(null);
     }
 
     private void Update()
@@ -40,7 +40,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    private void UpdateUI()
+    private void UpdateUI(Item item)
     {
         for (int i = 0; i < inventorySlots.Length; i++)
         {

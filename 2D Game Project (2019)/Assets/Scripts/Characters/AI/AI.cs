@@ -7,6 +7,8 @@ using UnityEngine.AI;
 // jump over these walls/ledges if detected.
 public abstract class AI : Character2D
 {
+    public enum EnemyType { Bat, Goblin, Kobold, Ogre }
+    public EnemyType Type;
     protected GameObject player;
     [SerializeField] protected int detectionRange = 5;
     [SerializeField] protected float minimumRange = 2;
@@ -21,7 +23,6 @@ public abstract class AI : Character2D
     [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
     private int patrolpointIndex = 0;
     [SerializeField] protected bool setToPatrol = false;
-    public bool isDead;
     private Transform healthBar;
     private Coroutine healthBarCoroutine;
 
@@ -131,6 +132,7 @@ public abstract class AI : Character2D
     protected override void Die()
     {
         isDead = true;
+        GameManager.instance.OnCharacterDeathCallback?.Invoke(Type);
         base.Die();
     }
 
