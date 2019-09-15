@@ -14,7 +14,7 @@ public class Quest : MonoBehaviour
 
     public void CheckGoals()
     {
-        IsCompleted = Goals.All(goal => goal.IsCompleted);
+        IsCompleted = Goals.All(goal => goal.IsCompleted);        
     }
 
     public virtual void GiveReward()
@@ -23,7 +23,7 @@ public class Quest : MonoBehaviour
         {
             Inventory.instance.AddToInventory(ItemReward);
         }
-
-        // TO DO: Add experience reward to player
+        GameManager.instance.player.Experience += ExperienceReward;
+        GameManager.instance.player.OnExperienceGainCallback.Invoke();
     }
 }

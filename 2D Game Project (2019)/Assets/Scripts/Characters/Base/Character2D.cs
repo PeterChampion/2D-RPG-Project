@@ -28,7 +28,7 @@ public abstract class Character2D : MonoBehaviour
     [SerializeField] protected int damage = 5;
     public int Damage { get { return damage; } set { damage = value; } }
     [SerializeField] protected float knockbackPower = 5;
-    [SerializeField] protected float attackCooldown = 1;
+    [SerializeField] protected float attackCooldown = 0.5f;
     [SerializeField] private int armour = 0;
     public int Armour { get { return armour; } set { armour = value; } }
     [SerializeField] private int magicResist = 0;

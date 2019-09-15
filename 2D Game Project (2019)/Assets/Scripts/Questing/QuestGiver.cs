@@ -55,7 +55,8 @@ public class QuestGiver : DialogueTrigger
                 else if (AssignedQuest && !QuestHandedIn)
                 {
                     // Check completion
-                    // In Progress Dialogue
+                    // In Progress Dialogue                    
+                    Inventory.instance.onItemChangedCallback(null);
                     CheckQuest();
 
                     if (Quest.IsCompleted)

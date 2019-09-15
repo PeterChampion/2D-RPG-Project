@@ -18,8 +18,11 @@ public class GameManager : MonoBehaviour
     // Player Stats
     private Slider healthSlider;
     private Slider staminaSlider;
-    private TextMeshProUGUI statsText;
+    private TextMeshProUGUI equipmentStatsText;
     public PlayerController player;
+    private GameObject playerStatsPanel;
+    private TextMeshProUGUI playerStatsText;
+    private GameObject playerStatsButtons;
 
     // Camera Shake
     private Camera gameCamera;
@@ -29,7 +32,7 @@ public class GameManager : MonoBehaviour
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineBasicMultiChannelPerlin virtualCameraNoise;
 
-    // Test
+    // AI Delegates
     public delegate void OnCharacterDeath(AI.EnemyType type);
     public OnCharacterDeath OnCharacterDeathCallback;
 
@@ -52,18 +55,27 @@ public class GameManager : MonoBehaviour
         gameCamera = FindObjectOfType<Camera>();
         healthSlider = GameObject.Find("HealthSlider").GetComponent<Slider>();
         staminaSlider = GameObject.Find("StaminaSlider").GetComponent<Slider>();
-        statsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
+        equipmentStatsText = GameObject.Find("EquipmentStatsText").GetComponent<TextMeshProUGUI>();
         pausePanel = GameObject.Find("PausePanel");
         pausePanel.SetActive(false);
-        EquipmentManager.instance.onEquipmentChangedCallback += UpdatePlayerStatsUI;
+        EquipmentManager.instance.onEquipmentChangedCallback += UpdateEquipmentStatsUI;
+        player.OnLevelUpCallback += UpdatePlayerStatsUI;
+        player.OnExperienceGainCallback += UpdatePlayerStatsUI;
+        playerStatsPanel = GameObject.Find("StatsPanel");
+        playerStatsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
+        playerStatsButtons = GameObject.Find("StatsButtons");
 
-        StartCoroutine(InputListener());
+        playerStatsPanel.SetActive(false);
+        //StartCoroutine(InputListener());
+        UpdateEquipmentStatsUI();
         UpdatePlayerStatsUI();
         Canvas.ForceUpdateCanvases();
     }
 
     private void Update()
     {
+        healthSlider.maxValue = player.MaximumHealth;
+        staminaSlider.maxValue = player.MaximumStamina;
         healthSlider.value = player.CurrentHealth;
         staminaSlider.value = player.CurrentStamina;
 
@@ -72,21 +84,31 @@ public class GameManager : MonoBehaviour
             TogglePauseState();
             pausePanel.SetActive(!pausePanel.activeSelf);
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            playerStatsPanel.SetActive(!playerStatsPanel.activeSelf);
+        }
+
+        if (player.LevelPoints > 0)
+        {
+            playerStatsButtons.SetActive(true);
+        }
+        else
+        {
+            playerStatsButtons.SetActive(false);
+        }
     }
 
-    private void UpdatePlayerStatsUI()
+    private void UpdateEquipmentStatsUI()
     {
-        statsText.text = "Damage: " + player.Damage.ToString() +"\nArmour: " + player.Armour.ToString();
+        equipmentStatsText.text = "Damage: " + player.Damage +"\nArmour: " + player.Armour;
     }
 
-    public void UpdateHealthUI(float healthValue)
+    public void UpdatePlayerStatsUI()
     {
-        healthSlider.value = healthValue;
-    }
-
-    public void UpdateStaminaUI(float staminaValue)
-    {
-        staminaSlider.value = staminaValue;
+        playerStatsText.text = "Strength: " + player.Strength + "\nConstitution: " + player.Constitution + "\nAgility: " + player.Agility + 
+            "\nLuck: " + player.Luck + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nPoints Left: " + player.LevelPoints;
     }
 
     public void TogglePauseState()

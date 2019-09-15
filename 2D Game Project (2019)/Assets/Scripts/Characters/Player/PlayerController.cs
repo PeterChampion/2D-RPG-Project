@@ -6,11 +6,27 @@ using UnityEngine;
 public class PlayerController : Character2D
 {
     // General Stats
-    [SerializeField] private int maximumStamina = 100;
-    [SerializeField] private float currentStamina = 100;
+    [SerializeField] private int maximumStamina = 90;
+    public int MaximumStamina { get { return maximumStamina; } set { maximumStamina = value; } }
+    private float currentStamina = 90;
     public float CurrentStamina { get { return currentStamina; } set { currentStamina = value; } }
+    [SerializeField] private int strength;
+    public int Strength { get { return strength; } set { strength = value; } }
+    [SerializeField] private int constitution;
+    public int Constitution { get { return constitution; } set { constitution = value; } }
+    [SerializeField] private int agility;
+    public int Agility { get { return agility; } set { agility = value; } }
+    [SerializeField] private int luck;
+    public int Luck { get { return luck; } set { luck = value; } }
+    [SerializeField] private int experience;
+    public int Experience { get { return experience; } set { experience = value; } }
+    [SerializeField] private int level;
+    public int Level { get { return level; } set { level = value; } }
+    public int LevelPoints { get; set; }
+    [SerializeField] private int nextLevelExperience;
+    public int NextLevelExperience { get { return nextLevelExperience; } set { nextLevelExperience = value; } }
 
-    // Movement / Dodge / GrapplingHook
+    // Movement // Dodge // GrapplingHook
     private bool movementEnabled = true;
     private float dodgeDelay;
     private float dodgeCooldown = 1;
@@ -42,6 +58,12 @@ public class PlayerController : Character2D
     // Respawn
     private Vector3 respawnPoint;
 
+    // Delegates
+    public delegate void OnLevelUp();
+    public OnLevelUp OnLevelUpCallback;
+    public delegate void OnExperienceGain();
+    public OnExperienceGain OnExperienceGainCallback;
+
     protected override void Awake()
     {
         base.Awake();
@@ -50,6 +72,11 @@ public class PlayerController : Character2D
         hookJoint.enabled = false;
         grapplingHook = FindObjectOfType<GrapplingHook>();
         respawnPoint = transform.position;
+        maximumHealth = maximumHealth + (constitution * 10);
+        maximumStamina = maximumStamina + (agility * 10);
+        currentHealth = MaximumHealth;
+        currentStamina = maximumStamina;
+        damage = damage + strength;
         Physics2D.IgnoreLayerCollision(9, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(9, 15, true); // Ignore collision with hook layer
     }
@@ -110,6 +137,12 @@ public class PlayerController : Character2D
                 movementEnabled = true;
                 characterAnim.SetBool("IsGrappled", false);
             }
+
+            if (Experience >= NextLevelExperience)
+            {
+                LevelUp();
+                OnLevelUpCallback.Invoke();
+            }
         }
     }
 
@@ -126,6 +159,14 @@ public class PlayerController : Character2D
     protected override void ClampVelocity()
     {
         RB.velocity = new Vector2(Mathf.Clamp(RB.velocity.x, -8, 8), Mathf.Clamp(RB.velocity.y, -15, 15));
+    }
+
+    private void LevelUp()
+    {
+        Level++;
+        LevelPoints++;
+        NextLevelExperience = NextLevelExperience * 2; // Refactor later to be a more gradual leveling process, this is to be used for testing currently
+        OnLevelUpCallback.Invoke();
     }
 
     private void PlayerMovement()
@@ -280,7 +321,6 @@ public class PlayerController : Character2D
         {
             base.TakeDamage(damageValue);
             StartCoroutine(GameManager.instance.CameraShake());
-            GameManager.instance.UpdateHealthUI(currentHealth);
             Invoke("ToggleHurtAnimation", 0);
             Invoke("ToggleHurtAnimation", 0.25f);
         }
@@ -288,7 +328,6 @@ public class PlayerController : Character2D
         {
             base.TakeDamage(1);
             StartCoroutine(GameManager.instance.CameraShake());
-            GameManager.instance.UpdateHealthUI(currentHealth);
             Invoke("ToggleHurtAnimation", 0);
             Invoke("ToggleHurtAnimation", 0.25f);
         }
@@ -362,7 +401,6 @@ public class PlayerController : Character2D
             }
 
             currentStamina -= drainValue;
-            GameManager.instance.UpdateStaminaUI((int)currentStamina);
             return true;
         }
         else
@@ -390,7 +428,6 @@ public class PlayerController : Character2D
         if (recoverStamina)
         {
             currentStamina += 0.5f;
-            GameManager.instance.UpdateStaminaUI((int)currentStamina);
         }
     }
 

@@ -30,19 +30,11 @@ public class CollectionGoal : Goal
         {
             if (inventoryItem.itemName == ItemName)
             {
+                Debug.Log("Matching Item Found");
                 itemCount++;
             }
         }
-
-        if (item.itemName == ItemName)
-        {
-            Debug.Log("Correct Item Found");
-            CurrentAmount++;
-            Evaluate();
-        }
-
         CurrentAmount = itemCount;
+        Evaluate();
     }
-
-
 }
