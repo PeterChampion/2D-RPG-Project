@@ -10,6 +10,12 @@ public abstract class Item : ScriptableObject
     public Sprite sprite = null;
     public int goldValue = 0;
 
+    private void OnEnable()
+    {
+        GameManager.instance.ItemsInGame.Add(this);
+        Debug.Log(itemName + " added to the list!");
+    }
+
     public virtual void Use()
     {
         // Intended to be overwritten

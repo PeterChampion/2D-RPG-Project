@@ -11,6 +11,7 @@ public class GroundAI : AI
     [SerializeField] private float raycastXSize = 1;
     [SerializeField] private float raycastYSize = 1;
     [SerializeField] private float heightDifferenceThreshhold = 0.5f;
+    private Coroutine attackCoroutine;
 
     protected override void Update()
     {
@@ -37,8 +38,11 @@ public class GroundAI : AI
 
                 if (attackType == NPCType.Melee)
                 {
-                    CancelInvoke("StandardAttack");
-                    Invoke("StandardAttack", Random.Range(0, initialAttackWindUp));
+                    if (attackCoroutine != null)
+                    {
+                        StopCoroutine(attackCoroutine);
+                    }
+                    attackCoroutine = StartCoroutine(StandardAttackCoroutine(Random.Range(0.1f, initialAttackWindUp)));
                 }
                 else
                 {
@@ -47,6 +51,12 @@ public class GroundAI : AI
                 }
             }
         }
+    }
+
+    private IEnumerator StandardAttackCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StandardAttack(damage);
     }
 
     protected override void ClampVelocity()

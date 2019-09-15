@@ -9,6 +9,7 @@ public abstract class AI : Character2D
 {
     public enum EnemyType { Bat, Goblin, Kobold, Ogre }
     public EnemyType Type;
+    [SerializeField] private int experienceValue;
     protected GameObject player;
     [SerializeField] protected int detectionRange = 5;
     [SerializeField] protected float minimumRange = 2;
@@ -25,6 +26,7 @@ public abstract class AI : Character2D
     [SerializeField] protected bool setToPatrol = false;
     private Transform healthBar;
     private Coroutine healthBarCoroutine;
+    [SerializeField] private GameObject lootDropOnDeath;
 
     protected override void Awake()
     {
@@ -120,6 +122,10 @@ public abstract class AI : Character2D
         else
         {
             healthBar.localScale = new Vector3(currentHealth / 100, healthBar.localScale.y, healthBar.localScale.z);
+            GameObject damagePopup = Instantiate(popupText, transform.position, Quaternion.identity);
+            damagePopup.GetComponent<PopupText>().content.text = damageValue.ToString();
+            damagePopup.GetComponent<PopupText>().content.color = Color.red;
+            damagePopup.transform.SetParent(null);
         }
 
         if (healthBarCoroutine != null)
@@ -133,6 +139,15 @@ public abstract class AI : Character2D
     {
         isDead = true;
         GameManager.instance.OnCharacterDeathCallback?.Invoke(Type);
+        GameManager.instance.player.Experience += experienceValue;
+        GameManager.instance.player.OnExperienceGainCallback();
+        GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
+        experiencePopup.GetComponent<PopupText>().content.text = experienceValue.ToString() + "xp";
+        experiencePopup.GetComponent<PopupText>().content.color = Color.green;
+        experiencePopup.transform.SetParent(null);
+        GameObject test = Instantiate(lootDropOnDeath, transform.position, Quaternion.identity);
+        test.transform.parent = null;
+        test.GetComponent<ItemPickUp>().item = RandomLootDrop();
         base.Die();
     }
 
@@ -197,6 +212,17 @@ public abstract class AI : Character2D
     {
         RB.velocity = Vector2.zero;
         RB.AddForce(direction * (force / 2), ForceMode2D.Impulse);
+    }
+
+    private Item RandomLootDrop()
+    {
+        int value = Random.Range(1, 101);
+        Item loot;
+
+        loot = GameManager.instance.ItemsInGame[0];
+        Debug.Log(loot.itemName);
+
+       return loot;
     }
 
     private IEnumerator DisplayHealthBar(float duration)

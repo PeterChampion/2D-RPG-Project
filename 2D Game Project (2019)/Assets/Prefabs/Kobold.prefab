@@ -194,10 +194,15 @@ MonoBehaviour:
   knockbackDuration: 0.5
   attackArea: {fileID: 2762480992248206957, guid: c4aa19d9043c63149b17c3d20569a9d6,
     type: 3}
+  isDead: 0
   damagedAudioClips:
   - {fileID: 8300000, guid: 6196bc284b80c4c54a21b261031f4830, type: 3}
   - {fileID: 8300000, guid: c8677862719e441688678e6632161da9, type: 3}
   - {fileID: 8300000, guid: aa2fcafe8628340078c5a01209215a07, type: 3}
+  popupText: {fileID: 2924230575057850071, guid: 2078bae5d5966c7409a902ac4a348a6e,
+    type: 3}
+  Type: 2
+  experienceValue: 0
   detectionRange: 8
   minimumRange: 2
   rayCastOffset: {x: 0.5, y: 0}
@@ -207,7 +212,6 @@ MonoBehaviour:
     m_Bits: 4352
   patrolPoints: []
   setToPatrol: 0
-  isDead: 0
   initialAttackWindUp: 0.5
   attackType: 0
   projectile: {fileID: 0}

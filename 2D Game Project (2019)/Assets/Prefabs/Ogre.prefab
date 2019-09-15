@@ -133,12 +133,11 @@ PrefabInstance:
       propertyPath: heightDifferenceThreshhold
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 8613347986703909917, guid: 146cb2883b3595448982d9e9401899c5,
+    - target: {fileID: 3847992862447097090, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: -7026482853496196451, guid: a7c26eea35560a04b8075ea6c41677c1,
-        type: 3}
+      propertyPath: Type
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6474476366344243068, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -154,6 +153,12 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 8613347986703909917, guid: 146cb2883b3595448982d9e9401899c5,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -7026482853496196451, guid: a7c26eea35560a04b8075ea6c41677c1,
+        type: 3}
     - target: {fileID: 8613347986703909916, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
       propertyPath: m_Offset.x

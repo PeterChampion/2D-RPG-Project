@@ -32,12 +32,17 @@ public class GameManager : MonoBehaviour
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineBasicMultiChannelPerlin virtualCameraNoise;
 
+    // Items List
+    public List<Item> ItemsInGame = new List<Item>();
+
     // AI Delegates
     public delegate void OnCharacterDeath(AI.EnemyType type);
     public OnCharacterDeath OnCharacterDeathCallback;
 
     private void Awake()
     {
+        Debug.Log("Ran");
+
         if (instance == null)
         {
             instance = this;
@@ -47,6 +52,7 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
     }
+
     void Start()
     {
         player = FindObjectOfType<PlayerController>();

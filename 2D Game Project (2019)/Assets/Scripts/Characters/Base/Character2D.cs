@@ -54,6 +54,9 @@ public abstract class Character2D : MonoBehaviour
     // SpriteRenderer
     protected SpriteRenderer spriteRenderer;
 
+    // Text
+    [SerializeField] protected GameObject popupText;
+
     protected virtual void Awake() // Set References & Variable set up
     {
         RB = GetComponent<Rigidbody2D>();
@@ -74,10 +77,10 @@ public abstract class Character2D : MonoBehaviour
         RB.velocity = new Vector2(Mathf.Clamp(RB.velocity.x, -3, 3), Mathf.Clamp(RB.velocity.y, -15, 15));
     }
 
-    protected virtual void StandardAttack()
+    protected virtual void StandardAttack(int damageToDeal)
     {
         AttackArea attack = Instantiate(attackArea, attackPoint.position, Quaternion.identity, transform).GetComponent<AttackArea>();
-        attack.Damage = damage;
+        attack.Damage = damageToDeal;
         attack.KnockbackDirection = xMovementDirection;
         attack.KnockbackPower = knockbackPower;
         attack.KnockbackDuration = knockbackDuration;
@@ -105,10 +108,10 @@ public abstract class Character2D : MonoBehaviour
         //}
     }
 
-    protected virtual void HeavyAttack()
+    protected virtual void HeavyAttack(int damageToDeal)
     {
         AttackArea attack = Instantiate(attackArea, attackPoint.position, Quaternion.identity, transform).GetComponent<AttackArea>();
-        attack.Damage = damage * 2;
+        attack.Damage = damageToDeal * 2;
         attack.KnockbackDirection = xMovementDirection;
         attack.KnockbackPower = knockbackPower * 2;
         attack.KnockbackDuration = knockbackDuration * 1.5f;

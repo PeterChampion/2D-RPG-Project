@@ -167,6 +167,11 @@ public class PlayerController : Character2D
         LevelPoints++;
         NextLevelExperience = NextLevelExperience * 2; // Refactor later to be a more gradual leveling process, this is to be used for testing currently
         OnLevelUpCallback.Invoke();
+
+        GameObject levelUpPopup = Instantiate(popupText, transform.position, Quaternion.identity);
+        levelUpPopup.GetComponent<PopupText>().content.text = "*Level Up!*";
+        levelUpPopup.GetComponent<PopupText>().content.color = Color.green;
+        levelUpPopup.transform.SetParent(null);
     }
 
     private void PlayerMovement()
@@ -239,7 +244,7 @@ public class PlayerController : Character2D
                 if (Time.time > attackDelay)
                 {
                     attackDelay = Time.time + attackCooldown;
-                    StandardAttack();
+                    StandardAttack(damage);
                 }
             }
             else if (timeMouseHeldDown >= 0.5f)
@@ -248,7 +253,7 @@ public class PlayerController : Character2D
                 if (Time.time > attackDelay)
                 {
                     attackDelay = Time.time + attackCooldown;
-                    HeavyAttack();
+                    HeavyAttack(damage);
                 }
             }
             else if (timeMouseHeldDown > 1.5f)
@@ -261,7 +266,7 @@ public class PlayerController : Character2D
 
         if (Input.GetKey(KeyCode.Mouse1))
         {
-           // Block();
+           //Block();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl) && !Stunned)
@@ -323,6 +328,11 @@ public class PlayerController : Character2D
             StartCoroutine(GameManager.instance.CameraShake());
             Invoke("ToggleHurtAnimation", 0);
             Invoke("ToggleHurtAnimation", 0.25f);
+
+            GameObject damagePopup = Instantiate(popupText, transform.position, Quaternion.identity);
+            damagePopup.GetComponent<PopupText>().content.text = damageValue.ToString();
+            damagePopup.GetComponent<PopupText>().content.color = Color.red;
+            damagePopup.transform.SetParent(null);
         }
         else
         {
@@ -333,12 +343,13 @@ public class PlayerController : Character2D
         }
     }
 
-    protected override void StandardAttack()
+    protected override void StandardAttack(int damageToDeal)
     {
         // Attack, plays animation + damages all targets hit
         if (DrainStamina(10))
         {
-            base.StandardAttack();
+            damageToDeal = DetermineCrit(damageToDeal, luck);
+            base.StandardAttack(damageToDeal);
             Invoke("ToggleLightAttackAnimation", 0);
             Invoke("ToggleLightAttackAnimation", 0.25f);
 
@@ -348,12 +359,14 @@ public class PlayerController : Character2D
         }
     }
 
-    protected override void HeavyAttack()
+    protected override void HeavyAttack(int damageToDeal)
     {
         // Attack, plays animation + damages all targets hit
-        if (DrainStamina(10))
+        if (DrainStamina(20))
         {
-            base.HeavyAttack();
+            damageToDeal = DetermineCrit(damageToDeal, luck);
+
+            base.HeavyAttack(damageToDeal);
             Invoke("ToggleHeavyAttackAnimation", 0);
             Invoke("ToggleHeavyAttackAnimation", 0.25f);
 
@@ -361,6 +374,16 @@ public class PlayerController : Character2D
             audioSource.clip = attackAudioClips[clipToPlay];
             audioSource.Play();
         }
+    }
+
+    private int DetermineCrit(int value, int chance)
+    {
+        if (Random.Range(1,101) <= chance)
+        {
+            value = value * 2;
+        }
+
+        return value;
     }
 
     private void Block()

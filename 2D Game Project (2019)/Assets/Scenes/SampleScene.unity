@@ -424,6 +424,7 @@ MonoBehaviour:
   shakeDuration: 0.3
   shakeAmplitude: 2
   shakeFrequency: 3
+  ItemsInGame: []
 --- !u!114 &14371221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13152,6 +13153,23 @@ PrefabInstance:
       propertyPath: Type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: popupText
+      value: 
+      objectReference: {fileID: 2924230575057850071, guid: 2078bae5d5966c7409a902ac4a348a6e,
+        type: 3}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: experienceValue
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: lootDropOnDeath
+      value: 
+      objectReference: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b7f21c23af80cf4fa03c73e8b7f6963, type: 3}
 --- !u!1001 &1327424856
@@ -39720,6 +39738,12 @@ PrefabInstance:
       propertyPath: maximumStamina
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 4337440639732455725, guid: d1daafb0628ebe7408390b72a6b65c21,
+        type: 3}
+      propertyPath: popupText
+      value: 
+      objectReference: {fileID: 2924230575057850071, guid: 2078bae5d5966c7409a902ac4a348a6e,
+        type: 3}
     - target: {fileID: 943657891, guid: d1daafb0628ebe7408390b72a6b65c21, type: 3}
       propertyPath: m_ConnectedRigidBody
       value: 
