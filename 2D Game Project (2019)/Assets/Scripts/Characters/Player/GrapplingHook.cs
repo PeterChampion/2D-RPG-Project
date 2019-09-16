@@ -23,6 +23,7 @@ public class GrapplingHook : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         Physics2D.IgnoreLayerCollision(15, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(15, 15, true); // Ignore collision with hook layer
+        Physics2D.IgnoreLayerCollision(15, 13, true); // Ignore collision with invulnerable layer
     }
 
     private void Start()

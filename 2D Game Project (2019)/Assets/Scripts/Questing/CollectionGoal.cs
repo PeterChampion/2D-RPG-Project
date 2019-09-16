@@ -6,12 +6,11 @@ public class CollectionGoal : Goal
 {
     public string ItemName { get; set; }
 
-    public CollectionGoal(Quest _quest, string _itemName, string _description, bool _completed, int _currentAmount, int _requiredAmount)
+    public CollectionGoal(Quest _quest, string _itemName, string _description, int _currentAmount, int _requiredAmount)
     {
         Quest = _quest;
         ItemName = _itemName;
         Description = _description;
-        IsCompleted = _completed;
         RequiredAmount = _requiredAmount;
         CurrentAmount = _currentAmount;
     }

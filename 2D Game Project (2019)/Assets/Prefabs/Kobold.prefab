@@ -212,6 +212,10 @@ MonoBehaviour:
     m_Bits: 4352
   patrolPoints: []
   setToPatrol: 0
+  lootDropPrefab: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
+    type: 3}
+  rarityOfLootDrop: 0
+  lootDropChance: 0
   initialAttackWindUp: 0.5
   attackType: 0
   projectile: {fileID: 0}

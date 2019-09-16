@@ -424,7 +424,6 @@ MonoBehaviour:
   shakeDuration: 0.3
   shakeAmplitude: 2
   shakeFrequency: 3
-  ItemsInGame: []
 --- !u!114 &14371221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3544,8 +3543,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 61.21}
-  m_SizeDelta: {x: 0, y: -122.42}
+  m_AnchoredPosition: {x: -0.000030517578, y: 108.13}
+  m_SizeDelta: {x: 0, y: -216.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &355129311
 MonoBehaviour:
@@ -6093,8 +6092,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7, y: -1.5800018}
-  m_SizeDelta: {x: 167.83, y: 95.79}
+  m_AnchoredPosition: {x: 1.3125, y: -12.558}
+  m_SizeDelta: {x: 194.05, y: 216.27}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &549969556
 MonoBehaviour:
@@ -6116,15 +6115,23 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: 'Strength: N/A
+  m_text: 'Level: N/A
+
+    Experience: N/A
+
+    Health: N/A
+
+    Stamina: N/A
+
+    ------------------------------------
+
+    Strength: N/A
 
     Constitution: N/A
 
     Agility: N/A
 
     Luck: N/A
-
-    Experience: N/A
 
     Points Left: N/A'
   m_isRightToLeft: 0
@@ -6192,15 +6199,15 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0.07331374, y: -0.1367719, z: -17.28794, w: -19.5337}
+  m_margin: {x: 7.3827057, y: -0.1367719, z: 2.2037249, w: 2.3944876}
   m_textInfo:
     textComponent: {fileID: 549969556}
-    characterCount: 87
+    characterCount: 160
     spriteCount: 0
-    spaceCount: 12
-    wordCount: 19
+    spaceCount: 19
+    wordCount: 29
     linkCount: 0
-    lineCount: 6
+    lineCount: 10
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -7997,7 +8004,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -54.7}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &832969538 stripped
@@ -8187,7 +8194,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 26.24, y: -45}
-  m_SizeDelta: {x: 196.68, y: 148.67}
+  m_SizeDelta: {x: 196.68, y: 241.38}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &852655023
 MonoBehaviour:
@@ -11099,7 +11106,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 42.795, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1164251367
@@ -11623,6 +11630,18 @@ PrefabInstance:
       propertyPath: Type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: lootDropOnDeath
+      value: 
+      objectReference: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
+        type: 3}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: lootDropPrefab
+      value: 
+      objectReference: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b7f21c23af80cf4fa03c73e8b7f6963, type: 3}
 --- !u!1001 &1196525665
@@ -13167,6 +13186,17 @@ PrefabInstance:
     - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
         type: 3}
       propertyPath: lootDropOnDeath
+      value: 
+      objectReference: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
+        type: 3}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: rarityOfLootDrop
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: lootDropPrefab
       value: 
       objectReference: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
         type: 3}
@@ -39332,7 +39362,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -39357,7 +39387,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 1599438692}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: -3
   m_MaxValue: 100
   m_WholeNumbers: 1
   m_Value: 100
@@ -39601,7 +39631,7 @@ MonoBehaviour:
   m_FillRect: {fileID: 1752516493}
   m_HandleRect: {fileID: 0}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: -3
   m_MaxValue: 100
   m_WholeNumbers: 1
   m_Value: 100

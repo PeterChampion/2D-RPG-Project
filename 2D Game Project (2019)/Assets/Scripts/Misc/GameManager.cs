@@ -32,9 +32,6 @@ public class GameManager : MonoBehaviour
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineBasicMultiChannelPerlin virtualCameraNoise;
 
-    // Items List
-    public List<Item> ItemsInGame = new List<Item>();
-
     // AI Delegates
     public delegate void OnCharacterDeath(AI.EnemyType type);
     public OnCharacterDeath OnCharacterDeathCallback;
@@ -53,7 +50,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        ItemsInGame = Item.allItems;
         player = FindObjectOfType<PlayerController>();
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
         virtualCameraNoise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -74,7 +70,6 @@ public class GameManager : MonoBehaviour
         //StartCoroutine(InputListener());
         UpdateEquipmentStatsUI();
         UpdatePlayerStatsUI();
-        Canvas.ForceUpdateCanvases();
     }
 
     private void Update()
@@ -90,7 +85,7 @@ public class GameManager : MonoBehaviour
             pausePanel.SetActive(!pausePanel.activeSelf);
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && pausePanel.activeSelf == false)
         {
             playerStatsPanel.SetActive(!playerStatsPanel.activeSelf);
         }
@@ -112,8 +107,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePlayerStatsUI()
     {
-        playerStatsText.text = "Strength: " + player.Strength + "\nConstitution: " + player.Constitution + "\nAgility: " + player.Agility + 
-            "\nLuck: " + player.Luck + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nPoints Left: " + player.LevelPoints;
+        playerStatsText.text = "Level: " + player.Level + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nHealth: " + player.CurrentHealth + "/" + player.MaximumHealth
+            + "\nStamina: " + player.CurrentStamina + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
+            + player.Constitution + "\nAgility: " + player.Agility + "\nLuck: " + player.Luck + "\nPoints Left: " + player.LevelPoints;
     }
 
     public void TogglePauseState()

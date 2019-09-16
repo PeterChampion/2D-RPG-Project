@@ -25,8 +25,9 @@ public abstract class AI : Character2D
     [SerializeField] protected bool setToPatrol = false;
     private Transform healthBar;
     private Coroutine healthBarCoroutine;
-    [SerializeField] private GameObject lootDropOnDeath;
+    [SerializeField] private GameObject lootDropPrefab;
     [SerializeField] private Item.RarityTier rarityOfLootDrop;
+    [SerializeField] private int lootDropChance = 0;
 
     protected override void Awake()
     {
@@ -141,13 +142,13 @@ public abstract class AI : Character2D
         GameManager.instance.OnCharacterDeathCallback?.Invoke(Type);
         GameManager.instance.player.Experience += experienceValue;
         GameManager.instance.player.OnExperienceGainCallback();
+
         GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
         experiencePopup.GetComponent<PopupText>().content.text = experienceValue.ToString() + "xp";
         experiencePopup.GetComponent<PopupText>().content.color = Color.green;
         experiencePopup.transform.SetParent(null);
-        GameObject test = Instantiate(lootDropOnDeath, transform.position, Quaternion.identity);
-        test.transform.parent = null;
-        test.GetComponent<ItemPickUp>().item = RandomLootDrop();
+
+        RandomLootDrop();
         base.Die();
     }
 
@@ -214,36 +215,44 @@ public abstract class AI : Character2D
         RB.AddForce(direction * (force / 2), ForceMode2D.Impulse);
     }
 
-    private Item RandomLootDrop()
+    private void RandomLootDrop()
     {
-        int value;
-        Item loot = null;
-
-        switch (rarityOfLootDrop)
+        if (lootDropChance + GameManager.instance.player.Luck <= Random.Range(1, 101))
         {
-            case Item.RarityTier.Common:
-                value = Random.Range(0, Item.commonItems.Count - 1);
-                loot = Item.commonItems[value];
-                break;
-            case Item.RarityTier.Uncommon:
-                value = Random.Range(0, Item.uncommonItems.Count - 1);
-                loot = Item.uncommonItems[value];
-                break;
-            case Item.RarityTier.Rare:
-                value = Random.Range(0, Item.rareItems.Count - 1);
-                loot = Item.rareItems[value];
-                break;
-            case Item.RarityTier.VeryRare:
-                value = Random.Range(0, Item.veryRareItems.Count - 1);
-                loot = Item.veryRareItems[value];
-                break;
-            case Item.RarityTier.Legendary:
-                value = Random.Range(0, Item.legendaryItems.Count - 1);
-                loot = Item.legendaryItems[value];
-                break;
+            int itemToDrop;
+            GameObject lootDrop = Instantiate(lootDropPrefab, transform.position, Quaternion.identity);
+            lootDrop.transform.parent = null;
+
+            switch (rarityOfLootDrop)
+            {
+                case Item.RarityTier.Common:
+                    itemToDrop = Random.Range(0, Item.commonItems.Count - 1);
+                    lootDrop.GetComponent<ItemPickUp>().item = Item.commonItems[itemToDrop];
+                    break;
+                case Item.RarityTier.Uncommon:
+                    itemToDrop = Random.Range(0, Item.uncommonItems.Count - 1);
+                    lootDrop.GetComponent<ItemPickUp>().item = Item.uncommonItems[itemToDrop];
+                    break;
+                case Item.RarityTier.Rare:
+                    itemToDrop = Random.Range(0, Item.rareItems.Count - 1);
+                    lootDrop.GetComponent<ItemPickUp>().item = Item.rareItems[itemToDrop];
+                    break;
+                case Item.RarityTier.VeryRare:
+                    itemToDrop = Random.Range(0, Item.veryRareItems.Count - 1);
+                    lootDrop.GetComponent<ItemPickUp>().item = Item.veryRareItems[itemToDrop];
+                    break;
+                case Item.RarityTier.Legendary:
+                    itemToDrop = Random.Range(0, Item.legendaryItems.Count - 1);
+                    lootDrop.GetComponent<ItemPickUp>().item = Item.legendaryItems[itemToDrop];
+                    break;
+            }
+        }
+        else
+        {
+
         }
 
-        return loot;
+        
     }
 
     private IEnumerator DisplayHealthBar(float duration)

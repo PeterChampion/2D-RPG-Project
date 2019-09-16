@@ -8,12 +8,12 @@ public class PotionCollector : Quest
 
     private void Start()
     {
-        QuestName = "Goblin Slayer";
+        QuestName = "Potion Collector";
         QuestDescription = "Slay some Goblins!";
         ExperienceReward = 500;
         ItemReward = ItemReward;
-        Goals.Add(new CollectionGoal(this, "Potion of Health", "Collect a health potion", false, 0, 2));
-
+        Goals.Add(new CollectionGoal(this, "Potion of Health", "Collect a health potion", 0, 2));
+       
         Goals.ForEach(goal => goal.Initialise());
     }
 
@@ -42,7 +42,7 @@ public class PotionCollector : Quest
                     }
                 }
             }                
-        }        
+        }
 
         foreach (Item item in itemsToRemove)
         {

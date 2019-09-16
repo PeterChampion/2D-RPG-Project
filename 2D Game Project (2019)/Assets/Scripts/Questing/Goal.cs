@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Goal
+public abstract class Goal
 {
     public Quest Quest { get; set; }
     public string Description { get; set; }

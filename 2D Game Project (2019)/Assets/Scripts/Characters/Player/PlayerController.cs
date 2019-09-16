@@ -448,7 +448,7 @@ public class PlayerController : Character2D
 
     private void StaminaRecovery()
     {
-        if (recoverStamina)
+        if (recoverStamina && currentStamina < maximumStamina)
         {
             currentStamina += 0.5f;
         }

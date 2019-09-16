@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Weapon")]
 public class Weapon : Equipment
 {
-    public enum WeaponType { OneHander, TwoHander, Polearm, }
+    public enum WeaponType { OneHander, TwoHander, Polearm }
     public int damageValue;
 
     public override string GetTooltipInfo()

@@ -28,6 +28,7 @@ public class UIButtons : MonoBehaviour
         player.LevelPoints--;
         player.OnLevelUpCallback.Invoke();
         player.Damage = player.Damage + player.Strength;
+        GameManager.instance.player.OnLevelUpCallback.Invoke();
     }
 
     public void IncreaseConstitution()
@@ -36,6 +37,7 @@ public class UIButtons : MonoBehaviour
         player.LevelPoints--;
         player.OnLevelUpCallback.Invoke();
         player.MaximumHealth = 90 + (player.Constitution * 10);
+        GameManager.instance.player.OnLevelUpCallback.Invoke();
     }
 
     public void IncreaseAgility()
@@ -44,6 +46,7 @@ public class UIButtons : MonoBehaviour
         player.LevelPoints--;
         player.OnLevelUpCallback.Invoke();
         player.MaximumStamina = 90 + (player.Agility * 10);
+        GameManager.instance.player.OnLevelUpCallback.Invoke();
     }
 
     public void IncreaseLuck()
@@ -51,5 +54,6 @@ public class UIButtons : MonoBehaviour
         player.Luck++;
         player.LevelPoints--;
         player.OnLevelUpCallback.Invoke();
+        GameManager.instance.player.OnLevelUpCallback.Invoke();
     }
 }
