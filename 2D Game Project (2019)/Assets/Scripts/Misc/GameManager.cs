@@ -41,8 +41,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("Ran");
-
         if (instance == null)
         {
             instance = this;
@@ -55,6 +53,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        ItemsInGame = Item.allItems;
         player = FindObjectOfType<PlayerController>();
         virtualCamera = FindObjectOfType<CinemachineVirtualCamera>();
         virtualCameraNoise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();

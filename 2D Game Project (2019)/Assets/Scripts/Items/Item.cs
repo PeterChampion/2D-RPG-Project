@@ -9,11 +9,37 @@ public abstract class Item : ScriptableObject
     public string itemName = "New Item";
     public Sprite sprite = null;
     public int goldValue = 0;
+    public enum RarityTier { Common, Uncommon, Rare, VeryRare, Legendary };
+    public RarityTier rarity;
+    public static List<Item> allItems = new List<Item>();
+    public static List<Item> commonItems = new List<Item>();
+    public static List<Item> uncommonItems = new List<Item>();
+    public static List<Item> rareItems = new List<Item>();
+    public static List<Item> veryRareItems = new List<Item>();
+    public static List<Item> legendaryItems = new List<Item>();
 
     private void OnEnable()
     {
-        GameManager.instance.ItemsInGame.Add(this);
-        Debug.Log(itemName + " added to the list!");
+        allItems.Add(this);
+
+        switch (rarity)
+        {
+            case RarityTier.Common:
+                commonItems.Add(this);
+                break;
+            case RarityTier.Uncommon:
+                uncommonItems.Add(this);
+                break;
+            case RarityTier.Rare:
+                rareItems.Add(this);
+                break;
+            case RarityTier.VeryRare:
+                veryRareItems.Add(this);
+                break;
+            case RarityTier.Legendary:
+                legendaryItems.Add(this);
+                break;
+        }
     }
 
     public virtual void Use()

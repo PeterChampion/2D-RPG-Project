@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-// Handles detection of walls/ledges in the direction of the AI's path to determine whether the AI should turn around or not, in the case of the player being within detection range the AI will instead 
-// jump over these walls/ledges if detected.
+// TBD
 public abstract class AI : Character2D
 {
     public enum EnemyType { Bat, Goblin, Kobold, Ogre }
@@ -27,6 +26,7 @@ public abstract class AI : Character2D
     private Transform healthBar;
     private Coroutine healthBarCoroutine;
     [SerializeField] private GameObject lootDropOnDeath;
+    [SerializeField] private Item.RarityTier rarityOfLootDrop;
 
     protected override void Awake()
     {
@@ -216,13 +216,34 @@ public abstract class AI : Character2D
 
     private Item RandomLootDrop()
     {
-        int value = Random.Range(1, 101);
-        Item loot;
+        int value;
+        Item loot = null;
 
-        loot = GameManager.instance.ItemsInGame[0];
-        Debug.Log(loot.itemName);
+        switch (rarityOfLootDrop)
+        {
+            case Item.RarityTier.Common:
+                value = Random.Range(0, Item.commonItems.Count - 1);
+                loot = Item.commonItems[value];
+                break;
+            case Item.RarityTier.Uncommon:
+                value = Random.Range(0, Item.uncommonItems.Count - 1);
+                loot = Item.uncommonItems[value];
+                break;
+            case Item.RarityTier.Rare:
+                value = Random.Range(0, Item.rareItems.Count - 1);
+                loot = Item.rareItems[value];
+                break;
+            case Item.RarityTier.VeryRare:
+                value = Random.Range(0, Item.veryRareItems.Count - 1);
+                loot = Item.veryRareItems[value];
+                break;
+            case Item.RarityTier.Legendary:
+                value = Random.Range(0, Item.legendaryItems.Count - 1);
+                loot = Item.legendaryItems[value];
+                break;
+        }
 
-       return loot;
+        return loot;
     }
 
     private IEnumerator DisplayHealthBar(float duration)
