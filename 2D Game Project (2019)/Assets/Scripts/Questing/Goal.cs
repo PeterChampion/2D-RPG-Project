@@ -5,14 +5,13 @@ using UnityEngine;
 public abstract class Goal
 {
     public Quest Quest { get; set; }
-    public string Description { get; set; }
     public bool IsCompleted { get; set; }
     public int RequiredAmount { get; set; }
     public int CurrentAmount { get; set; }
 
     public virtual void Initialise()
     {
-        // Default init stuff
+        // Intended to be over written by derived classes
     }
 
     public void Evaluate()
@@ -28,5 +27,12 @@ public abstract class Goal
         Debug.Log("Goal Completed!");
         IsCompleted = true;
         Quest.CheckGoals();
+    }
+
+    public virtual string RetrieveGoalInfo(string variableNameToReturn)
+    {
+        string value = string.Empty;
+        return value;
+        // Intended to be over written by derived classes
     }
 }

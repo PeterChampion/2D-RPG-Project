@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class PotionCollector : Quest
 {
-    [SerializeField] private Item itemReward;
-
     private void Start()
     {
         QuestName = "Potion Collector";
-        QuestDescription = "Slay some Goblins!";
+        QuestDescription = "Collect health and stamina potions to prepare yourself for the journey ahead.";
         ExperienceReward = 500;
-        ItemReward = ItemReward;
-        Goals.Add(new CollectionGoal(this, "Potion of Health", "Collect a health potion", 0, 2));
+        ItemReward = FindItem("Tutorial Sheild +1");
+        Goals.Add(new CollectionGoal(this, "Health Potion", 0, 2));
+        Goals.Add(new CollectionGoal(this, "Stamina Potion", 0, 2));
 
         Goals.ForEach(goal => goal.Initialise());
     }

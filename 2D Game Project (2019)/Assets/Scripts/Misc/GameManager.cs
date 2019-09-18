@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI playerStatsText;
     private GameObject playerStatsButtons;
 
+    // QuestLog UI
+    public GameObject questLog;
+
     // Camera Shake
     private Camera gameCamera;
     [SerializeField] private float shakeDuration = 0.3f; // How long the shake effect lasts
@@ -65,8 +68,10 @@ public class GameManager : MonoBehaviour
         playerStatsPanel = GameObject.Find("StatsPanel");
         playerStatsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
         playerStatsButtons = GameObject.Find("StatsButtons");
+        questLog = GameObject.Find("QuestLog");
 
         playerStatsPanel.SetActive(false);
+        questLog.SetActive(false);
         //StartCoroutine(InputListener());
         UpdateEquipmentStatsUI();
         UpdatePlayerStatsUI();
@@ -83,9 +88,14 @@ public class GameManager : MonoBehaviour
         {
             TogglePauseState();
             pausePanel.SetActive(!pausePanel.activeSelf);
+
+            if (questLog.activeSelf)
+            {
+                questLog.SetActive(!questLog.activeSelf);
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab) && pausePanel.activeSelf == false)
+        if (Input.GetKeyDown(KeyCode.Tab) && !questLog.activeSelf && !pausePanel.activeSelf)
         {
             playerStatsPanel.SetActive(!playerStatsPanel.activeSelf);
         }
@@ -97,6 +107,11 @@ public class GameManager : MonoBehaviour
         else
         {
             playerStatsButtons.SetActive(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q) && !Inventory.instance.open && !IsGamePaused)
+        {
+            questLog.SetActive(!questLog.activeSelf);
         }
     }
 

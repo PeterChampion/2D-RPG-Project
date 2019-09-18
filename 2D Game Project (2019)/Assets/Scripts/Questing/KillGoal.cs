@@ -6,11 +6,10 @@ public class KillGoal : Goal
 {
     public AI.EnemyType EnemyType { get; set; }
 
-    public KillGoal(Quest _quest, AI.EnemyType _enemyType, string _description, int _requiredAmount)
+    public KillGoal(Quest _quest, AI.EnemyType _enemyType, int _requiredAmount)
     {
         Quest = _quest;
         EnemyType = _enemyType;
-        Description = _description;
         RequiredAmount = _requiredAmount;
         CurrentAmount = 0;
     }
@@ -29,5 +28,23 @@ public class KillGoal : Goal
             CurrentAmount++;
             Evaluate();
         }
+    }
+
+
+
+    public override string RetrieveGoalInfo(string variableNameToReturn)
+    {
+        string value = string.Empty;
+
+        switch (variableNameToReturn)
+        {
+            case "EnemyType":
+                value = EnemyType.ToString();
+                break;
+            default:
+                break;
+        }
+
+        return value;
     }
 }

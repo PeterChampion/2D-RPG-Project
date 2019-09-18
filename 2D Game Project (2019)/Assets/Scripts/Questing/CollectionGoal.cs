@@ -6,11 +6,10 @@ public class CollectionGoal : Goal
 {
     public string ItemName { get; set; }
 
-    public CollectionGoal(Quest _quest, string _itemName, string _description, int _currentAmount, int _requiredAmount)
+    public CollectionGoal(Quest _quest, string _itemName, int _currentAmount, int _requiredAmount)
     {
         Quest = _quest;
         ItemName = _itemName;
-        Description = _description;
         RequiredAmount = _requiredAmount;
         CurrentAmount = _currentAmount;
     }
@@ -35,5 +34,21 @@ public class CollectionGoal : Goal
         }
         CurrentAmount = itemCount;
         Evaluate();
+    }
+
+    public override string RetrieveGoalInfo(string variableNameToReturn)
+    {
+        string value = string.Empty;
+
+        switch (variableNameToReturn)
+        {
+            case "ItemName":
+                value = ItemName;
+                break;
+            default:
+                break;
+        }
+
+        return value;
     }
 }

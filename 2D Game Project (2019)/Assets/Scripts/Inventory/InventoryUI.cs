@@ -31,7 +31,7 @@ public class InventoryUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false && !GameManager.instance.pausePanel.activeInHierarchy)
+        if (Input.GetKeyDown(KeyCode.Tab) && DialogueTrigger.dialogueOpen == false && !GameManager.instance.pausePanel.activeSelf && !GameManager.instance.questLog.activeSelf)
         {
             tooltip.SetActive(false);
             GameManager.instance.TogglePauseState();

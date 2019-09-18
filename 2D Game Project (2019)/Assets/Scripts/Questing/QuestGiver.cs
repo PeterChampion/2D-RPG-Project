@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class QuestGiver : DialogueTrigger
 {
-    private GameObject quests;
+    private GameObject questsArea;
+    [SerializeField] GameObject questSlotPrefab;
     [SerializeField] private string QuestToAssign;
     public Quest Quest { get; set; }
 
@@ -14,9 +15,10 @@ public class QuestGiver : DialogueTrigger
     [SerializeField] protected Dialogue rewardDialogue = new Dialogue();
     [SerializeField] protected Dialogue completedDialogue = new Dialogue();
 
-    private void Start()
+    protected override void Awake()
     {
-        quests = GameObject.Find("Quests");
+        questsArea = GameObject.Find("QuestsArea");
+        base.Awake();
     }
 
     protected override void CheckForInteraction()
@@ -101,7 +103,9 @@ public class QuestGiver : DialogueTrigger
     private void AssignQuest()
     {
         AssignedQuest = true;
-        Quest = (Quest)quests.AddComponent(System.Type.GetType(QuestToAssign));
+        Quest = (Quest)questsArea.AddComponent(System.Type.GetType(QuestToAssign));
+        GameObject questSlotGO = Instantiate(questSlotPrefab, questsArea.transform.position, Quaternion.identity, questsArea.transform);
+        questSlotGO.GetComponent<QuestSlot>().quest = Quest;
     }
 
     private void CheckQuest()

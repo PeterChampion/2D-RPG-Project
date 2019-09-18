@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b6472f2337a1ad40b7b4c7cad0a036f, type: 3}
   m_Name: Health Regen Potion
   m_EditorClassIdentifier: 
-  itemName: Potion of Health Regeneration
+  itemName: Health Regeneration Potion
   sprite: {fileID: -7522750473901418957, guid: 1b41c5de688142748b219e71c8099dfa, type: 3}
   goldValue: 75
+  rarity: 0
   type: 1
   consumableValue: 100
   consumableDuration: 10

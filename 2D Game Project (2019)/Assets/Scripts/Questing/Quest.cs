@@ -11,6 +11,7 @@ public class Quest : MonoBehaviour
     public int ExperienceReward { get; set; }
     public Item ItemReward { get; set; }
     public bool IsCompleted { get; set; }
+    public bool IsRewardCollected { get; set; }
 
     public void CheckGoals()
     {
@@ -25,5 +26,21 @@ public class Quest : MonoBehaviour
         }
         GameManager.instance.player.Experience += ExperienceReward;
         GameManager.instance.player.OnExperienceGainCallback.Invoke();
+        IsRewardCollected = true;
+    }
+
+    protected Item FindItem(string itemName)
+    {
+        Item itemFound = null;
+
+        foreach (Item item in Item.allItems)
+        {
+            if (item.itemName == itemName)
+            {
+                itemFound = item;
+            }
+        }
+
+        return itemFound;
     }
 }

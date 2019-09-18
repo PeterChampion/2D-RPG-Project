@@ -14,7 +14,7 @@ public class DialogueTrigger : MonoBehaviour
     [SerializeField] protected GameObject interactionPrompt = null;
 
     // Set up references
-    private void Awake()
+    protected virtual void Awake()
     {
         player = FindObjectOfType<PlayerController>().gameObject;
         interactionPrompt.SetActive(false);
