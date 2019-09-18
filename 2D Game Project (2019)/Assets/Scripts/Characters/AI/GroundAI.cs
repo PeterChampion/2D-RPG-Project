@@ -16,7 +16,10 @@ public class GroundAI : AI
     protected override void Update()
     {
         base.Update();
-        Attack();
+        if (!isDead)
+        {
+            Attack();
+        }
 
         if (RB.velocity.y > 3f)
         {
@@ -143,6 +146,15 @@ public class GroundAI : AI
         }
 
         characterAnim.SetFloat("Speed", Mathf.Abs(RB.velocity.x));
+    }
+
+    protected override void Die()
+    {
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+        }
+        base.Die();
     }
 
     protected override void Jump()

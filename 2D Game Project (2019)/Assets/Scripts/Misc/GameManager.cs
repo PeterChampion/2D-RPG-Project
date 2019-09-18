@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdatePlayerStatsUI()
     {
-        playerStatsText.text = "Level: " + player.Level + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nHealth: " + player.CurrentHealth + "/" + player.MaximumHealth
+        playerStatsText.text = "Level: " + player.Level + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nHealth: " + (int)player.CurrentHealth + "/" + player.MaximumHealth
             + "\nStamina: " + player.CurrentStamina + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
             + player.Constitution + "\nAgility: " + player.Agility + "\nLuck: " + player.Luck + "\nPoints Left: " + player.LevelPoints;
     }

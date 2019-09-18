@@ -341,6 +341,7 @@ public class PlayerController : Character2D
             Invoke("ToggleHurtAnimation", 0);
             Invoke("ToggleHurtAnimation", 0.25f);
         }
+        GameManager.instance.UpdatePlayerStatsUI();
     }
 
     protected override void StandardAttack(int damageToDeal)
@@ -391,7 +392,7 @@ public class PlayerController : Character2D
         // Block, plays animation + activates collider in front of the player that blocks incoming damage
         if (DrainStamina(0.5f))
         {
-
+            
         }
     }
 
@@ -424,6 +425,7 @@ public class PlayerController : Character2D
             }
 
             currentStamina -= drainValue;
+            GameManager.instance.UpdatePlayerStatsUI();
             return true;
         }
         else

@@ -217,7 +217,7 @@ public abstract class AI : Character2D
 
     private void RandomLootDrop()
     {
-        if (lootDropChance + GameManager.instance.player.Luck <= Random.Range(1, 101))
+        if (lootDropChance + GameManager.instance.player.Luck >= Random.Range(1, 101))
         {
             int itemToDrop;
             GameObject lootDrop = Instantiate(lootDropPrefab, transform.position, Quaternion.identity);
@@ -246,13 +246,7 @@ public abstract class AI : Character2D
                     lootDrop.GetComponent<ItemPickUp>().item = Item.legendaryItems[itemToDrop];
                     break;
             }
-        }
-        else
-        {
-
-        }
-
-        
+        }        
     }
 
     private IEnumerator DisplayHealthBar(float duration)

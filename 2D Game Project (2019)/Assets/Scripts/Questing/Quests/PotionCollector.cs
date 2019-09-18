@@ -13,7 +13,7 @@ public class PotionCollector : Quest
         ExperienceReward = 500;
         ItemReward = ItemReward;
         Goals.Add(new CollectionGoal(this, "Potion of Health", "Collect a health potion", 0, 2));
-       
+
         Goals.ForEach(goal => goal.Initialise());
     }
 

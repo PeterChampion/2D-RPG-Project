@@ -6,14 +6,13 @@ public class KillGoal : Goal
 {
     public AI.EnemyType EnemyType { get; set; }
 
-    public KillGoal(Quest _quest, AI.EnemyType _enemyType, string _description, bool _completed, int _currentAmount, int _requiredAmount)
+    public KillGoal(Quest _quest, AI.EnemyType _enemyType, string _description, int _requiredAmount)
     {
         Quest = _quest;
         EnemyType = _enemyType;
         Description = _description;
-        IsCompleted = _completed;
         RequiredAmount = _requiredAmount;
-        CurrentAmount = _currentAmount;
+        CurrentAmount = 0;
     }
 
     public override void Initialise()

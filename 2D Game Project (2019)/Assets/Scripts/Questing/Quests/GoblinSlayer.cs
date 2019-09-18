@@ -13,7 +13,7 @@ public class GoblinSlayer : Quest
         ExperienceReward = 100;
         ItemReward = ItemReward;
 
-        Goals.Add(new KillGoal(this, AI.EnemyType.Goblin, "Kill 3 Goblins", false, 0, 3));
+        Goals.Add(new KillGoal(this, AI.EnemyType.Goblin, "Kill 3 Goblins", 3));
 
         Goals.ForEach(goal => goal.Initialise());
     }

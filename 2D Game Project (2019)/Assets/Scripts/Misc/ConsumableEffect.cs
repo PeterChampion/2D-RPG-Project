@@ -25,5 +25,6 @@ public class ConsumableEffect : MonoBehaviour
                 player.CurrentStamina += value / duration * Time.deltaTime;
                 break;
         }
+        GameManager.instance.UpdatePlayerStatsUI();
     }
 }

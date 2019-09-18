@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b728ed64415ff84ea07264883158171, type: 3}
-  m_Name: Armour Of Awesome
+  m_Name: Armour of Awesome
   m_EditorClassIdentifier: 
   itemName: Armour of Awesome
   sprite: {fileID: 21300000, guid: 2f1eaeeaad36ee5469eff7ff158f37ba, type: 3}
