@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     // QuestLog UI
     public GameObject questLog;
 
+    // Shop UI
+    public GameObject shopWindow;
+
     // Camera Shake
     private Camera gameCamera;
     [SerializeField] private float shakeDuration = 0.3f; // How long the shake effect lasts
@@ -69,7 +72,9 @@ public class GameManager : MonoBehaviour
         playerStatsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
         playerStatsButtons = GameObject.Find("StatsButtons");
         questLog = GameObject.Find("QuestLog");
+        shopWindow = GameObject.Find("ShopUI");
 
+        shopWindow.SetActive(false);
         playerStatsPanel.SetActive(false);
         questLog.SetActive(false);
         //StartCoroutine(InputListener());

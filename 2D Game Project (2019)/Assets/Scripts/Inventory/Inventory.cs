@@ -13,6 +13,7 @@ public class Inventory : MonoBehaviour
     public int goldAmount;
     public int maxInventorySpace = 20;
     public List<Item> inventoryItems = new List<Item>();
+    public int gold = 0;
     public bool open;
 
     private void Awake()
@@ -25,6 +26,11 @@ public class Inventory : MonoBehaviour
         {
             Destroy(this);
         }
+    }
+
+    private void Update()
+    {
+        goldText.text = "Gold: " + gold;
     }
 
     public bool AddToInventory(Item item)

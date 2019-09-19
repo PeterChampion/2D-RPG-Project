@@ -5,12 +5,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-// Runs on each individual slot within the inventory, stores the information of the item stored within the slot if one is present, allows for adding/removing/clearing an item to and from the inventory.
-public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image icon = null;
-    [SerializeField] private Button removeButton = null;
-    private Item item;
+    public Item item;
     private AudioSource audioSource;
 
     // Tooltip Info
@@ -24,6 +22,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         tooltipText = tooltip.GetComponentInChildren<TextMeshProUGUI>();
         tooltipOriginalPosition = tooltip.transform.position;
         audioSource = GetComponent<AudioSource>();
+        icon.sprite = item.sprite;
     }
 
     private void Start()
@@ -45,57 +44,61 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         item = newItem;
         icon.sprite = item.sprite;
         icon.enabled = true;
-        removeButton.interactable = true;
     }
 
     public void ClearSlot()
     {
-       //Debug.Log("Clearing item from UI...");
+        //Debug.Log("Clearing item from UI...");
         item = null;
         icon.sprite = null;
         icon.enabled = false;
-        removeButton.interactable = false;
     }
 
-    public void OnRemoveButton()
+    public void BuyItem()
     {
-        //Debug.Log("Removing item from inventory...");
-        HideToolTip();
-        if (item != null)
+        if (IsMouseOver())
         {
-            if (GameManager.instance.shopWindow.activeSelf)
+            if (item != null)
             {
-                Inventory.instance.gold += item.goldValue / 2;
+                ShowToolTip(transform.position, item.GetTooltipInfo());
             }
-            Inventory.instance.RemoveFromInventory(item);
-            audioSource.Play();
-        }        
-    }
+            else
+            {
+                HideToolTip();
+            }
+        }
 
-    public void UseItem()
-    {
         if (item != null)
         {
-            item.Use();
-            audioSource.Play();
-            if (IsMouseOver())
+            if (Inventory.instance.inventoryItems.Count < Inventory.instance.maxInventorySpace)
             {
-                if (item != null)
+                if (Inventory.instance.gold >= item.goldValue)
                 {
-                    ShowToolTip(transform.position, item.GetTooltipInfo());
+                    Inventory.instance.gold -= item.goldValue;
+                    Inventory.instance.AddToInventory(item);
                 }
                 else
                 {
                     HideToolTip();
+                    print("Not enough gold");
+                    ShowToolTip(transform.position, "Not enough gold!");
                 }
-            }            
+            }
+            else
+            {
+                HideToolTip();
+                print("Not enough space");
+                ShowToolTip(transform.position, "Inventory full!");
+            }
+
+            audioSource.Play();
         }
     }
 
     private void ShowToolTip(Vector2 position, string text)
     {
         tooltip.SetActive(true);
-        tooltip.transform.position = position + new Vector2(-80,-60);
+        tooltip.transform.position = position + new Vector2(-80, -60);
         tooltipText.text = text;
     }
 

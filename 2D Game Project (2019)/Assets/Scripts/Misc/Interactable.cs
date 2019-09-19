@@ -18,7 +18,7 @@ public abstract class Interactable : MonoBehaviour
         Physics2D.IgnoreLayerCollision(gameObject.layer, gameObject.layer);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         Interaction();
     }
