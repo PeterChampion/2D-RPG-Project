@@ -10,6 +10,10 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Image icon = null;
     public Item item;
     private AudioSource audioSource;
+    [SerializeField] private TextMeshProUGUI quantity;
+
+    public int quantityInStock = 0;
+    public bool unlimitedQuantity;
 
     // Tooltip Info
     private GameObject tooltip;
@@ -35,6 +39,26 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (tooltip.activeSelf)
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(tooltip.GetComponent<RectTransform>());
+        }
+
+        if (quantityInStock <= 0 && !unlimitedQuantity)
+        {
+            ClearSlot();
+            Debug.Log("Clear");
+        }
+
+        if (!unlimitedQuantity)
+        {
+            quantity.text = quantityInStock.ToString();
+        }
+        else
+        {
+            quantity.text = string.Empty;
+        }
+
+        if (item == null)
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -74,6 +98,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 if (Inventory.instance.gold >= item.goldValue)
                 {
+                    quantityInStock--;
                     Inventory.instance.gold -= item.goldValue;
                     Inventory.instance.AddToInventory(item);
                 }

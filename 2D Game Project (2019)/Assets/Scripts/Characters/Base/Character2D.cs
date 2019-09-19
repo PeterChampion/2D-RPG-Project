@@ -152,7 +152,7 @@ public abstract class Character2D : MonoBehaviour
         Physics2D.IgnoreCollision(FindObjectOfType<PlayerController>().GetComponent<Collider2D>(), GetComponent<Collider2D>());
         speed = 0;
         RB.gravityScale = 2;
-        RB.velocity = new Vector2(RB.velocity.x / 2, RB.velocity.y);
+        RB.velocity = new Vector2(0, RB.velocity.y);
         Destroy(gameObject, 3);
     }
 
@@ -163,6 +163,7 @@ public abstract class Character2D : MonoBehaviour
             RB.AddForce(new Vector2(0, jumpStrength), ForceMode2D.Impulse);
         }
     }
+
     protected virtual bool IsGrounded()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, jumpableLayers);
@@ -190,6 +191,11 @@ public abstract class Character2D : MonoBehaviour
         gameObject.layer = 13;
         RB.velocity = new Vector2(0, RB.velocity.y);
         RB.AddForce(knockbackDirection * knockbackStrength, ForceMode2D.Impulse);
+
+        if (isDead)
+        {
+            yield return null;
+        }
 
         yield return new WaitForSeconds(movementLockoutDuration);
 

@@ -11,6 +11,7 @@ public abstract class AI : Character2D
     [SerializeField] private int experienceValue;
     protected GameObject player;
     [SerializeField] protected int detectionRange = 5;
+    private int detectionRangeDoubled;
     [SerializeField] protected float minimumRange = 2;
     protected float xDistanceFromPlayer;
     protected float yDistanceFromPlayer;
@@ -33,6 +34,7 @@ public abstract class AI : Character2D
     {
         base.Awake();
         player = FindObjectOfType<PlayerController>().gameObject;
+        detectionRangeDoubled = detectionRange * 2;
         healthBar = transform.Find("Healthbar");
         healthBar.localScale = new Vector3(currentHealth / 100, healthBar.localScale.y, healthBar.localScale.z);
         healthBar.GetComponent<SpriteRenderer>().enabled = false;
@@ -89,9 +91,11 @@ public abstract class AI : Character2D
         if (Mathf.Abs(xDistanceFromPlayer) < detectionRange && Mathf.Abs(yDistanceFromPlayer) < detectionRange)
         {
             playerInRange = true;
+            detectionRange = detectionRangeDoubled;
         }
         else // Otherwise if the player is not...
         {
+            detectionRange = detectionRangeDoubled / 2;
             playerInRange = false;
             if (setToPatrol)
             {
