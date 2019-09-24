@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour
     public OnItemChanged onItemChangedCallback;
     public TextMeshProUGUI goldText;
     public int goldAmount;
-    public int maxInventorySpace = 20;
+    public int maxInventorySpace = 20; // Possibly change later to allow for increases based on items, allow inventory to expand/be scroll through?
     public List<Item> inventoryItems = new List<Item>();
     public int gold = 0;
     public bool open;

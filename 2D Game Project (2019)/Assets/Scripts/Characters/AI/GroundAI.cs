@@ -45,7 +45,7 @@ public class GroundAI : AI
                     {
                         StopCoroutine(attackCoroutine);
                     }
-                    attackCoroutine = StartCoroutine(StandardAttackCoroutine(Random.Range(0.1f, initialAttackWindUp)));
+                    attackCoroutine = StartCoroutine(StandardAttackCoroutine(initialAttackWindUp));
                 }
                 else
                 {

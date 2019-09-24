@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class QuestGiver : DialogueTrigger
 {
-    private GameObject questsArea;
+    private GameObject quests;
+    private GameObject questLogArea;
     [SerializeField] GameObject questSlotPrefab;
     [SerializeField] private string QuestToAssign;
     public Quest Quest { get; set; }
@@ -17,7 +18,8 @@ public class QuestGiver : DialogueTrigger
 
     protected override void Awake()
     {
-        questsArea = GameObject.Find("QuestsArea");
+        quests = GameObject.Find("Quests");
+        questLogArea = GameObject.Find("QuestsArea");
         base.Awake();
     }
 
@@ -103,8 +105,8 @@ public class QuestGiver : DialogueTrigger
     private void AssignQuest()
     {
         AssignedQuest = true;
-        Quest = (Quest)questsArea.AddComponent(System.Type.GetType(QuestToAssign));
-        GameObject questSlotGO = Instantiate(questSlotPrefab, questsArea.transform.position, Quaternion.identity, questsArea.transform);
+        Quest = (Quest)quests.AddComponent(System.Type.GetType(QuestToAssign));
+        GameObject questSlotGO = Instantiate(questSlotPrefab, questLogArea.transform.position, Quaternion.identity, questLogArea.transform);
         questSlotGO.GetComponent<QuestSlot>().quest = Quest;
     }
 

@@ -53,6 +53,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 5537878718005115218}
   removeButton: {fileID: 5537878717779561578}
+  shopSlotPrefab: {fileID: 9150902482529469392, guid: 3cd618774c95e91418d8e20cf13ae94c,
+    type: 3}
 --- !u!82 &7191376311975914420
 AudioSource:
   m_ObjectHideFlags: 0

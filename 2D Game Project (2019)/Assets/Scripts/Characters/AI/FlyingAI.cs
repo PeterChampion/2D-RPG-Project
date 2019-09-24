@@ -12,9 +12,20 @@ public class FlyingAI : AI
     private Coroutine flightCoroutine = null;
     private bool descending = false;
 
+    protected override void Update()
+    {
+        base.Update();
+
+        if (isDead)
+        {
+            StopCoroutine(flightCoroutine);
+            IsGrounded();
+        }
+    }
+
     protected override void FixedUpdate()
     {
-        if (!Stunned)
+        if (!Stunned || !isDead)
         {
             if (playerInRange && Mathf.Abs(xDistanceFromPlayer) < 6)
             {
@@ -141,6 +152,24 @@ public class FlyingAI : AI
                 StartCoroutine(MoveAroundObstruction(1f));
             }
         }      
+    }
+
+    protected override bool IsGrounded()
+    {
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, jumpRaycastLength, jumpableLayers);
+        Debug.DrawRay(transform.position, Vector2.down * jumpRaycastLength, Color.red, 0.2f);
+
+        if (hit.collider != null)
+        {
+            grounded = true;
+            characterAnim.SetBool("IsGrounded", true);
+        }
+        else
+        {
+            grounded = false;
+        }
+        return grounded;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

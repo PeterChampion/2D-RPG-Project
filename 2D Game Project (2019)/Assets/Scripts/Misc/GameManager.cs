@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     // Player Stats
     private Slider healthSlider;
     private Slider staminaSlider;
+    private Slider experienceSlider;
     private TextMeshProUGUI equipmentStatsText;
     public PlayerController player;
     private GameObject playerStatsPanel;
@@ -62,17 +63,20 @@ public class GameManager : MonoBehaviour
         gameCamera = FindObjectOfType<Camera>();
         healthSlider = GameObject.Find("HealthSlider").GetComponent<Slider>();
         staminaSlider = GameObject.Find("StaminaSlider").GetComponent<Slider>();
+        experienceSlider = GameObject.Find("ExperienceSlider").GetComponent<Slider>();
         equipmentStatsText = GameObject.Find("EquipmentStatsText").GetComponent<TextMeshProUGUI>();
         pausePanel = GameObject.Find("PausePanel");
         pausePanel.SetActive(false);
         EquipmentManager.instance.onEquipmentChangedCallback += UpdateEquipmentStatsUI;
         player.OnLevelUpCallback += UpdatePlayerStatsUI;
+        player.OnLevelUpCallback += SetExperienceSliderMinValue;
+        player.OnLevelUpCallback += UpdateEquipmentStatsUI;
         player.OnExperienceGainCallback += UpdatePlayerStatsUI;
         playerStatsPanel = GameObject.Find("StatsPanel");
         playerStatsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
         playerStatsButtons = GameObject.Find("StatsButtons");
         questLog = GameObject.Find("QuestLog");
-        shopWindow = GameObject.Find("ShopUI");
+        shopWindow = GameObject.Find("ShopPanel");
 
         shopWindow.SetActive(false);
         playerStatsPanel.SetActive(false);
@@ -86,8 +90,11 @@ public class GameManager : MonoBehaviour
     {
         healthSlider.maxValue = player.MaximumHealth;
         staminaSlider.maxValue = player.MaximumStamina;
+        experienceSlider.maxValue = player.NextLevelExperience;
+
         healthSlider.value = player.CurrentHealth;
         staminaSlider.value = player.CurrentStamina;
+        experienceSlider.value = player.Experience;
 
         if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !Inventory.instance.open)
         {
@@ -130,6 +137,11 @@ public class GameManager : MonoBehaviour
         playerStatsText.text = "Level: " + player.Level + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nHealth: " + (int)player.CurrentHealth + "/" + player.MaximumHealth
             + "\nStamina: " + player.CurrentStamina + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
             + player.Constitution + "\nAgility: " + player.Agility + "\nLuck: " + player.Luck + "\nPoints Left: " + player.LevelPoints;
+    }
+
+    private void SetExperienceSliderMinValue()
+    {
+        experienceSlider.minValue = player.Experience - (player.Experience / 10);
     }
 
     public void TogglePauseState()

@@ -5,7 +5,7 @@ using UnityEngine;
 // Handles displaying the inventory when the inventory key is pressed, loops through the inventory to display the contents and which slots are filled/empty.
 public class InventoryUI : MonoBehaviour
 {
-    private GameObject InventoryPanel;
+    private GameObject inventoryPanel;
     private Transform itemsArea;
     private Inventory inventory;
     private InventorySlot[] inventorySlots;
@@ -13,7 +13,7 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
-        InventoryPanel = GameObject.Find("InventoryPanel");
+        inventoryPanel = GameObject.Find("InventoryPanel");
         itemsArea = GameObject.Find("ItemsArea").transform;
         inventorySlots = itemsArea.GetComponentsInChildren<InventorySlot>();
         tooltip = GameObject.Find("TooltipPanel");
@@ -23,7 +23,7 @@ public class InventoryUI : MonoBehaviour
     {
         inventory = Inventory.instance;
         inventory.onItemChangedCallback += UpdateUI;
-        InventoryPanel.SetActive(false);
+        inventoryPanel.SetActive(false);
         tooltip.SetActive(false);
         inventory.open = false;
         UpdateUI(null);
@@ -35,7 +35,7 @@ public class InventoryUI : MonoBehaviour
         {
             tooltip.SetActive(false);
             GameManager.instance.TogglePauseState();
-            InventoryPanel.SetActive(!InventoryPanel.activeSelf);
+            inventoryPanel.SetActive(!inventoryPanel.activeSelf);
             inventory.open = !inventory.open;
         }
     }

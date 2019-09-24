@@ -64,8 +64,10 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (item != null)
         {
             if (GameManager.instance.shopWindow.activeSelf)
-            {
+            {                
                 Inventory.instance.gold += item.goldValue / 2;
+
+                // Add item to shop?
             }
             Inventory.instance.RemoveFromInventory(item);
             audioSource.Play();
