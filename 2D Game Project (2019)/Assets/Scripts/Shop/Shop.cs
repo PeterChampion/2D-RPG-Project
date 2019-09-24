@@ -58,4 +58,35 @@ public class Shop : MonoBehaviour
             onShopChangedCallback?.Invoke(item);
         }
     }
+
+    public bool IsItemInShop(Item item)
+    {
+        if (shopItems.Contains(item))
+        {
+            foreach (ShopSlot slot in ShopUI.instance.shopSlots)
+            {
+                if (slot.item == item)
+                {
+                    slot.quantityInStock++;
+                    break;
+                }
+            }
+            return true;
+        }
+        else
+        {
+            AddToShop(item);
+
+            foreach (ShopSlot slot in ShopUI.instance.shopSlots)
+            {
+                if (slot.item == item)
+                {
+                    slot.quantityInStock++;
+                    slot.gameObject.SetActive(true);
+                    break;
+                }
+            }
+            return false;
+        }
+    }
 }

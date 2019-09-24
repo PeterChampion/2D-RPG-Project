@@ -25,6 +25,7 @@ public class Quest : MonoBehaviour
             Inventory.instance.AddToInventory(ItemReward);
         }
         GameManager.instance.player.Experience += ExperienceReward;
+        GameManager.instance.player.DisplayQuestExperience(ExperienceReward);
         GameManager.instance.player.OnExperienceGainCallback.Invoke();
         IsRewardCollected = true;
     }

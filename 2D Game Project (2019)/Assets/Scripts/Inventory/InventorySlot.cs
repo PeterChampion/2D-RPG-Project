@@ -66,6 +66,7 @@ public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             if (GameManager.instance.shopWindow.activeSelf)
             {                
                 Inventory.instance.gold += item.goldValue / 2;
+                Shop.instance.IsItemInShop(item);
 
                 // Add item to shop?
             }

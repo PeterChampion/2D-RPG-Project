@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(DistanceJoint2D))]
 // Handles player movement, actions such as attacking/dodging/etc, health and stamina (Possibly should be moved to a 'Stats' class)
 public class PlayerController : Character2D
 {
     // General Stats
+    [Header("Stats")]
     [SerializeField] private int maximumStamina = 90;
     public int MaximumStamina { get { return maximumStamina; } set { maximumStamina = value; } }
     private float currentStamina = 90;
@@ -30,19 +32,20 @@ public class PlayerController : Character2D
     private bool movementEnabled = true;
     private float dodgeDelay;
     private float dodgeCooldown = 1;
-    public bool dodging;
+    private bool dodging;
     private float xMovement;
     private float jumpDelay;
     private float jumpCooldown = 0.5f;
-    public DistanceJoint2D hookJoint;
+    [HideInInspector] public DistanceJoint2D hookJoint;
     private GrapplingHook grapplingHook;
-    public float grapplingHookDelay;
+    [HideInInspector] public float grapplingHookDelay;
     private float grapplingHookCooldown = 0.5f;
     private Coroutine HookCoroutine;
     private float stunduration = 0;
     private float stunCooldown = 0.1f;
-    [SerializeField] private float dashSpeed = 15;
+    private float dashSpeed = 15;
     private bool velocityClamped = true;
+    [Space]
     [SerializeField] private AudioClip jumpAudioClip;
 
     // Stamina Recovery
@@ -172,6 +175,17 @@ public class PlayerController : Character2D
         levelUpPopup.GetComponent<PopupText>().content.text = "*Level Up!*";
         levelUpPopup.GetComponent<PopupText>().content.color = Color.green;
         levelUpPopup.transform.SetParent(null);
+    }
+
+    public void DisplayQuestExperience(int questExperience)
+    {
+        if (questExperience + experience < nextLevelExperience)
+        {
+            GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
+            experiencePopup.GetComponent<PopupText>().content.text = questExperience.ToString() + "xp";
+            experiencePopup.GetComponent<PopupText>().content.color = Color.yellow;
+            experiencePopup.transform.SetParent(null);
+        }       
     }
 
     private void PlayerMovement()

@@ -5,30 +5,37 @@ using UnityEngine.AI;
 
 // TBD
 public abstract class AI : Character2D
-{
+{    
     public enum EnemyType { Bat, Goblin, Kobold, Ogre }
+    [Header("Character Details")]
     public EnemyType Type;
-    [SerializeField] private int experienceValue;
+    [Range(0,1000)] [SerializeField] private int experienceValue;
     protected GameObject player;
-    [SerializeField] protected int detectionRange = 5;
+    [Range(0,100)] [SerializeField] protected int detectionRange = 5;
     private int detectionRangeDoubled;
-    [SerializeField] protected float minimumRange = 2;
+    [Range(0, 10)] [SerializeField] protected float minimumRange = 2;
     protected float xDistanceFromPlayer;
     protected float yDistanceFromPlayer;
+
+    [Header("Jump Settings")]
     [SerializeField] protected Vector2 rayCastOffset = new Vector2(1,0);
-    [SerializeField] protected float jumpCooldown = 1.5f;
-    protected float jumpDelay = 0;
+    [Range(0, 5)] [SerializeField] protected float jumpCooldown = 1.5f;
+    [Range(0, 3)] protected float jumpDelay = 0;
     protected bool playerInRange = false;
     protected int directionOfMovement = -1;
     [SerializeField] protected LayerMask wallLayer = new LayerMask();
+
+    [Header("Patrol Settings")]   
+    [SerializeField] protected bool setToPatrol = false;
     [SerializeField] private List<Transform> patrolPoints = new List<Transform>();
     private int patrolpointIndex = 0;
-    [SerializeField] protected bool setToPatrol = false;
     private Transform healthBar;
     private Coroutine healthBarCoroutine;
+
+    [Header("Loot Settings")]
     [SerializeField] private GameObject lootDropPrefab;
     [SerializeField] private Item.RarityTier rarityOfLootDrop;
-    [SerializeField] private int lootDropChance = 0;
+    [Range(0, 100)] [SerializeField] private int lootDropChance = 0;
 
     protected override void Awake()
     {
@@ -149,7 +156,7 @@ public abstract class AI : Character2D
 
         GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
         experiencePopup.GetComponent<PopupText>().content.text = experienceValue.ToString() + "xp";
-        experiencePopup.GetComponent<PopupText>().content.color = Color.green;
+        experiencePopup.GetComponent<PopupText>().content.color = Color.yellow;
         experiencePopup.transform.SetParent(null);
 
         RandomLootDrop();
