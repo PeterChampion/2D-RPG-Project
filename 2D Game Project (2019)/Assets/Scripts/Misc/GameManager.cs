@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
         playerStatsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
         playerStatsButtons = GameObject.Find("StatsButtons");
         questLog = GameObject.Find("QuestLog");
-        shopWindow = GameObject.Find("ShopUI");
+        shopWindow = GameObject.Find("ShopPanel");
 
         shopWindow.SetActive(false);
         playerStatsPanel.SetActive(false);

@@ -11,6 +11,8 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public Item item;
     private AudioSource audioSource;
     [SerializeField] private TextMeshProUGUI quantity;
+    [SerializeField] private TextMeshProUGUI outOfStock;
+    [SerializeField] private Button button;
 
     public int quantityInStock = 0;
     public bool unlimitedQuantity;
@@ -27,6 +29,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         tooltipOriginalPosition = tooltip.transform.position;
         audioSource = GetComponent<AudioSource>();
         icon.sprite = item.sprite;
+        outOfStock.enabled = false;
     }
 
     private void Start()
@@ -43,8 +46,19 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (quantityInStock <= 0 && !unlimitedQuantity)
         {
-            ClearSlot();
+            outOfStock.enabled = true;
+            quantity.enabled = false;
+            button.interactable = false;
+
+            //ClearSlot();
             Debug.Log("Clear");
+        }
+        else if (item != null)
+        {
+            outOfStock.enabled = false;
+            quantity.enabled = true;
+            icon.sprite = item.sprite;
+            button.interactable = true;
         }
 
         if (!unlimitedQuantity)
@@ -58,7 +72,15 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (item == null)
         {
-            Destroy(gameObject);
+            //ShopUI.instance.shopSlots.Remove(this);
+            //Destroy(gameObject);
+
+            ClearSlot();
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(true);
         }
     }
 
@@ -68,6 +90,7 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         item = newItem;
         icon.sprite = item.sprite;
         icon.enabled = true;
+        button.interactable = true;
     }
 
     public void ClearSlot()
@@ -117,6 +140,17 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             }
 
             audioSource.Play();
+        }
+    }
+
+    private void ItemSold(Item itemReceived)
+    {
+        if (itemReceived == item)
+        {
+            if (!unlimitedQuantity)
+            {
+                quantityInStock++;
+            }
         }
     }
 

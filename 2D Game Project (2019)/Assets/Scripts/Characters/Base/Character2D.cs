@@ -151,7 +151,7 @@ public abstract class Character2D : MonoBehaviour
         CancelInvoke("ToggleAttackAnimation");
         Physics2D.IgnoreCollision(FindObjectOfType<PlayerController>().GetComponent<Collider2D>(), GetComponent<Collider2D>());
         speed = 0;
-        RB.gravityScale = 2;
+        RB.gravityScale = 1;
         RB.velocity = new Vector2(0, RB.velocity.y);
         Destroy(gameObject, 3);
     }

@@ -153,6 +153,7 @@ public abstract class AI : Character2D
         experiencePopup.transform.SetParent(null);
 
         RandomLootDrop();
+        StopAllCoroutines();
         base.Die();
     }
 
