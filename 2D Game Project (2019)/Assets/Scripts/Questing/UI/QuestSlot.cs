@@ -10,6 +10,7 @@ public class QuestSlot : MonoBehaviour
     public TextMeshProUGUI questDescription;
     public TextMeshProUGUI questProgress;
     public TextMeshProUGUI questReward;
+    public TextMeshProUGUI questStatus;
 
     private void Update()
     {
@@ -22,8 +23,22 @@ public class QuestSlot : MonoBehaviour
 
             if (quest.ItemReward != null)
             {
-                questReward.text = questReward.text + "\n" + quest.ItemReward.itemName;
+                questReward.text += "\n" + quest.ItemReward.itemName;
             }
+
+            if (quest.GoldReward != 0)
+            {
+                questReward.text += "\n" + quest.GoldReward + " Gold";
+            }
+        }
+
+        if (quest.IsCompleted)
+        {
+            questStatus.text = "Status: Completed";
+        }
+        else
+        {
+            questStatus.text = "Status: In Progress";            
         }
 
         if (quest.IsRewardCollected)
@@ -40,18 +55,18 @@ public class QuestSlot : MonoBehaviour
         {
             if (goal is CollectionGoal)
             {
-                text = text + "\n" + goal.CurrentAmount + "/" + goal.RequiredAmount + " " + goal.RetrieveGoalInfo("ItemName");
+                text += "\n" + goal.CurrentAmount + "/" + goal.RequiredAmount + " " + goal.RetrieveGoalInfo("ItemName");
                 if (goal.RequiredAmount > 1)
                 {
-                    text = text + "s";
+                    text += "s";
                 }
             }
             else if (goal is KillGoal)
             {
-                text = text + "\n" + goal.CurrentAmount + "/" + goal.RequiredAmount + " " + goal.RetrieveGoalInfo("EnemyType");
+                text += "\n" + goal.CurrentAmount + "/" + goal.RequiredAmount + " " + goal.RetrieveGoalInfo("EnemyType");
                 if (goal.RequiredAmount > 1)
                 {
-                    text = text + "s";
+                    text += "s";
                 }
             }
         }

@@ -177,15 +177,23 @@ public class PlayerController : Character2D
         levelUpPopup.transform.SetParent(null);
     }
 
-    public void DisplayQuestExperience(int questExperience)
+    public void DisplayQuestReward(int questExperience, int questGold)
     {
-        if (questExperience + experience < nextLevelExperience)
+        if (questExperience + experience < nextLevelExperience && questExperience != 0)
         {
             GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
             experiencePopup.GetComponent<PopupText>().content.text = questExperience.ToString() + "xp";
-            experiencePopup.GetComponent<PopupText>().content.color = Color.yellow;
+            experiencePopup.GetComponent<PopupText>().content.color = Color.blue;
             experiencePopup.transform.SetParent(null);
-        }       
+        }
+
+        if (questGold != 0)
+        {
+            GameObject goldPopup = Instantiate(popupText, (Vector2)transform.position + new Vector2(0.5f, 0.5f), Quaternion.identity);
+            goldPopup.GetComponent<PopupText>().content.text = questGold.ToString() + " Gold";
+            goldPopup.GetComponent<PopupText>().content.color = Color.yellow;
+            goldPopup.transform.SetParent(null);
+        }        
     }
 
     private void PlayerMovement()

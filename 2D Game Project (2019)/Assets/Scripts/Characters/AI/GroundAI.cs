@@ -5,7 +5,7 @@ using UnityEngine;
 public class GroundAI : AI
 {
     private enum NPCType { Melee, Ranged }
-    [SerializeField] private float initialAttackWindUp = 0.5f;
+    [SerializeField] private float attackWindup = 0.5f;
     [SerializeField] private NPCType attackType;
     [SerializeField] private GameObject projectile;
     [SerializeField] private float raycastXSize = 1;
@@ -45,7 +45,7 @@ public class GroundAI : AI
                     {
                         StopCoroutine(attackCoroutine);
                     }
-                    attackCoroutine = StartCoroutine(StandardAttackCoroutine(initialAttackWindUp));
+                    attackCoroutine = StartCoroutine(StandardAttackCoroutine(attackWindup));
                 }
                 else
                 {

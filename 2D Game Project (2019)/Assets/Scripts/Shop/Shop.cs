@@ -81,7 +81,7 @@ public class Shop : MonoBehaviour
             {
                 if (slot.item == item)
                 {
-                    slot.quantityInStock++;
+                    slot.quantityInStock = 1;
                     slot.gameObject.SetActive(true);
                     break;
                 }

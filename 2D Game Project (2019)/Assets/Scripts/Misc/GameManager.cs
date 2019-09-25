@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         staminaSlider.value = player.CurrentStamina;
         experienceSlider.value = player.Experience;
 
-        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !Inventory.instance.open)
+        if ((Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape)) && !Inventory.instance.open && !shopWindow.activeSelf)
         {
             TogglePauseState();
             pausePanel.SetActive(!pausePanel.activeSelf);
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Tab) && !questLog.activeSelf && !pausePanel.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Tab) && !questLog.activeSelf && !pausePanel.activeSelf && !shopWindow.activeSelf)
         {
             playerStatsPanel.SetActive(!playerStatsPanel.activeSelf);
         }

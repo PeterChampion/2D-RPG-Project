@@ -9035,90 +9035,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!1001 &695236259
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 718937030}
-    m_Modifications:
-    - target: {fileID: 3084026111566285479, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_Name
-      value: Bat (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285479, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -177.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 23.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285466, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: speed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3084026111566285466, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-        type: 3}
-      propertyPath: jumpableLayers.m_Bits
-      value: 256
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa, type: 3}
 --- !u!1001 &701789701
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9622,7 +9538,6 @@ Transform:
   - {fileID: 786298498}
   - {fileID: 775192601}
   - {fileID: 1643220893}
-  - {fileID: 2094759358}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10410,7 +10325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7735849, g: 0.7437427, b: 0, a: 1}
+  m_Color: {r: 0, g: 0.32299602, b: 0.77254903, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -16564,6 +16479,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054580430121318920, guid: 1b7f21c23af80cf4fa03c73e8b7f6963,
+        type: 3}
+      propertyPath: damage
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b7f21c23af80cf4fa03c73e8b7f6963, type: 3}
@@ -42078,7 +41998,7 @@ PrefabInstance:
     - target: {fileID: 8670997310207885220, guid: 42bfb935c523b6240a8e48c7480f2a57,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 49.26
+      value: 49.28
       objectReference: {fileID: 0}
     - target: {fileID: 8670997310207885220, guid: 42bfb935c523b6240a8e48c7480f2a57,
         type: 3}
@@ -42154,6 +42074,11 @@ PrefabInstance:
         type: 3}
       propertyPath: speed
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4232118498013949624, guid: 42bfb935c523b6240a8e48c7480f2a57,
+        type: 3}
+      propertyPath: attackWindup
+      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 42bfb935c523b6240a8e48c7480f2a57, type: 3}
@@ -44820,12 +44745,6 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: dbbe1cc759189e848aae70294c293641, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdcf47ef8f34248429d5a9b461c1cca3, type: 3}
---- !u!4 &2094759358 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3084026111566285468, guid: 7e00cdf19ea06ba4ba50d94ba3a34faa,
-    type: 3}
-  m_PrefabInstance: {fileID: 695236259}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2096658402
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44897,7 +44816,7 @@ PrefabInstance:
         type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: 3eec7d2957bee6647ba8536886b4d1a9,
+      objectReference: {fileID: 11400000, guid: 31063df650db7144aa6def4875163b61,
         type: 2}
     - target: {fileID: 7303968969690253044, guid: cc86d39dd16151e4482cf73854bd6f58,
         type: 3}
@@ -45612,7 +45531,7 @@ PrefabInstance:
     - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
         type: 3}
       propertyPath: standardDialogue.sentences.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
         type: 3}
@@ -45630,16 +45549,30 @@ PrefabInstance:
     - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
         type: 3}
       propertyPath: name
-      value: Sup Bitch
+      value: Tutorial Sign
       objectReference: {fileID: 0}
     - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
         type: 3}
       propertyPath: standardDialogue.sentences.Array.data[0]
-      value: 'Hello THi si a bunch of fucking randomt ext to just spam the audio with
-        a bunch oif bleeps couretsy of chad thunder thighs
-
-
-        Sup bitches its ya boi 8 headed chad here'
+      value: Welcome! This is a work in progress for [Catchy Game Title]!
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
+        type: 3}
+      propertyPath: standardDialogue.sentences.Array.data[1]
+      value: Thank you for playing and taking part in the playtesting process, lets
+        teach you the basic controls of the game!
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
+        type: 3}
+      propertyPath: standardDialogue.sentences.Array.data[2]
+      value: Movement is controlled through the WASD or Arrow Keys, Spacebar is used
+        to jump, E interacts with objects.
+      objectReference: {fileID: 0}
+    - target: {fileID: 7255696896842101042, guid: affb7d4c64c57a145bfd5230f53788e2,
+        type: 3}
+      propertyPath: standardDialogue.sentences.Array.data[3]
+      value: You can also pause and quit the game through pressing Escape or P, to
+        open your questlog press Q and to open your inventory & equipment press TAB.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: affb7d4c64c57a145bfd5230f53788e2, type: 3}

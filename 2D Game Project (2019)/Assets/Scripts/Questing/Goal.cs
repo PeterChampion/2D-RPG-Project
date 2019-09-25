@@ -20,6 +20,11 @@ public abstract class Goal
         {
             Complete();
         }
+        else
+        {
+            IsCompleted = false;
+            Quest.CheckGoals();
+        }
     }
 
     public void Complete()

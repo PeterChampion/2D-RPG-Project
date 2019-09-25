@@ -9,6 +9,7 @@ public class Quest : MonoBehaviour
     public string QuestName { get; set; }
     public string QuestDescription { get; set; }
     public int ExperienceReward { get; set; }
+    public int GoldReward { get; set; }
     public Item ItemReward { get; set; }
     public bool IsCompleted { get; set; }
     public bool IsRewardCollected { get; set; }
@@ -24,8 +25,9 @@ public class Quest : MonoBehaviour
         {
             Inventory.instance.AddToInventory(ItemReward);
         }
+        Inventory.instance.gold += GoldReward;
         GameManager.instance.player.Experience += ExperienceReward;
-        GameManager.instance.player.DisplayQuestExperience(ExperienceReward);
+        GameManager.instance.player.DisplayQuestReward(ExperienceReward, GoldReward);
         GameManager.instance.player.OnExperienceGainCallback.Invoke();
         IsRewardCollected = true;
     }
