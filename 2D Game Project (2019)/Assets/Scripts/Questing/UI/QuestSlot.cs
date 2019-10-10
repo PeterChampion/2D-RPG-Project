@@ -69,6 +69,10 @@ public class QuestSlot : MonoBehaviour
                     text += "s";
                 }
             }
+            else if (goal is ExploreGoal)
+            {
+                text += "\n" + goal.CurrentAmount + "/" + goal.RequiredAmount + " " + goal.RetrieveGoalInfo("LocationToExplore");
+            }
         }
 
         return text;

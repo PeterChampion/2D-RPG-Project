@@ -155,8 +155,8 @@ public abstract class AI : Character2D
         GameManager.instance.player.OnExperienceGainCallback();
 
         GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
-        experiencePopup.GetComponent<PopupText>().content.text = experienceValue.ToString() + "xp";
-        experiencePopup.GetComponent<PopupText>().content.color = Color.yellow;
+        experiencePopup.GetComponent<PopupText>().content.text = experienceValue + "xp";
+        experiencePopup.GetComponent<PopupText>().content.color = Color.cyan;
         experiencePopup.transform.SetParent(null);
 
         RandomLootDrop();

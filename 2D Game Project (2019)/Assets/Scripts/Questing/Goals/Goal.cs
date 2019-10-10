@@ -18,6 +18,7 @@ public abstract class Goal
     {
         if (CurrentAmount >= RequiredAmount)
         {
+            CurrentAmount = RequiredAmount;
             Complete();
         }
         else

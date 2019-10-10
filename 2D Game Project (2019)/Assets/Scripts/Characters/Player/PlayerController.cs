@@ -183,7 +183,7 @@ public class PlayerController : Character2D
         {
             GameObject experiencePopup = Instantiate(popupText, transform.position, Quaternion.identity);
             experiencePopup.GetComponent<PopupText>().content.text = questExperience.ToString() + "xp";
-            experiencePopup.GetComponent<PopupText>().content.color = Color.blue;
+            experiencePopup.GetComponent<PopupText>().content.color = Color.cyan;
             experiencePopup.transform.SetParent(null);
         }
 
@@ -194,6 +194,14 @@ public class PlayerController : Character2D
             goldPopup.GetComponent<PopupText>().content.color = Color.yellow;
             goldPopup.transform.SetParent(null);
         }        
+    }
+
+    public void DisplayPopupText(string text)
+    {
+        GameObject textPopUp = Instantiate(popupText, (Vector2)transform.position + new Vector2(0.5f, 0.5f), Quaternion.identity);
+        textPopUp.GetComponent<PopupText>().content.text = text;
+        textPopUp.GetComponent<PopupText>().content.color = Color.red;
+        textPopUp.transform.SetParent(null);
     }
 
     private void PlayerMovement()
@@ -362,6 +370,11 @@ public class PlayerController : Character2D
             StartCoroutine(GameManager.instance.CameraShake());
             Invoke("ToggleHurtAnimation", 0);
             Invoke("ToggleHurtAnimation", 0.25f);
+
+            GameObject damagePopup = Instantiate(popupText, transform.position, Quaternion.identity);
+            damagePopup.GetComponent<PopupText>().content.text = 1.ToString();
+            damagePopup.GetComponent<PopupText>().content.color = Color.red;
+            damagePopup.transform.SetParent(null);
         }
         GameManager.instance.UpdatePlayerStatsUI();
     }
@@ -475,6 +488,7 @@ public class PlayerController : Character2D
         if (recoverStamina && currentStamina < maximumStamina)
         {
             currentStamina += 0.5f;
+            GameManager.instance.UpdatePlayerStatsUI();
         }
     }
 

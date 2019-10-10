@@ -38,7 +38,8 @@ public class Inventory : MonoBehaviour
         //Debug.Log("Attempting to add item to inventory...");
         if (inventoryItems.Count >= maxInventorySpace)
         {
-           // Debug.Log("Could not add to inventory");
+            // Debug.Log("Could not add to inventory");
+            GameManager.instance.player.DisplayPopupText("Inventory full!");
             return false;
         }
         else

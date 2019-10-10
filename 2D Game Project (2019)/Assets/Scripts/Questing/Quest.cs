@@ -16,7 +16,7 @@ public class Quest : MonoBehaviour
 
     public void CheckGoals()
     {
-        IsCompleted = Goals.All(goal => goal.IsCompleted);        
+        IsCompleted = Goals.All(goal => goal.IsCompleted);      
     }
 
     public virtual void GiveReward()

@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     private TextMeshProUGUI playerStatsText;
     private GameObject playerStatsButtons;
 
+    // Location UI
+    private TextMeshProUGUI locationNameText;
+    private Coroutine locationNameFadeCoroutine;
+
     // QuestLog UI
     public GameObject questLog;
 
@@ -42,6 +46,10 @@ public class GameManager : MonoBehaviour
     // AI Delegates
     public delegate void OnCharacterDeath(AI.EnemyType type);
     public OnCharacterDeath OnCharacterDeathCallback;
+
+    // Location Delegates
+    public delegate void OnLocationEntered(string name);
+    public OnLocationEntered OnLocationEnteredCallback;
 
     private void Awake()
     {
@@ -67,11 +75,17 @@ public class GameManager : MonoBehaviour
         equipmentStatsText = GameObject.Find("EquipmentStatsText").GetComponent<TextMeshProUGUI>();
         pausePanel = GameObject.Find("PausePanel");
         pausePanel.SetActive(false);
+        locationNameText = GameObject.Find("LocationNameText").GetComponent<TextMeshProUGUI>();
+        locationNameText.enabled = false;
+
+        // Delegate assignments
         EquipmentManager.instance.onEquipmentChangedCallback += UpdateEquipmentStatsUI;
         player.OnLevelUpCallback += UpdatePlayerStatsUI;
         player.OnLevelUpCallback += SetExperienceSliderMinValue;
         player.OnLevelUpCallback += UpdateEquipmentStatsUI;
         player.OnExperienceGainCallback += UpdatePlayerStatsUI;
+        OnLocationEnteredCallback += DisplayLocationName;
+
         playerStatsPanel = GameObject.Find("StatsPanel");
         playerStatsText = GameObject.Find("StatsText").GetComponent<TextMeshProUGUI>();
         playerStatsButtons = GameObject.Find("StatsButtons");
@@ -135,7 +149,7 @@ public class GameManager : MonoBehaviour
     public void UpdatePlayerStatsUI()
     {
         playerStatsText.text = "Level: " + player.Level + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nHealth: " + (int)player.CurrentHealth + "/" + player.MaximumHealth
-            + "\nStamina: " + player.CurrentStamina + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
+            + "\nStamina: " + Mathf.RoundToInt(player.CurrentStamina) + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
             + player.Constitution + "\nAgility: " + player.Agility + "\nLuck: " + player.Luck + "\nPoints Left: " + player.LevelPoints;
     }
 
@@ -158,6 +172,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void DisplayLocationName(string locationName)
+    {
+        locationNameText.text = locationName;
+
+        if (locationNameFadeCoroutine != null)
+        {
+            StopCoroutine(locationNameFadeCoroutine);
+            locationNameFadeCoroutine = StartCoroutine(FadeTextEffect(locationNameText, 0.5f));
+        }
+        else
+        {
+            locationNameFadeCoroutine = StartCoroutine(FadeTextEffect(locationNameText, 0.5f));
+        }
+    }
+
+    private IEnumerator FadeTextEffect(TextMeshProUGUI textElement, float duration)
+    {
+        textElement.enabled = true;
+        textElement.color = new Color(textElement.color.r, textElement.color.g, textElement.color.b, 0);
+
+        while (textElement.color.a < 1f)
+        {
+            textElement.color = new Color(textElement.color.r, textElement.color.g, textElement.color.b, textElement.color.a + (Time.deltaTime * 1));
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        while (textElement.color.a > 0f)
+        {
+            textElement.color = new Color(textElement.color.r, textElement.color.g, textElement.color.b, textElement.color.a - (Time.deltaTime * 1));
+            yield return null;
+        }
+
+        textElement.enabled = false;
+    }
+
     public IEnumerator CameraShake()
     {
         virtualCameraNoise.m_AmplitudeGain = shakeAmplitude;
@@ -165,7 +216,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(shakeDuration);
         virtualCameraNoise.m_AmplitudeGain = 0f;
     }
-
 
     // TEST VARIABLES AND METHODS BELOW, FREE TO REMOVE
 

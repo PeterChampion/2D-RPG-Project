@@ -190,7 +190,6 @@ MonoBehaviour:
   knockbackPower: 5
   attackCooldown: 1
   armour: 0
-  magicResist: 0
   knockbackDuration: 0.5
   attackArea: {fileID: 2762480992248206957, guid: c4aa19d9043c63149b17c3d20569a9d6,
     type: 3}
@@ -202,7 +201,7 @@ MonoBehaviour:
   popupText: {fileID: 2924230575057850071, guid: 2078bae5d5966c7409a902ac4a348a6e,
     type: 3}
   Type: 2
-  experienceValue: 0
+  experienceValue: 50
   detectionRange: 8
   minimumRange: 2
   rayCastOffset: {x: 0.5, y: 0}
@@ -210,13 +209,13 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 4352
-  patrolPoints: []
   setToPatrol: 0
+  patrolPoints: []
   lootDropPrefab: {fileID: 7303968969690253039, guid: cc86d39dd16151e4482cf73854bd6f58,
     type: 3}
   rarityOfLootDrop: 0
   lootDropChance: 0
-  initialAttackWindUp: 0.5
+  attackWindup: 0.5
   attackType: 0
   projectile: {fileID: 0}
   raycastXSize: 2
