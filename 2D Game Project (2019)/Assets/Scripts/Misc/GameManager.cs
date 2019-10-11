@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Cinemachine;
 using TMPro;
 
-// Central gamemanger class, handles camera behaviour, UI elements & pausing the gamestate
+// Central GameManager class, handles camera behaviour, UI elements & pausing the gamestate
 public class GameManager : MonoBehaviour
 {
     // Singleton
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
     public void UpdatePlayerStatsUI()
     {
         playerStatsText.text = "Level: " + player.Level + "\nExperience: " + player.Experience + "/" + player.NextLevelExperience + "\nHealth: " + (int)player.CurrentHealth + "/" + player.MaximumHealth
-            + "\nStamina: " + Mathf.RoundToInt(player.CurrentStamina) + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
+            + "\nStamina: " +(int)player.CurrentStamina + "/" + player.MaximumStamina + "\n-----------------------------------" + "\nStrength: " + player.Strength + "\nConstitution: " 
             + player.Constitution + "\nAgility: " + player.Agility + "\nLuck: " + player.Luck + "\nPoints Left: " + player.LevelPoints;
     }
 

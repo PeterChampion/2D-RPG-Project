@@ -11,8 +11,8 @@ public class PotionCollector : Quest
         ExperienceReward = 500;
         GoldReward = 100;
         ItemReward = FindItem("Tutorial Sheild +1");
-        Goals.Add(new CollectionGoal(this, "Health Potion", 0, 2));
-        Goals.Add(new CollectionGoal(this, "Stamina Potion", 0, 2));
+        Goals.Add(new CollectionGoal(this, "Health Potion", 2));
+        Goals.Add(new CollectionGoal(this, "Stamina Potion", 2));
 
         Goals.ForEach(goal => goal.Initialise());
     }

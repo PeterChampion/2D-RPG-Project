@@ -13,6 +13,7 @@ public class Quest : MonoBehaviour
     public Item ItemReward { get; set; }
     public bool IsCompleted { get; set; }
     public bool IsRewardCollected { get; set; }
+    public List<GameObject> questTriggers = new List<GameObject>();
 
     public void CheckGoals()
     {
@@ -30,6 +31,8 @@ public class Quest : MonoBehaviour
         GameManager.instance.player.DisplayQuestReward(ExperienceReward, GoldReward);
         GameManager.instance.player.OnExperienceGainCallback.Invoke();
         IsRewardCollected = true;
+
+        TriggerOnCompletion();
     }
 
     protected Item FindItem(string itemName)
@@ -45,5 +48,16 @@ public class Quest : MonoBehaviour
         }
 
         return itemFound;
+    }
+
+    protected void TriggerOnCompletion()
+    {
+        if (questTriggers.Count > 0)
+        {
+            foreach (GameObject obj in questTriggers)
+            {
+                obj.SetActive(!obj.activeSelf);
+            }
+        }
     }
 }

@@ -24,6 +24,7 @@ public class GrapplingHook : MonoBehaviour
         Physics2D.IgnoreLayerCollision(15, 11, true); // Ignore collision with items layer
         Physics2D.IgnoreLayerCollision(15, 15, true); // Ignore collision with hook layer
         Physics2D.IgnoreLayerCollision(15, 13, true); // Ignore collision with invulnerable layer
+        Physics2D.IgnoreLayerCollision(15, 5); // Ignore collision with UI layer
     }
 
     private void Start()

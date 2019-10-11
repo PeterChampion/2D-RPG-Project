@@ -6,12 +6,12 @@ public class CollectionGoal : Goal
 {
     public string ItemName { get; set; }
 
-    public CollectionGoal(Quest _quest, string _itemName, int _currentAmount, int _requiredAmount)
+    public CollectionGoal(Quest _quest, string _itemName, int _requiredAmount)
     {
         Quest = _quest;
         ItemName = _itemName;
         RequiredAmount = _requiredAmount;
-        CurrentAmount = _currentAmount;
+        CurrentAmount = 0;
     }
 
     public override void Initialise()
