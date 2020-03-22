@@ -18,6 +18,7 @@ public class Unit : MonoBehaviour
     {
         if (pathSuccess)
         {
+            print("Path found!");
             StopCoroutine("FollowPath");
             targetIndex = 0;
             path = newPath;

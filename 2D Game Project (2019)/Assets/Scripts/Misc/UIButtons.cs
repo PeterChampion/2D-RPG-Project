@@ -27,7 +27,7 @@ public class UIButtons : MonoBehaviour
         player.Strength++;
         player.LevelPoints--;
         player.OnLevelUpCallback.Invoke();
-        player.Damage = player.Damage + player.Strength;
+        player.Damage = 5 + player.Strength;
         GameManager.instance.player.OnLevelUpCallback.Invoke();
     }
 

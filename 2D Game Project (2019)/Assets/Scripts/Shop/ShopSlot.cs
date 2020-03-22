@@ -47,7 +47,6 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (quantityInStock <= 0 && !unlimitedQuantity)
         {
             outOfStock.enabled = true;
-            quantity.enabled = false;
             button.interactable = false;
 
             //ClearSlot();
@@ -56,7 +55,6 @@ public class ShopSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else if (item != null)
         {
             outOfStock.enabled = false;
-            quantity.enabled = true;
             icon.sprite = item.sprite;
             button.interactable = true;
         }

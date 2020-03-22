@@ -30,8 +30,6 @@ public class KillGoal : Goal
         }
     }
 
-
-
     public override string RetrieveGoalInfo(string variableNameToReturn)
     {
         string value = string.Empty;

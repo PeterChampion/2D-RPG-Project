@@ -138,6 +138,11 @@ PrefabInstance:
       propertyPath: Type
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 3847992862447097090, guid: 146cb2883b3595448982d9e9401899c5,
+        type: 3}
+      propertyPath: experienceValue
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 6474476366344243068, guid: 146cb2883b3595448982d9e9401899c5,
         type: 3}
       propertyPath: m_LocalPosition.x

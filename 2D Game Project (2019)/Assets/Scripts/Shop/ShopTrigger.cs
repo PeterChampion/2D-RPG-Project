@@ -52,32 +52,48 @@ public class ShopTrigger : Interactable
 
     private void UpdateStock(int numberToCheck)
     {
-        List<Item> itemsToRemove = new List<Item>();
+        //List<Item> itemsToRemove = new List<Item>();
 
-        for (int index = 0; index < itemsForSale.Count; index++)
+        //for (int index = 0; index < itemsForSale.Count; index++)
+        //{
+            //itemQuantitys[index] = ShopUI.instance.shopSlots[index].quantityInStock;
+
+            //if (itemQuantitys[index] <= 0)
+            //{
+            //    itemsToRemove.Add(itemsForSale[index]);
+            //}
+        //}
+
+        itemsForSale.Clear();
+        itemQuantitys.Clear();
+
+        foreach (ShopSlot slot in ShopUI.instance.shopSlots)
         {
-            itemQuantitys[index] = ShopUI.instance.shopSlots[index].quantityInStock;
-
-            if (itemQuantitys[index] <= 0)
+            if ((slot.quantityInStock > 0 || slot.unlimitedQuantity) && slot.item != null)
             {
-                itemsToRemove.Add(itemsForSale[index]);
+                itemsForSale.Add(slot.item);
+                itemQuantitys.Add(slot.quantityInStock);
+            }
+            else
+            {
+                continue;
             }
         }
 
-        foreach (Item item in itemsToRemove)
-        {
-            itemsForSale.Remove(item);
-        }
+        //foreach (Item item in itemsToRemove)
+        //{
+        //    itemsForSale.Remove(item);
+        //}
 
-        for (int index = numberToCheck - 1; index >= 0; index--)
-        {
-            print("Ran");
+        //for (int index = numberToCheck - 1; index >= 0; index--)
+        //{
+        //    print("Ran");
 
-            if (itemQuantitys[index] <= 0)
-            {
-                itemQuantitys.Remove(itemQuantitys[index]);
-                print("Removed");
-            }
-        }
+        //    if (itemQuantitys[index] <= 0)
+        //    {
+        //        itemQuantitys.Remove(itemQuantitys[index]);
+        //        print("Removed");
+        //    }
+        //}
     }
 }

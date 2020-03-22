@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(CapsuleCollider2D))]
+[RequireComponent(typeof(Animator))]
 // Base class for all 2D characters, gives all characters the capability of moving, attacking, ground checking, dying, etc.
 public abstract class Character2D : MonoBehaviour
 {
     // Health
+    [Header("Health Settings")]
     [SerializeField] protected float maximumHealth = 100;
     public float MaximumHealth { get { return maximumHealth; } set { maximumHealth = value; } }
     protected float currentHealth;
     public float CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
 
     // Movement
+    [Header("Movement Settings")]
     [SerializeField] protected int speed = 5;
     [SerializeField] protected int jumpStrength = 8;
     [SerializeField] protected float jumpRaycastLength = 1;
@@ -22,29 +28,29 @@ public abstract class Character2D : MonoBehaviour
     protected Vector2 xMovementDirection;
     public Vector2 XMovementDirection { get { return xMovementDirection; } }
 
-    // Combat
-    protected float attackDelay;
-    [SerializeField] protected float attackRange = 2;
-    [SerializeField] protected int damage = 5;
+    // Combat    
+    [Header("Combat Settings")]
+    [Range(1,5)] [SerializeField] protected float attackRange = 2;
+    [Range(0, 100)] [SerializeField] protected int damage = 5;
     public int Damage { get { return damage; } set { damage = value; } }
-    [SerializeField] protected float knockbackPower = 5;
-    [SerializeField] protected float attackCooldown = 0.5f;
-    [SerializeField] private int armour = 0;
+    [Range(0, 20)] [SerializeField] protected float knockbackPower = 5;
+    [Range(0, 5)] [SerializeField] protected float attackCooldown = 0.5f;
+    [Range(0, 100)] [SerializeField] private int armour = 0;
     public int Armour { get { return armour; } set { armour = value; } }
-    [SerializeField] private int magicResist = 0;
-    public int MagicResist { get { return magicResist; } set { magicResist = value; } }
     //[SerializeField] private LayerMask enemyLayer = new LayerMask();
     //public LayerMask EnemyLayer { get { return enemyLayer; } }
-    [SerializeField] protected float knockbackDuration = 0;
+    [Range(0, 5)] [SerializeField] protected float knockbackDuration = 0;
     private int originalLayer = 0;
     private bool stunned;
     public bool Stunned { get { return stunned; } set { stunned = value; } }
     [SerializeField] GameObject attackArea;
     private Coroutine stunCoroutine;
     private Transform attackPoint;
-    public bool isDead;
+    protected float attackDelay;
+    [HideInInspector] public bool isDead;
 
     // Audio
+    [Header("Audio Settings")]
     protected AudioSource audioSource;
     [SerializeField] private AudioClip[] damagedAudioClips;
 
