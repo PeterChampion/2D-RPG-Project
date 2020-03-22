@@ -8,7 +8,7 @@ public class PotionCollector : Quest
     {
         QuestName = "Potion Collector";
         QuestDescription = "Collect health and stamina potions to prepare yourself for the journey ahead.";
-        ExperienceReward = 500;
+        ExperienceReward = 2500;
         GoldReward = 100;
         ItemReward = FindItem("Tutorial Sheild +1");
         Goals.Add(new CollectionGoal(this, "Health Potion", 2));
